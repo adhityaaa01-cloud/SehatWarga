@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Administrator - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-greeting">
+      <h1>Panel Administrator SehatWarga</h1>
+      <p>Ringkasan operasional dan status kepesertaan masyarakat terkini.</p>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+      <a href="{{ url_for('admin.services_list') }}" class="btn btn-primary btn-rounded">Kelola Pengajuan Layanan</a>
+      <a href="{{ url_for('admin.complaints_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Kelola Pengaduan</a>
+      <a href="{{ url_for('admin.contributions_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Kelola Iuran</a>
+      <a href="{{ url_for('admin.payments_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Riwayat Pembayaran</a>
+      <a href="{{ url_for('admin.facilities_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Kelola Fasilitas</a>
+    </div>
+  </div>
+
+  <section class="summary-panel"><div><p class="eyebrow">OPERASIONAL HARI INI</p><h2>Prioritaskan yang menunggu.</h2><p>Tinjau pengajuan, tanggapi pengaduan, dan periksa administrasi layanan.</p></div><a class="btn" href="{{ url_for('admin.services_list', status='SUBMITTED') }}">Tinjau pengajuan</a></section>
+  <div class="stats-grid">
+    <a class="stat-card" href="{{ url_for('admin.services_list', status='SUBMITTED') }}"><div class="stat-label">Menunggu Verifikasi</div><div class="stat-value">{{ pending_service_requests }}</div><p class="stat-desc">Pengajuan layanan →</p></a>
+    <a class="stat-card" href="{{ url_for('admin.complaints_list', status='OPEN') }}"><div class="stat-label">Pengaduan Terbuka</div><div class="stat-value">{{ open_complaints }}</div><p class="stat-desc">Perlu tanggapan petugas →</p></a>
+    <a class="stat-card" href="{{ url_for('admin.contributions_list', status='OVERDUE') }}"><div class="stat-label">Tagihan Terlambat</div><div class="stat-value">{{ overdue_bills }}</div><p class="stat-desc">Tinjau tagihan →</p></a>
+    <a class="stat-card" href="{{ url_for('admin.facilities_list', status='inactive') }}"><div class="stat-label">Fasilitas Nonaktif</div><div class="stat-value">{{ inactive_facilities }}</div><p class="stat-desc">Periksa operasional →</p></a>
+  </div>
+  <details class="secondary-details"><summary>Rincian statistik operasional & kepesertaan</summary>
+  <!-- Complaint Stats (Stage 7) -->
+  <div class="flex justify-between items-center mt-4 mb-2 flex-wrap gap-3">
+    <h2 class="section-heading mb-0">Pengaduan Layanan Masyarakat</h2>
+    <a href="{{ url_for('admin.complaints_list') }}" class="btn btn-outline-light btn-rounded text-xs text-accent" style="border-color: var(--color-border); padding: 4px 12px;">Kelola Semua Pengaduan &rarr;</a>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Pengaduan</div>
+      <div class="stat-value">{{ total_complaints }}</div>
+      <div class="stat-desc">Semua laporan masuk</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Baru (OPEN)</div>
+      <div class="stat-value" style="color: #0284c7;">{{ open_complaints }}</div>
+      <div class="stat-desc">Menunggu proses admin</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Sedang Diproses</div>
+      <div class="stat-value" style="color: #7c3aed;">{{ in_progress_complaints }}</div>
+      <div class="stat-desc">Status IN_PROGRESS</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Selesai (RESOLVED)</div>
+      <div class="stat-value text-success">{{ resolved_complaints }}</div>
+      <div class="stat-desc">Telah ditanggapi tuntas</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Ditolak (REJECTED)</div>
+      <div class="stat-value text-danger">{{ rejected_complaints }}</div>
+      <div class="stat-desc">Tidak memenuhi kriteria</div>
+    </div>
+  </div>
+
+  <!-- Contribution Stats (Stage 6) -->
+  <div class="flex justify-between items-center mt-4 mb-2 flex-wrap gap-3">
+    <h2 class="section-heading mb-0">Iuran &amp; Pembayaran Simulasi (Periode {{ current_period.strftime('%B %Y') }})</h2>
+    <a href="{{ url_for('admin.contributions_list') }}" class="btn btn-outline-light btn-rounded text-xs text-accent" style="border-color: var(--color-border); padding: 4px 12px;">Lihat Semua Iuran &rarr;</a>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Tagihan Bulan Ini</div>
+      <div class="stat-value">{{ total_month_bills }}</div>
+      <div class="stat-desc">Peserta aktif periode ini</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Belum Dibayar</div>
+      <div class="stat-value" style="color: #d97706;">{{ unpaid_month_bills }}</div>
+      <div class="stat-desc">Status UNPAID bulan ini</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Sudah Lunas</div>
+      <div class="stat-value text-success">{{ paid_month_bills }}</div>
+      <div class="stat-desc">Status PAID bulan ini</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total Terlambat</div>
+      <div class="stat-value text-danger">{{ overdue_bills }}</div>
+      <div class="stat-desc">Status OVERDUE semua periode</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total Pembayaran Simulasi</div>
+      <div class="stat-value text-accent" style="font-size: 22px;">{{ total_simulated_paid|rupiah }}</div>
+      <div class="stat-desc">Bulan {{ current_period.strftime('%B %Y') }}</div>
+    </div>
+  </div>
+
+  <!-- Service Request Stats (Stage 5) -->
+  <h2 class="section-heading">Operasional Pengajuan Layanan</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Pengajuan</div>
+      <div class="stat-value">{{ total_service_requests }}</div>
+      <div class="stat-desc">Semua permohonan masuk</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Menunggu Verifikasi</div>
+      <div class="stat-value" style="color: #d97706;">{{ pending_service_requests }}</div>
+      <div class="stat-desc">Status SUBMITTED</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Terverifikasi</div>
+      <div class="stat-value" style="color: #0284c7;">{{ verified_service_requests }}</div>
+      <div class="stat-desc">Status VERIFIED</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Dijadwalkan</div>
+      <div class="stat-value" style="color: #7c3aed;">{{ scheduled_service_requests }}</div>
+      <div class="stat-desc">Status SCHEDULED</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Layanan Selesai</div>
+      <div class="stat-value text-success">{{ completed_service_requests }}</div>
+      <div class="stat-desc">Status COMPLETED</div>
+    </div>
+  </div>
+
+  <!-- Citizen & User Stats -->
+  <h2 class="section-heading">Statistik Pengguna &amp; Kepesertaan</h2>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Pengguna Akun</div>
+      <div class="stat-value">{{ total_users }}</div>
+      <div class="stat-desc">Akun terdaftar dalam sistem</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total Peserta Warga</div>
+      <div class="stat-value">{{ total_citizens }}</div>
+      <div class="stat-desc">Pengguna berstatus warga (citizen)</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Peserta Aktif</div>
+      <div class="stat-value text-success">{{ total_active_participants }}</div>
+      <div class="stat-desc">Kepesertaan dengan status ACTIVE</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Peserta Nonaktif</div>
+      <div class="stat-value text-danger">{{ total_inactive_participants }}</div>
+      <div class="stat-desc">Kepesertaan dengan status INACTIVE</div>
+    </div>
+  </div>
+
+  <!-- Health Facility Stats (Stage 4) -->
+  <h2 class="section-heading">Jaringan Fasilitas Kesehatan</h2>
+  <div class="stats-grid mb-8">
+    <div class="stat-card">
+      <div class="stat-label">Total Fasilitas Terdaftar</div>
+      <div class="stat-value">{{ total_facilities }}</div>
+      <div class="stat-desc">Puskesmas, klinik, dan rumah sakit</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Fasilitas Aktif Melayani</div>
+      <div class="stat-value text-success">{{ active_facilities }}</div>
+      <div class="stat-desc">Tampil di portal publik &amp; peta</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Fasilitas Nonaktif</div>
+      <div class="stat-value text-danger">{{ inactive_facilities }}</div>
+      <div class="stat-desc">Operasional ditangguhkan</div>
+    </div>
+  </div>
+
+</details>
+  <!-- Recent Service Requests (Stage 5) -->
+  <div class="mt-9">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="section-heading mb-0">5 Pengajuan Layanan Terbaru</h2>
+      <a href="{{ url_for('admin.services_list') }}" class="btn btn-outline-light btn-rounded text-accent text-sm" style="border-color: var(--color-border); padding: 6px 14px;">Lihat Semua &rarr;</a>
+    </div>
+
+    {% if recent_service_requests %}
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nomor Pengajuan</th>
+              <th>Peserta / Pasien</th>
+              <th>Fasilitas Kesehatan</th>
+              <th>Jenis Layanan</th>
+              <th>Rencana / Jadwal</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in recent_service_requests %}
+              <tr>
+                <td class="mono font-semibold">
+                  <a href="{{ url_for('admin.service_detail', request_id=r.id) }}">{{ r.request_number }}</a>
+                </td>
+                <td>
+                  <strong>{{ r.participant.full_name }}</strong>
+                  {% if r.family_member %}
+                    <br><small class="text-muted">Pasien: {{ r.family_member.full_name }} (Keluarga)</small>
+                  {% endif %}
+                </td>
+                <td>{{ r.health_facility.name }}</td>
+                <td>{{ valid_service_types.get(r.service_type, r.service_type) }}</td>
+                <td>{{ r.scheduled_date.strftime('%d/%m/%Y') if r.scheduled_date else '-' }}</td>
+                <td>
+                  {% if r.status == 'SUBMITTED' %}
+                    <span class="badge badge-warning">Menunggu Verifikasi</span>
+                  {% elif r.status == 'VERIFIED' %}
+                    <span class="badge badge-info">Terverifikasi</span>
+                  {% elif r.status == 'SCHEDULED' %}
+                    <span class="badge badge-purple">Dijadwalkan</span>
+                  {% elif r.status == 'COMPLETED' %}
+                    <span class="badge badge-success">Selesai</span>
+                  {% elif r.status == 'REJECTED' %}
+                    <span class="badge badge-danger">Ditolak</span>
+                  {% elif r.status == 'CANCELLED' %}
+                    <span class="badge badge-secondary">Dibatalkan</span>
+                  {% else %}
+                    <span class="badge badge-secondary">{{ r.status }}</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{{ url_for('admin.service_detail', request_id=r.id) }}" class="btn btn-primary text-xs" style="padding: 4px 10px;">Kelola</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="stat-card text-center text-muted p-8">
+        Belum ada pengajuan layanan masuk.
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="mt-9">
+    <h2 class="section-heading">5 Pendaftaran Peserta Terbaru</h2>
+
+    {% if recent_participants %}
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nomor Peserta</th>
+              <th>Nama Lengkap</th>
+              <th>Jenis Kelamin</th>
+              <th>Kelas Layanan</th>
+              <th>Status</th>
+              <th>Tanggal Registrasi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in recent_participants %}
+              <tr>
+                <td class="mono font-semibold">{{ p.participant_number }}</td>
+                <td>{{ p.full_name }}</td>
+                <td>
+                  {% if p.gender == 'MALE' %}
+                    Laki-laki
+                  {% elif p.gender == 'FEMALE' %}
+                    Perempuan
+                  {% else %}
+                    {{ p.gender }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if p.service_class == 'CLASS_1' %}
+                    Kelas 1
+                  {% elif p.service_class == 'CLASS_2' %}
+                    Kelas 2
+                  {% elif p.service_class == 'CLASS_3' %}
+                    Kelas 3
+                  {% else %}
+                    {{ p.service_class }}
+                  {% endif %}
+                </td>
+                <td>
+                  {% if p.membership_status == 'ACTIVE' %}
+                    <span class="badge badge-success">AKTIF</span>
+                  {% else %}
+                    <span class="badge badge-danger">NONAKTIF</span>
+                  {% endif %}
+                </td>
+                <td>{{ p.created_at.strftime('%d %b %Y %H:%M') if p.created_at else '-' }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="stat-card text-center text-muted p-8">
+        Belum ada peserta terdaftar dalam sistem SehatWarga.
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="mt-9">
+    <div class="flex justify-between items-center mb-3 flex-wrap gap-2">
+      <h2 class="section-heading mb-0">5 Pengaduan Layanan Terbaru</h2>
+      <a href="{{ url_for('admin.complaints_list') }}" class="btn btn-outline-light btn-rounded text-xs text-accent" style="border-color: var(--color-border); padding: 4px 12px;">Lihat Semua Pengaduan &rarr;</a>
+    </div>
+
+    {% if recent_complaints %}
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nomor Tiket</th>
+              <th>Nama Warga</th>
+              <th>Judul Pengaduan</th>
+              <th>Status</th>
+              <th>Tanggal Dikirim</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in recent_complaints %}
+              <tr>
+                <td class="mono font-semibold">
+                  <a href="{{ url_for('admin.complaint_detail', complaint_id=c.id) }}">{{ c.ticket_number }}</a>
+                </td>
+                <td>{{ c.user.name }}</td>
+                <td>{{ c.subject }}</td>
+                <td>
+                  <span class="badge {{ complaint_status_badges.get(c.status, 'badge-secondary') }}">
+                    {{ complaint_status_labels.get(c.status, c.status) }}
+                  </span>
+                </td>
+                <td>{{ c.created_at.strftime('%d %b %Y %H:%M') if c.created_at else '-' }}</td>
+                <td>
+                  <a href="{{ url_for('admin.complaint_detail', complaint_id=c.id) }}" class="btn btn-outline-light text-xs text-accent" style="padding: 4px 10px; border-color: var(--color-border);">Detail</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="stat-card text-center text-muted p-8">
+        Belum ada pengaduan layanan masuk.
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="padding: 14px 18px;" class="mt-8 surface-secondary border rounded text-sm text-muted">
+    <strong>Informasi Administrator:</strong> Modul kepesertaan, fasilitas kesehatan, pengajuan layanan, iuran, pembayaran simulasi, serta penanganan pengaduan layanan administratif masyarakat telah aktif secara terintegrasi.
+  </div>
+</div>
+{% endblock %}

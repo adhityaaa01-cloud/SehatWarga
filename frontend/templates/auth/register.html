@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Pendaftaran Peserta - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width: 600px;">
+    <div class="auth-header">
+      <h1 class="auth-title">Pendaftaran Peserta SehatWarga</h1>
+      <p class="auth-subtitle">Daftarkan diri Anda untuk mendapatkan akses layanan jaminan kesehatan simulasi</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+      {{ form.hidden_tag() }}
+      <h2 class="form-section-title">Identitas dan akses akun</h2>
+
+      <div class="form-group">
+        <label for="name" class="form-label">Nama Lengkap</label>
+        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Nama sesuai identitas", id="name") }}
+        {% for error in form.name.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Alamat Email</label>
+        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="nama@contoh.id", id="email") }}
+        <div class="form-hint">Email akan digunakan untuk masuk ke akun portal SehatWarga.</div>
+        {% for error in form.email.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="password" class="form-label">Kata Sandi</label>
+          {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Minimal 8 karakter", id="password") }}
+          {% for error in form.password.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="confirm_password" class="form-label">Konfirmasi Sandi</label>
+          {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Ulangi kata sandi", id="confirm_password") }}
+          {% for error in form.confirm_password.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <h2 class="form-section-title">Data kepesertaan</h2>
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="birth_date" class="form-label">Tanggal Lahir</label>
+          {{ form.birth_date(class="form-control" + (" is-invalid" if form.birth_date.errors else ""), type="date", id="birth_date") }}
+          {% for error in form.birth_date.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="gender" class="form-label">Jenis Kelamin</label>
+          {{ form.gender(class="form-control" + (" is-invalid" if form.gender.errors else ""), id="gender") }}
+          {% for error in form.gender.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="service_class" class="form-label">Kelas Layanan Simulasi</label>
+        {{ form.service_class(class="form-control" + (" is-invalid" if form.service_class.errors else ""), id="service_class") }}
+        <div class="form-hint">
+          Kelas layanan simulasi SehatWarga untuk kebutuhan prototipe akademik (tidak terafiliasi dengan BPJS resmi).
+        </div>
+        {% for error in form.service_class.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group mt-6">
+        <button type="submit" class="btn btn-primary w-full">Daftar Sebagai Warga</button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      Sudah memiliki akun terdaftar? <a href="{{ url_for('auth.login') }}">Masuk sekarang</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

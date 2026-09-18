@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Kartu Peserta Digital - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="card-container">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-bold text-primary mb-6px">Kartu Peserta Digital</h1>
+      <p class="text-sm text-muted">Kartu identitas elektronik kepesertaan jaminan kesehatan SehatWarga</p>
+    </div>
+
+    <!-- Digital Card Element -->
+    <div class="digital-card">
+      <div class="digital-card-top">
+        <div>
+          <div class="digital-card-brand">SEHATWARGA</div>
+          <div class="digital-card-tagline">Prototype Layanan Kesehatan Digital</div>
+        </div>
+        <div class="digital-card-chip"></div>
+      </div>
+
+      <div class="digital-card-middle">
+        <div class="digital-card-number-label">Nomor Peserta</div>
+        <div class="digital-card-number">{{ participant.participant_number }}</div>
+      </div>
+
+      <div class="digital-card-bottom">
+        <div>
+          <div class="digital-card-name">{{ user.name }}</div>
+          <div class="digital-card-meta">
+            Kelas:
+            {% if participant.service_class == 'CLASS_1' %}
+              Kelas 1
+            {% elif participant.service_class == 'CLASS_2' %}
+              Kelas 2
+            {% elif participant.service_class == 'CLASS_3' %}
+              Kelas 3
+            {% else %}
+              {{ participant.service_class }}
+            {% endif %}
+            &bull; Terdaftar: {{ participant.registered_at.strftime('%Y') }}
+          </div>
+        </div>
+        <div>
+          {% if participant.membership_status == 'ACTIVE' %}
+            <span class="digital-card-badge">STATUS: AKTIF</span>
+          {% else %}
+            <span class="digital-card-badge" style="background: rgba(220, 38, 38, 0.4);">STATUS: NONAKTIF</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card-actions">
+      <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-primary">&larr; Kembali ke Dashboard</a>
+      <button type="button" onclick="window.print()" class="btn btn-primary">Cetak Kartu</button>
+    </div>
+
+    <div style="max-width: 480px; line-height: 1.5; padding: 12px 16px; background: #f8fafc;" class="mt-8 text-center text-xs text-muted border rounded">
+      <strong>Catatan Prototype:</strong> Kartu digital ini diterbitkan secara simulasi oleh sistem akademik SehatWarga. Dokumen ini bukan kartu BPJS Kesehatan / BPJS Ketenagakerjaan resmi.
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}Riwayat Pembayaran Iuran - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px;">
+  <!-- Header -->
+  <div class="flex justify-between items-start mb-5 flex-wrap gap-4">
+    <div>
+      <h1 class="text-4xl text-primary font-bold mb-1">Riwayat Pembayaran Iuran</h1>
+      <p class="text-muted text-base">Catatan riwayat transaksi pelunasan iuran bulanan dan kuitansi digital simulasi SehatWarga.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('citizen.contributions_list') }}" class="btn btn-primary btn-rounded">
+        Lihat Daftar Tagihan Iuran
+      </a>
+    </div>
+  </div>
+
+  <!-- Academic Simulation Notice -->
+  <div class="card mb-6 rounded flex items-center gap-3" style="padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe;">
+    <div style="color: #1d4ed8; width: 22px; height: 22px; border: 1.5px solid #1d4ed8; border-radius: 50%; line-height: 1; flex-shrink: 0;" class="font-bold text-md flex items-center justify-center">i</div>
+    <div style="color: #1e40af; line-height: 1.5;" class="text-sm">
+      <strong>Simulasi Akademis:</strong> {{ simulation_notice }}
+    </div>
+  </div>
+
+  <!-- Table List -->
+  {% if payments %}
+    <div class="table-responsive surface border rounded shadow-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nomor Bukti (Kuitansi)</th>
+            <th>Periode Iuran</th>
+            <th>Metode Pembayaran</th>
+            <th>Jumlah Dibayar</th>
+            <th>Status Transaksi</th>
+            <th>Tanggal Transaksi</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in payments %}
+            <tr>
+              <td class="mono font-semibold">
+                <a href="{{ url_for('citizen.payment_detail', payment_id=p.id) }}">{{ p.payment_number }}</a>
+              </td>
+              <td class="font-semibold text-primary">
+                {{ p.contribution.billing_period.strftime('%B %Y') if p.contribution else '-' }}
+              </td>
+              <td>
+                {{ method_labels.get(p.payment_method, p.payment_method) }}
+              </td>
+              <td class="font-bold text-body">
+                {{ p.amount|rupiah }}
+              </td>
+              <td>
+                <span class="badge badge-success">Berhasil (Simulasi)</span>
+              </td>
+              <td class="text-sm text-muted">
+                {{ p.created_at.strftime('%d %b %Y %H:%M') if p.created_at else '-' }}
+              </td>
+              <td>
+                <a href="{{ url_for('citizen.payment_detail', payment_id=p.id) }}" class="btn btn-outline-light text-xs text-primary" style="padding: 4px 10px; border-color: var(--color-border);">
+                  Lihat Kuitansi
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('citizen.payments_list', page=pagination.prev_num) }}" class="page-link">&laquo;</a>
+        {% else %}
+          <span class="page-link disabled">&laquo;</span>
+        {% endif %}
+
+        {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if page_num %}
+            {% if page_num == pagination.page %}
+              <span class="page-link active">{{ page_num }}</span>
+            {% else %}
+              <a href="{{ url_for('citizen.payments_list', page=page_num) }}" class="page-link">{{ page_num }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-link disabled">&hellip;</span>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+          <a href="{{ url_for('citizen.payments_list', page=pagination.next_num) }}" class="page-link">&raquo;</a>
+        {% else %}
+          <span class="page-link disabled">&raquo;</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="card text-center surface border rounded" style="padding: 48px 24px;">
+      <h3 class="text-xl text-primary mb-2">Belum Ada Transaksi Pembayaran</h3>
+      <p class="text-muted text-base mb-5">
+        Anda belum pernah melakukan pembayaran iuran simulasi pada sistem SehatWarga.
+      </p>
+      <a href="{{ url_for('citizen.contributions_list') }}" class="btn btn-primary btn-rounded">
+        Cek Tagihan Iuran
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

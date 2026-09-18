@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Anggota Keluarga - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width: 560px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Edit Data Anggota Keluarga</h2>
+      <p class="auth-subtitle">Perbarui informasi identitas anggota keluarga terdaftar</p>
+    </div>
+
+    <div style="padding: 12px 16px; background: #f8fafc;" class="mb-5 border rounded">
+      <div style="font-size: 11px; text-transform: uppercase;" class="text-muted font-semibold">Nomor Anggota (Permanen)</div>
+      <div class="mono text-md font-bold text-primary mt-2px">{{ member.member_number }}</div>
+    </div>
+
+    <form method="POST" action="{{ url_for('citizen.family_edit', member_id=member.id) }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        <label for="full_name" class="form-label">Nama Lengkap</label>
+        {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else ""), id="full_name") }}
+        {% for error in form.full_name.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="relationship" class="form-label">Hubungan Keluarga</label>
+        {{ form.relationship(class="form-control" + (" is-invalid" if form.relationship.errors else ""), id="relationship") }}
+        {% for error in form.relationship.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="gender" class="form-label">Jenis Kelamin</label>
+          {{ form.gender(class="form-control" + (" is-invalid" if form.gender.errors else ""), id="gender") }}
+          {% for error in form.gender.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="birth_date" class="form-label">Tanggal Lahir</label>
+          {{ form.birth_date(class="form-control" + (" is-invalid" if form.birth_date.errors else ""), type="date", id="birth_date") }}
+          {% for error in form.birth_date.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group mt-6 flex gap-3">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Perbarui Data</button>
+        <a href="{{ url_for('citizen.family_detail', member_id=member.id) }}" class="btn btn-outline-primary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

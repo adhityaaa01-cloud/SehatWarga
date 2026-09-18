@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Iuran Peserta - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px; max-width: 900px;">
+  <!-- Breadcrumb -->
+  <div class="mb-6">
+    <a href="{{ url_for('admin.contributions_list') }}" style="text-decoration: none;" class="text-primary text-sm font-medium inline-flex items-center gap-6px mb-3">
+      &larr; Kembali ke Manajemen Iuran
+    </a>
+    <div class="flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h1 class="text-4xl text-primary font-bold mb-1">
+          Tagihan Iuran: {{ contribution.billing_period.strftime('%B %Y') }}
+        </h1>
+        <p class="text-muted text-base">Detail kewajiban iuran dan riwayat pembayaran peserta.</p>
+      </div>
+      <div>
+        {% if contribution.status == 'PAID' %}
+          <span class="badge badge-success text-sm" style="padding: 6px 14px;">Lunas</span>
+        {% elif contribution.status == 'OVERDUE' %}
+          <span class="badge badge-danger text-sm" style="padding: 6px 14px;">Menunggak</span>
+        {% else %}
+          <span class="badge badge-warning text-sm" style="padding: 6px 14px;">Belum Lunas</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Academic Simulation Notice -->
+  <div class="card mb-6 rounded flex items-center gap-3" style="padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe;">
+    <div style="color: #1d4ed8; width: 22px; height: 22px; border: 1.5px solid #1d4ed8; border-radius: 50%; line-height: 1; flex-shrink: 0;" class="font-bold text-md flex items-center justify-center">i</div>
+    <div style="color: #1e40af; line-height: 1.5;" class="text-sm">
+      <strong>Simulasi Akademis:</strong> {{ rate_desc }}. Tidak melibatkan transaksi uang nyata atau tagihan hukum perbankan.
+    </div>
+  </div>
+
+  <!-- Grid of Details -->
+  <div class="grid grid-two gap-5 mb-6">
+    <!-- Participant Info -->
+    <div class="card surface border rounded shadow-card" style="padding: 22px;">
+      <h3 style="border-bottom: 1px solid var(--color-border);" class="text-md font-bold text-primary mb-14px pb-2">
+        Profil Peserta
+      </h3>
+      <div class="flex flex-col gap-10px text-sm">
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Nama Lengkap</span>
+          <strong class="text-base text-body">{{ contribution.participant.full_name }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Nomor Peserta</span>
+          <span class="mono font-semibold text-primary">{{ contribution.participant.participant_number }}</span>
+        </div>
+        
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Kelas Rawat</span>
+          <span class="badge badge-info">{{ contribution.participant.service_class }}</span>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Status Kepesertaan</span>
+          <span class="badge badge-success">{{ contribution.participant.membership_status }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billing Info -->
+    <div class="card surface border rounded shadow-card" style="padding: 22px;">
+      <h3 style="border-bottom: 1px solid var(--color-border);" class="text-md font-bold text-primary mb-14px pb-2">
+        Rincian Tagihan
+      </h3>
+      <div class="flex flex-col gap-10px text-sm">
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Periode Tagihan</span>
+          <strong class="text-base">{{ contribution.billing_period.strftime('%B %Y') }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Jumlah Iuran</span>
+          <strong class="text-xl text-primary">{{ contribution.amount|rupiah }}</strong>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Batas Waktu (Jatuh Tempo)</span>
+          <span>{{ contribution.due_date.strftime('%d %B %Y') if contribution.due_date else '-' }}</span>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Tanggal Lunas</span>
+          <span>{{ contribution.paid_at.strftime('%d %B %Y %H:%M WIB') if contribution.paid_at else '-' }}</span>
+        </div>
+        <div>
+          <span style="font-size: 11px; text-transform: uppercase;" class="text-muted block">Dibuat Pada</span>
+          <span>{{ contribution.created_at.strftime('%d %B %Y %H:%M WIB') if contribution.created_at else '-' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Associated Payments Table -->
+  <div class="card surface border rounded shadow-card" style="padding: 22px;">
+    <h3 class="text-lg font-bold text-primary mb-4">
+      Catatan Pembayaran Terkait
+    </h3>
+    {% if contribution.payments %}
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nomor Bukti</th>
+              <th>Waktu Transaksi</th>
+              <th>Metode Pembayaran</th>
+              <th>Nominal</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in contribution.payments %}
+              <tr>
+                <td class="mono font-semibold">{{ p.payment_number }}</td>
+                <td class="text-sm">{{ p.created_at.strftime('%d %b %Y, %H:%M WIB') if p.created_at else '-' }}</td>
+                <td>{{ method_labels.get(p.payment_method, p.payment_method) }}</td>
+                <td class="font-semibold">{{ p.amount|rupiah }}</td>
+                <td><span class="badge badge-success">SUCCESS</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-5 text-center text-muted text-sm">
+        Belum ada riwayat transaksi pembayaran untuk tagihan ini.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar Fasilitas Kesehatan - SehatWarga{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-greeting">
+      <h1>Fasilitas Kesehatan SehatWarga</h1>
+      <p>Cari puskesmas, klinik, dan rumah sakit mitra pelayanan simulasi SehatWarga.</p>
+    </div>
+    <div>
+      <button type="button" id="btn-use-location" class="btn btn-outline-primary btn-rounded">
+        &#128205; Gunakan Lokasi Saya
+      </button>
+    </div>
+  </div>
+
+  <div id="location-feedback" style="display: none;" class="mb-5"></div>
+
+  <!-- Filter & Search Bar -->
+  <div class="filter-bar">
+    <form method="GET" action="{{ url_for('facilities.list_facilities') }}">
+      <div class="filter-grid">
+        <div class="form-group mb-0">
+          <label for="search" class="form-label">Pencarian</label>
+          <input type="text" name="search" id="search" class="form-control" placeholder="Cari nama faskes, kode, kota, alamat..." value="{{ search_query }}">
+        </div>
+
+        <div class="form-group mb-0">
+          <label for="facility_type" class="form-label">Jenis Fasilitas</label>
+          <select name="facility_type" id="facility_type" class="form-control">
+            <option value="">Semua Jenis</option>
+            {% for code, label in facility_types.items() %}
+              <option value="{{ code }}" {% if selected_type == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group mb-0">
+          <label for="city" class="form-label">Kota / Kabupaten</label>
+          <select name="city" id="city" class="form-control">
+            <option value="">Semua Kota</option>
+            {% for c in cities %}
+              <option value="{{ c }}" {% if selected_city == c %}selected{% endif %}>{{ c }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="flex gap-2">
+          <button type="submit" class="btn btn-primary" style="height: 42px;">Terapkan</button>
+          {% if search_query or selected_type or selected_city %}
+            <a href="{{ url_for('facilities.list_facilities') }}" class="btn btn-outline-primary" style="height: 42px;">Reset</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Map Visualizer -->
+  {% if map_facilities %}
+    <div class="map-card">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-sm font-semibold text-primary">Peta Persebaran Fasilitas (OpenStreetMap)</span>
+        <span style="font-size: 11px;" class="text-muted">{{ map_facilities|length }} marker faskes terdeteksi</span>
+      </div>
+      <div id="facility-map" class="map-container"></div>
+    </div>
+  {% endif %}
+
+  <!-- Facility Cards Grid -->
+  {% if facilities %}
+    <div class="facility-grid">
+      {% for f in facilities %}
+        <div class="facility-card">
+          <div>
+            <div class="facility-header">
+              <span class="badge badge-info">{{ facility_types.get(f.facility_type, f.facility_type) }}</span>
+              <span class="facility-code-badge">{{ f.facility_code }}</span>
+            </div>
+            <h3 class="facility-name">{{ f.name }}</h3>
+            <div class="facility-meta">
+              <div><strong>Alamat:</strong> {{ f.address if f.address else '-' }}</div>
+              <div><strong>Kota:</strong> {{ f.city if f.city else '-' }}</div>
+              <div><strong>Telepon:</strong> {{ f.phone if f.phone else '-' }}</div>
+            </div>
+          </div>
+
+          <div>
+            <div id="distance-card-{{ f.id }}" class="facility-distance"></div>
+            <div class="facility-actions">
+              <a href="{{ url_for('facilities.detail_facility', facility_id=f.id) }}" class="btn btn-primary btn-rounded text-xs" style="padding: 6px 16px;">
+                Lihat Detail &rarr;
+              </a>
+              {% if f.latitude and f.longitude %}
+                <span style="font-size: 11px;" class="text-muted">&#128506; Koordinat Siap</span>
+              {% else %}
+                <span style="font-size: 11px;" class="text-muted">Peta Belum Ada</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('facilities.list_facilities', page=pagination.prev_num, search=search_query, facility_type=selected_type, city=selected_city) }}" class="page-link">&laquo;</a>
+        {% else %}
+          <span class="page-link disabled">&laquo;</span>
+        {% endif %}
+
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            {% if p == pagination.page %}
+              <span class="page-link active">{{ p }}</span>
+            {% else %}
+              <a href="{{ url_for('facilities.list_facilities', page=p, search=search_query, facility_type=selected_type, city=selected_city) }}" class="page-link">{{ p }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-link disabled">&hellip;</span>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+          <a href="{{ url_for('facilities.list_facilities', page=pagination.next_num, search=search_query, facility_type=selected_type, city=selected_city) }}" class="page-link">&raquo;</a>
+        {% else %}
+          <span class="page-link disabled">&raquo;</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="stat-card text-center" style="padding: 48px 24px;">
+      <div class="text-lg font-semibold text-primary mb-2">
+        Tidak ada fasilitas kesehatan yang cocok dengan kriteria pencarian.
+      </div>
+      <p class="text-sm text-muted mb-5">
+        Silakan coba gunakan kata kunci lain atau reset filter pencarian Anda.
+      </p>
+      <a href="{{ url_for('facilities.list_facilities') }}" class="btn btn-outline-primary btn-rounded">Reset Pencarian</a>
+    </div>
+  {% endif %}
+
+  <!-- Academic Prototype Simulation Notice (Section 34) -->
+  <div style="padding: 12px 18px;" class="mt-8 surface-secondary border rounded text-xs text-muted text-center">
+    <strong>Catatan Prototype:</strong> Seluruh informasi fasilitas kesehatan pada portal ini adalah data simulasi akademik. Tidak terafiliasi dengan jaringan faskes resmi BPJS Kesehatan.
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/facility-map.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const facilities = {{ map_facilities|tojson }};
+    initFacilityListMap('facility-map', facilities);
+  });
+</script>
+{% endblock %}

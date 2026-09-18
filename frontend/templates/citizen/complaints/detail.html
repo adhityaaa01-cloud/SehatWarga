@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Pengaduan {{ complaint.ticket_number }} - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px; max-width: 900px;">
+  <!-- Breadcrumb / Header -->
+  <div class="mb-6">
+    <a href="{{ url_for('citizen.complaints_list') }}" class="text-accent text-sm inline-flex items-center gap-6px mb-2">
+      &larr; Kembali ke Daftar Pengaduan
+    </a>
+    <div class="flex justify-between items-start flex-wrap gap-3">
+      <div>
+        <div class="mono text-base font-bold text-accent mb-1">
+          {{ complaint.ticket_number }}
+        </div>
+        <h1 style="margin: 0;" class="text-3xl text-primary font-bold break-word">
+          {{ complaint.subject }}
+        </h1>
+      </div>
+      <div>
+        <span class="badge {{ status_badges.get(complaint.status, 'badge-secondary') }} text-sm" style="padding: 6px 14px;">
+          {{ status_labels.get(complaint.status, complaint.status) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaint Meta & Content Card -->
+  <div class="card surface border rounded p-6 mb-6 shadow-card">
+    <div style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-bottom: 1px solid var(--color-border);" class="grid gap-4 pb-5 mb-5">
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Nomor Tiket</div>
+        <div class="mono font-bold text-base text-primary">{{ complaint.ticket_number }}</div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Tanggal Dikirim</div>
+        <div class="text-base text-body">{{ complaint.created_at.strftime('%d %B %Y, %H:%M') if complaint.created_at else '-' }}</div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Terakhir Diperbarui</div>
+        <div class="text-base text-body">{{ complaint.updated_at.strftime('%d %B %Y, %H:%M') if complaint.updated_at else '-' }}</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="text-transform: uppercase; letter-spacing: 0.5px;" class="text-base font-bold text-primary mb-10px">
+        Uraian Pengaduan Warga
+      </h3>
+      <div style="border-radius: var(--radius-sm); padding: 18px 20px;" class="surface-secondary border text-base leading-relaxed text-body pre-wrap break-word">{{ complaint.message }}</div>
+    </div>
+  </div>
+
+  <!-- Admin Response Card -->
+  <div class="card surface border rounded p-6 shadow-card">
+    <h3 class="text-md font-bold text-primary mb-3 flex items-center gap-2">
+      <span>Tanggapan Administrator</span>
+      {% if complaint.status == 'RESOLVED' %}
+        <span class="badge badge-success" style="font-size: 11px;">Penyelesaian Resmi</span>
+      {% elif complaint.status == 'REJECTED' %}
+        <span class="badge badge-danger" style="font-size: 11px;">Alasan Penolakan</span>
+      {% endif %}
+    </h3>
+
+    {% if complaint.admin_response %}
+      <div style="background-color: {% if complaint.status == 'RESOLVED' %}#f0fdf4{% elif complaint.status == 'REJECTED' %}#fef2f2{% else %}#f8fafc{% endif %}; border: 1px solid {% if complaint.status == 'RESOLVED' %}#bbf7d0{% elif complaint.status == 'REJECTED' %}#fecaca{% else %}var(--color-border){% endif %}; border-radius: var(--radius-sm); padding: 18px 20px; font-size: 14px; line-height: 1.6; color: var(--color-text); white-space: pre-wrap; word-break: break-word;">{{ complaint.admin_response }}</div>
+      <div class="text-xs text-muted mt-10px">
+        Ditindaklanjuti pada: {{ complaint.updated_at.strftime('%d %B %Y, %H:%M') if complaint.updated_at else '-' }}
+      </div>
+    {% else %}
+      <div style="border: 1px dashed var(--color-border); border-radius: var(--radius-sm);" class="surface-secondary p-6 text-center text-muted text-base">
+        {% if complaint.status == 'OPEN' %}
+          Pengaduan Anda telah tercatat dengan status <strong>Baru</strong> dan sedang dalam antrean verifikasi oleh administrator. Tanggapan resmi akan ditampilkan di sini setelah pengaduan ditindaklanjuti.
+        {% elif complaint.status == 'IN_PROGRESS' %}
+          Pengaduan Anda sedang <strong>Diproses</strong> oleh tim pengelola layanan. Mohon menunggu tanggapan resmi dari administrator.
+        {% else %}
+          Belum ada catatan tanggapan tertulis.
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="padding: 14px 18px; line-height: 1.4;" class="mt-6 surface-secondary border rounded text-xs text-muted">
+    <strong>Catatan Audit:</strong> Seluruh riwayat pengaduan disimpan sebagai catatan administratif permanen demi transparansi pelayanan publik. Pengaduan tidak dapat diubah setelah dikirimkan.
+  </div>
+</div>
+{% endblock %}

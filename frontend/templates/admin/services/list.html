@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Manajemen Pengajuan Layanan - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px;">
+  <div class="flex justify-between items-start mb-6 flex-wrap gap-4">
+    <div>
+      <h1 class="text-4xl text-primary font-bold mb-1">Manajemen Pengajuan Layanan Kesehatan</h1>
+      <p class="text-muted text-base">Kelola alur verifikasi berkas, penetapan jadwal rujukan, penyelesaian tindakan, dan penolakan pengajuan.</p>
+    </div>
+  </div>
+
+  <!-- Search & Filter Form -->
+  <div class="card p-5 mb-6 surface border rounded">
+    <form method="GET" action="{{ url_for('admin.services_list') }}" class="flex flex-col gap-14px">
+      <div class="flex flex-wrap gap-14px">
+        <!-- Search Query -->
+        <div style="flex: 2; min-width: 220px;">
+          <label for="search" class="text-xs font-semibold text-muted block mb-1">Pencarian (Nomor / Nama / No. Peserta)</label>
+          <input type="text" name="search" id="search" class="form-control text-sm" value="{{ search_query }}" placeholder="Contoh: SWR-2026 atau Nama Peserta..." style="height: 38px;">
+        </div>
+
+        <!-- Status Filter -->
+        <div style="flex: 1; min-width: 170px;">
+          <label for="status" class="text-xs font-semibold text-muted block mb-1">Status Layanan</label>
+          <select name="status" id="status" class="form-control text-sm" style="height: 38px;">
+            <option value="">-- Semua Status --</option>
+            {% for code, label in valid_statuses.items() %}
+              <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Service Type Filter -->
+        <div style="flex: 1; min-width: 170px;">
+          <label for="service_type" class="text-xs font-semibold text-muted block mb-1">Jenis Layanan</label>
+          <select name="service_type" id="service_type" class="form-control text-sm" style="height: 38px;">
+            <option value="">-- Semua Jenis --</option>
+            {% for code, label in valid_service_types.items() %}
+              <option value="{{ code }}" {% if selected_service_type == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Health Facility Filter -->
+        <div style="flex: 1.5; min-width: 200px;">
+          <label for="facility_id" class="text-xs font-semibold text-muted block mb-1">Fasilitas Kesehatan</label>
+          <select name="facility_id" id="facility_id" class="form-control text-sm" style="height: 38px;">
+            <option value="">-- Semua Fasilitas --</option>
+            {% for f in facilities %}
+              <option value="{{ f.id }}" {% if selected_facility_id == f.id %}selected{% endif %}>{{ f.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div style="justify-content: flex-end;" class="flex gap-2">
+        <button type="submit" class="btn btn-primary text-sm" style="height: 36px; padding: 0 18px;">Terapkan Filter</button>
+        {% if search_query or selected_status or selected_service_type or selected_facility_id %}
+          <a href="{{ url_for('admin.services_list') }}" class="btn btn-outline-light text-sm text-body surface flex items-center" style="height: 36px; padding: 0 14px; border-color: var(--color-border);">Reset Filter</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Table -->
+  {% if service_requests %}
+    <div class="table-responsive surface border rounded shadow-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nomor Pengajuan</th>
+            <th>Peserta / Pasien</th>
+            <th>Fasilitas Kesehatan</th>
+            <th>Jenis Layanan</th>
+            <th>Rencana / Jadwal</th>
+            <th>Status</th>
+            <th>Tanggal Masuk</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in service_requests %}
+            <tr>
+              <td class="mono font-semibold">
+                <a href="{{ url_for('admin.service_detail', request_id=r.id) }}">{{ r.request_number }}</a>
+              </td>
+              <td>
+                <div class="font-semibold">{{ r.participant.full_name }}</div>
+                {% if r.family_member %}
+                  <div style="font-size: 11px;" class="text-muted">
+                    Pasien: <strong>{{ r.family_member.full_name }}</strong> ({{ r.family_member.relationship }})
+                  </div>
+                {% else %}
+                  <div style="font-size: 11px;" class="text-muted">
+                    Pasien: Diri Sendiri ({{ r.participant.participant_number }})
+                  </div>
+                {% endif %}
+              </td>
+              <td>
+                <div>{{ r.health_facility.name }}</div>
+                <small style="font-size: 11px;" class="text-muted">{{ r.health_facility.city or '' }}</small>
+              </td>
+              <td>{{ valid_service_types.get(r.service_type, r.service_type) }}</td>
+              <td>
+                <strong>{{ r.scheduled_date.strftime('%d/%m/%Y') if r.scheduled_date else '-' }}</strong>
+              </td>
+              <td>
+                {% if r.status == 'SUBMITTED' %}
+                  <span class="badge badge-warning">Menunggu Verifikasi</span>
+                {% elif r.status == 'VERIFIED' %}
+                  <span class="badge badge-info">Terverifikasi</span>
+                {% elif r.status == 'SCHEDULED' %}
+                  <span class="badge badge-purple">Dijadwalkan</span>
+                {% elif r.status == 'COMPLETED' %}
+                  <span class="badge badge-success">Selesai</span>
+                {% elif r.status == 'REJECTED' %}
+                  <span class="badge badge-danger">Ditolak</span>
+                {% elif r.status == 'CANCELLED' %}
+                  <span class="badge badge-secondary">Dibatalkan</span>
+                {% else %}
+                  <span class="badge badge-secondary">{{ r.status }}</span>
+                {% endif %}
+              </td>
+              <td class="text-xs text-muted">
+                {{ r.created_at.strftime('%d %b %Y %H:%M') if r.created_at else '-' }}
+              </td>
+              <td>
+                <a href="{{ url_for('admin.service_detail', request_id=r.id) }}" class="btn btn-primary text-xs" style="padding: 4px 12px;">Kelola</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('admin.services_list', page=pagination.prev_num, search=search_query, status=selected_status, service_type=selected_service_type, facility_id=selected_facility_id) }}" class="page-link">&laquo;</a>
+        {% else %}
+          <span class="page-link disabled">&laquo;</span>
+        {% endif %}
+
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            {% if p == pagination.page %}
+              <span class="page-link active">{{ p }}</span>
+            {% else %}
+              <a href="{{ url_for('admin.services_list', page=p, search=search_query, status=selected_status, service_type=selected_service_type, facility_id=selected_facility_id) }}" class="page-link">{{ p }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-link disabled">&hellip;</span>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+          <a href="{{ url_for('admin.services_list', page=pagination.next_num, search=search_query, status=selected_status, service_type=selected_service_type, facility_id=selected_facility_id) }}" class="page-link">&raquo;</a>
+        {% else %}
+          <span class="page-link disabled">&raquo;</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="card text-center surface border rounded" style="padding: 48px 24px;">
+      <h3 class="text-xl text-primary mb-2">Tidak Ditemukan Pengajuan Layanan</h3>
+      <p class="text-muted text-base mb-5">
+        Tidak ada data pengajuan yang cocok dengan kriteria filter atau pencarian Anda.
+      </p>
+      {% if search_query or selected_status or selected_service_type or selected_facility_id %}
+        <a href="{{ url_for('admin.services_list') }}" class="btn btn-outline-light btn-rounded text-body surface" style="border-color: var(--color-border);">Reset Pencarian</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

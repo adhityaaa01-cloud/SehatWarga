@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}404 Tidak Ditemukan - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="error-box">
+    <div class="error-code">404</div>
+    <h2 class="error-title">Halaman Tidak Ditemukan</h2>
+    <p class="error-message">Halaman yang Anda tuju mungkin telah dipindahkan, dihapus, atau belum tersedia.</p>
+    <div class="flex justify-center gap-3">
+      <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-rounded">Kembali ke Beranda</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

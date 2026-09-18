@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Tagihan Iuran - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px; max-width: 860px;">
+  <!-- Breadcrumbs & Header -->
+  <div class="mb-6">
+    <a href="{{ url_for('citizen.contributions_list') }}" style="text-decoration: none;" class="text-primary text-sm font-medium inline-flex items-center gap-6px mb-3">
+      &larr; Kembali ke Daftar Iuran
+    </a>
+    <div class="flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <h1 class="text-4xl text-primary font-bold mb-1">
+          Tagihan {{ contribution.billing_period.strftime('%B %Y') }}
+        </h1>
+        <p class="text-muted text-base">Rincian kewajiban iuran bulanan kepesertaan SehatWarga.</p>
+      </div>
+      <div>
+        {% if contribution.status == 'PAID' %}
+          <span class="badge badge-success text-sm" style="padding: 6px 14px;">Lunas</span>
+        {% elif contribution.status == 'OVERDUE' %}
+          <span class="badge badge-danger text-sm" style="padding: 6px 14px;">Menunggak</span>
+        {% else %}
+          <span class="badge badge-warning text-sm" style="padding: 6px 14px;">Belum Lunas</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Academic Simulation Banner -->
+  <div class="card mb-6 rounded flex items-center gap-3" style="padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe;">
+    <div style="color: #1d4ed8; width: 22px; height: 22px; border: 1.5px solid #1d4ed8; border-radius: 50%; line-height: 1; flex-shrink: 0;" class="font-bold text-md flex items-center justify-center">i</div>
+    <div style="color: #1e40af; line-height: 1.5;" class="text-sm">
+      <strong>Simulasi Akademis:</strong> {{ rate_desc }}. Tidak melibatkan transaksi uang nyata atau tagihan hukum perbankan.
+    </div>
+  </div>
+
+  <!-- Detail Information Card -->
+  <div class="card p-6 mb-6 surface border rounded shadow-card">
+    <h3 style="border-bottom: 1px solid var(--color-border);" class="text-lg font-semibold text-primary mb-5 pb-10px">
+      Informasi Tagihan
+    </h3>
+
+    <div style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));" class="grid gap-5 mb-6">
+      <div>
+        <label style="text-transform: uppercase;" class="text-xs text-muted font-semibold">Peserta</label>
+        <p class="text-md font-semibold text-body mt-1">{{ participant.full_name }}</p>
+        <small class="text-muted">{{ participant.participant_number }}</small>
+      </div>
+
+      <div>
+        <label style="text-transform: uppercase;" class="text-xs text-muted font-semibold">Kelas Rawat / Layanan</label>
+        <p class="text-md font-semibold text-body mt-1">{{ participant.service_class }}</p>
+        <small class="text-muted">Sesuai profil kepesertaan</small>
+      </div>
+
+      <div>
+        <label style="text-transform: uppercase;" class="text-xs text-muted font-semibold">Periode Tagihan</label>
+        <p class="text-md font-semibold text-body mt-1">{{ contribution.billing_period.strftime('%B %Y') }}</p>
+        <small class="text-muted">Awal periode: {{ contribution.billing_period.strftime('%d/%m/%Y') }}</small>
+      </div>
+
+      <div>
+        <label style="text-transform: uppercase;" class="text-xs text-muted font-semibold">Batas Waktu Pembayaran</label>
+        <p class="text-md font-semibold text-body mt-1">{{ contribution.due_date.strftime('%d %B %Y') if contribution.due_date else '-' }}</p>
+        <small class="text-muted">Tanggal 10 setiap bulan</small>
+      </div>
+    </div>
+
+    <!-- Amount Highlight Box -->
+    <div style="background: #f8fafc; padding: 18px 24px;" class="border rounded flex justify-between items-center flex-wrap gap-4">
+      <div>
+        <div style="text-transform: uppercase;" class="text-xs text-muted font-semibold">Total Jumlah Iuran</div>
+        <div class="text-4xl font-bold text-primary mt-1">{{ contribution.amount|rupiah }}</div>
+      </div>
+
+      <div>
+        {% if contribution.status in ['UNPAID', 'OVERDUE'] %}
+          <a href="{{ url_for('citizen.contribution_pay', contribution_id=contribution.id) }}" class="btn btn-success btn-rounded text-base font-semibold" style="padding: 10px 24px;">
+            Bayar Tagihan Ini (Simulasi) &rarr;
+          </a>
+        {% else %}
+          <div style="color: #16a34a;" class="flex items-center gap-2 font-semibold text-base">
+            <span>Tagihan telah lunas</span>
+            <small class="text-muted text-xs font-normal">({{ contribution.paid_at.strftime('%d %b %Y %H:%M') if contribution.paid_at else '' }})</small>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Records for this contribution -->
+  {% if contribution.payments %}
+    <div class="card p-6 surface border rounded shadow-card">
+      <h3 class="text-lg font-semibold text-primary mb-4">
+        Riwayat Pembayaran untuk Tagihan Ini
+      </h3>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nomor Bukti</th>
+              <th>Waktu Pembayaran</th>
+              <th>Metode</th>
+              <th>Jumlah</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in contribution.payments %}
+              <tr>
+                <td class="mono font-semibold">
+                  <a href="{{ url_for('citizen.payment_detail', payment_id=p.id) }}">{{ p.payment_number }}</a>
+                </td>
+                <td class="text-sm">
+                  {{ p.created_at.strftime('%d %b %Y, %H:%M WIB') if p.created_at else '-' }}
+                </td>
+                <td>
+                  {{ payment_methods.get(p.payment_method, p.payment_method) }}
+                </td>
+                <td class="font-semibold">
+                  {{ p.amount|rupiah }}
+                </td>
+                <td>
+                  <span class="badge badge-success">Berhasil (Simulasi)</span>
+                </td>
+                <td>
+                  <a href="{{ url_for('citizen.payment_detail', payment_id=p.id) }}" class="btn btn-outline-light text-xs text-primary" style="padding: 4px 10px; border-color: var(--color-border);">
+                    Lihat Kuitansi
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

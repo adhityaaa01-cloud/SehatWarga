@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Daftar Anggota Keluarga - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-greeting">
+      <h1>Anggota Keluarga</h1>
+      <p>Kelola data anggota keluarga yang terhubung dengan kepesertaan SehatWarga Anda.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('citizen.family_add') }}" class="btn btn-primary btn-rounded">+ Tambah Anggota Keluarga</a>
+    </div>
+  </div>
+
+  {% if members %}
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nomor Anggota</th>
+            <th>Nama Lengkap</th>
+            <th>Hubungan</th>
+            <th>Jenis Kelamin</th>
+            <th>Tanggal Lahir</th>
+            <th>Status</th>
+            <th class="text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for member in members %}
+            <tr>
+              <td class="mono font-semibold">{{ member.member_number }}</td>
+              <td>
+                <a href="{{ url_for('citizen.family_detail', member_id=member.id) }}" class="font-semibold">
+                  {{ member.full_name }}
+                </a>
+              </td>
+              <td>
+                {% if member.relationship == 'SPOUSE' %}
+                  Pasangan
+                {% elif member.relationship == 'CHILD' %}
+                  Anak
+                {% elif member.relationship == 'PARENT' %}
+                  Orang Tua
+                {% else %}
+                  Lainnya
+                {% endif %}
+              </td>
+              <td>
+                {% if member.gender == 'MALE' %}
+                  Laki-laki
+                {% elif member.gender == 'FEMALE' %}
+                  Perempuan
+                {% else %}
+                  {{ member.gender }}
+                {% endif %}
+              </td>
+              <td>{{ member.birth_date.strftime('%d %b %Y') if member.birth_date else '-' }}</td>
+              <td>
+                {% if member.membership_status == 'ACTIVE' %}
+                  <span class="badge badge-success">AKTIF</span>
+                {% else %}
+                  <span class="badge badge-danger">NONAKTIF</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                <a href="{{ url_for('citizen.family_detail', member_id=member.id) }}" class="btn btn-outline-primary text-xs" style="padding: 4px 10px; margin-right: 4px;">Detail</a>
+                <a href="{{ url_for('citizen.family_edit', member_id=member.id) }}" class="btn btn-primary text-xs" style="padding: 4px 10px;">Edit</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="stat-card text-center" style="padding: 48px 24px;">
+      <div class="text-lg font-semibold text-primary mb-2">
+        Belum ada anggota keluarga terdaftar.
+      </div>
+      <p class="text-sm text-muted mb-5">
+        Anda dapat mendaftarkan pasangan, anak, atau orang tua sebagai tanggungan kepesertaan SehatWarga.
+      </p>
+      <a href="{{ url_for('citizen.family_add') }}" class="btn btn-primary btn-rounded">
+        + Tambah Anggota Keluarga
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="mt-6">
+    <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-primary">&larr; Kembali ke Dashboard</a>
+  </div>
+</div>
+{% endblock %}

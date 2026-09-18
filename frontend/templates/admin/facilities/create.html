@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Fasilitas Kesehatan - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width: 640px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Tambah Fasilitas Kesehatan</h2>
+      <p class="auth-subtitle">Daftarkan faskes baru ke dalam sistem jaringan pelayanan SehatWarga</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin.facility_create') }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="facility_code" class="form-label">Kode Faskes (Unik)</label>
+          {{ form.facility_code(class="form-control" + (" is-invalid" if form.facility_code.errors else ""), placeholder="Contoh: FS-SBY-001", id="facility_code") }}
+          {% for error in form.facility_code.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="facility_type" class="form-label">Jenis Fasilitas</label>
+          {{ form.facility_type(class="form-control" + (" is-invalid" if form.facility_type.errors else ""), id="facility_type") }}
+          {% for error in form.facility_type.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="name" class="form-label">Nama Fasilitas Kesehatan</label>
+        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Nama resmi fasilitas kesehatan", id="name") }}
+        {% for error in form.name.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="address" class="form-label">Alamat Lengkap</label>
+        {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else ""), rows="3", placeholder="Alamat jalan, kelurahan, kecamatan", id="address") }}
+        {% for error in form.address.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="city" class="form-label">Kota / Kabupaten</label>
+          {{ form.city(class="form-control" + (" is-invalid" if form.city.errors else ""), placeholder="Contoh: Surabaya", id="city") }}
+          {% for error in form.city.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">Nomor Telepon</label>
+          {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else ""), placeholder="Contoh: 031-5312001", id="phone") }}
+          {% for error in form.phone.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="latitude" class="form-label">Latitude (-90 s/d 90)</label>
+          {{ form.latitude(class="form-control" + (" is-invalid" if form.latitude.errors else ""), placeholder="-7.2655000", id="latitude", step="any") }}
+          {% for error in form.latitude.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="longitude" class="form-label">Longitude (-180 s/d 180)</label>
+          {{ form.longitude(class="form-control" + (" is-invalid" if form.longitude.errors else ""), placeholder="112.7518000", id="longitude", step="any") }}
+          {% for error in form.longitude.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group mt-2">
+        <label style="cursor: pointer;" class="flex items-center gap-2 text-sm font-semibold text-primary">
+          {{ form.is_active(style="width: 16px; height: 16px;") }}
+          <span>Fasilitas Aktif dan Siap Melayani Publik</span>
+        </label>
+      </div>
+
+      <div class="form-group mt-6 flex gap-3">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Fasilitas</button>
+        <a href="{{ url_for('admin.facilities_list') }}" class="btn btn-outline-primary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Masuk ke Portal - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1 class="auth-title">Masuk ke SehatWarga</h1>
+      <p class="auth-subtitle">Portal Layanan Jaminan Kesehatan Masyarakat</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        <label for="email" class="form-label">Alamat Email</label>
+        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="nama@contoh.id", id="email") }}
+        {% for error in form.email.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Kata Sandi</label>
+        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="••••••••", id="password") }}
+        {% for error in form.password.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group mt-6">
+        <button type="submit" class="btn btn-primary w-full">Masuk Sekarang</button>
+      </div>
+    </form>
+
+    <div class="auth-footer">
+      Belum memiliki akun peserta? <a href="{{ url_for('auth.register') }}">Daftar di sini</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

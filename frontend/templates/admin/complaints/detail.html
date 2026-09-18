@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Kelola Pengaduan {{ complaint.ticket_number }} - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px; max-width: 960px;">
+  <!-- Breadcrumb / Header -->
+  <div class="mb-6">
+    <a href="{{ url_for('admin.complaints_list') }}" class="text-accent text-sm inline-flex items-center gap-6px mb-2">
+      &larr; Kembali ke Daftar Pengaduan
+    </a>
+    <div class="flex justify-between items-start flex-wrap gap-3">
+      <div>
+        <div class="mono text-base font-bold text-accent mb-1">
+          {{ complaint.ticket_number }}
+        </div>
+        <h1 style="margin: 0;" class="text-3xl text-primary font-bold break-word">
+          {{ complaint.subject }}
+        </h1>
+      </div>
+      <div>
+        <span class="badge {{ status_badges.get(complaint.status, 'badge-secondary') }} text-sm" style="padding: 6px 14px;">
+          {{ status_labels.get(complaint.status, complaint.status) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complaint Info & Citizen Meta -->
+  <div class="card surface border rounded p-6 mb-6 shadow-card">
+    <div style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-bottom: 1px solid var(--color-border);" class="grid gap-4 pb-5 mb-5">
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Warga Pengirim</div>
+        <div class="font-bold text-base text-primary">{{ complaint.user.name }}</div>
+        <small class="text-muted text-xs">{{ complaint.user.email }}</small>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Nomor Tiket</div>
+        <div class="mono font-bold text-base text-primary">{{ complaint.ticket_number }}</div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Tanggal Masuk</div>
+        <div class="text-base text-body">{{ complaint.created_at.strftime('%d %B %Y, %H:%M') if complaint.created_at else '-' }}</div>
+      </div>
+      <div>
+        <div class="text-xs font-semibold text-muted mb-2px">Terakhir Diperbarui</div>
+        <div class="text-base text-body">{{ complaint.updated_at.strftime('%d %B %Y, %H:%M') if complaint.updated_at else '-' }}</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="text-transform: uppercase; letter-spacing: 0.5px;" class="text-base font-bold text-primary mb-10px">
+        Uraian Pengaduan Warga
+      </h3>
+      <div style="border-radius: var(--radius-sm); padding: 18px 20px;" class="surface-secondary border text-base leading-relaxed text-body pre-wrap break-word">{{ complaint.message }}</div>
+    </div>
+  </div>
+
+  <!-- Admin Response Section (if exists) -->
+  {% if complaint.admin_response %}
+    <div class="card surface border rounded p-6 mb-6 shadow-card">
+      <h3 class="text-md font-bold text-primary mb-3 flex items-center gap-2">
+        <span>Tanggapan / Catatan Resmi Administrator</span>
+        {% if complaint.status == 'RESOLVED' %}
+          <span class="badge badge-success" style="font-size: 11px;">Penyelesaian Resmi</span>
+        {% elif complaint.status == 'REJECTED' %}
+          <span class="badge badge-danger" style="font-size: 11px;">Alasan Penolakan</span>
+        {% endif %}
+      </h3>
+      <div style="background-color: {% if complaint.status == 'RESOLVED' %}#f0fdf4{% elif complaint.status == 'REJECTED' %}#fef2f2{% else %}#f8fafc{% endif %}; border: 1px solid {% if complaint.status == 'RESOLVED' %}#bbf7d0{% elif complaint.status == 'REJECTED' %}#fecaca{% else %}var(--color-border){% endif %}; border-radius: var(--radius-sm); padding: 18px 20px; font-size: 14px; line-height: 1.6; color: var(--color-text); white-space: pre-wrap; word-break: break-word;">{{ complaint.admin_response }}</div>
+      <div class="text-xs text-muted mt-10px">
+        Diperbarui pada: {{ complaint.updated_at.strftime('%d %B %Y, %H:%M') if complaint.updated_at else '-' }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Workflow Action Section -->
+  <div class="card surface border rounded p-6 shadow-card">
+    <h3 class="text-lg font-bold text-primary mb-4">
+      Tindakan Manajemen Pengaduan
+    </h3>
+
+    {% if complaint.status == 'OPEN' %}
+      <div class="flex flex-col gap-6">
+        <!-- Start Processing Form -->
+        <div style="padding: 16px 20px; background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-sm);" class="flex justify-between items-center flex-wrap gap-3">
+          <div>
+            <div style="color: #0369a1;" class="font-bold text-base mb-2px">Mulai Penanganan Pengaduan</div>
+            <div style="color: #0284c7;" class="text-xs">Ubah status menjadi 'Sedang Diproses' untuk memulai investigasi atau koordinasi administratif.</div>
+          </div>
+          <form method="POST" action="{{ url_for('admin.complaint_start', complaint_id=complaint.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-primary btn-rounded text-sm" style="padding: 8px 20px;">
+              Mulai Proses &rarr;
+            </button>
+          </form>
+        </div>
+
+        <!-- Reject Form from OPEN -->
+        <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-sm);" class="p-5">
+          <div style="color: #9f1239;" class="font-bold text-base mb-1">Tolak Pengaduan</div>
+          <p style="color: #881337;" class="text-xs mb-3">
+            Gunakan tindakan ini jika pengaduan tidak relevan, di luar kewenangan administratif SehatWarga, atau melanggar ketentuan. Alasan penolakan wajib diisi (minimal 10 karakter).
+          </p>
+          <form method="POST" action="{{ url_for('admin.complaint_reject', complaint_id=complaint.id) }}">
+            {{ reject_form.csrf_token }}
+            <div class="form-group mb-3">
+              <label for="reject_reason_open" style="color: #9f1239;" class="text-xs font-semibold block mb-1">
+                Alasan Penolakan <span class="text-danger">*</span>
+              </label>
+              {{ reject_form.admin_response(id="reject_reason_open", rows=3, class="form-control", placeholder="Ketik alasan resmi penolakan pengaduan...", style="font-size: 13px;") }}
+            </div>
+            <button type="submit" class="btn btn-outline-light btn-rounded text-sm" style="background-color: #dc2626; color: #ffffff; border-color: #dc2626; padding: 8px 18px;">
+              Tolak Pengaduan
+            </button>
+          </form>
+        </div>
+      </div>
+
+    {% elif complaint.status == 'IN_PROGRESS' %}
+      <div class="flex flex-col gap-6">
+        <!-- Resolve Form -->
+        <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-sm);" class="p-5">
+          <div style="color: #166534;" class="font-bold text-base mb-1">Selesaikan Pengaduan (RESOLVED)</div>
+          <p style="color: #15803d;" class="text-xs mb-3">
+            Berikan tanggapan resmi dan solusi atas keluhan warga. Tanggapan wajib diisi (minimal 10 karakter) dan akan tampil di halaman warga.
+          </p>
+          <form method="POST" action="{{ url_for('admin.complaint_resolve', complaint_id=complaint.id) }}">
+            {{ resolve_form.csrf_token }}
+            <div class="form-group mb-3">
+              <label for="resolve_response" style="color: #166534;" class="text-xs font-semibold block mb-1">
+                Tanggapan Penyelesaian Resmi <span class="text-danger">*</span>
+              </label>
+              {{ resolve_form.admin_response(id="resolve_response", rows=4, class="form-control", placeholder="Uraikan solusi, klarifikasi, atau tindak lanjut administratif yang telah dilakukan...", style="font-size: 13px;") }}
+            </div>
+            <button type="submit" class="btn btn-primary btn-rounded text-sm" style="background-color: #059669; border-color: #059669; padding: 8px 22px;">
+              Simpan Penyelesaian &amp; Selesaikan Pengaduan
+            </button>
+          </form>
+        </div>
+
+        <!-- Reject Form from IN_PROGRESS -->
+        <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: var(--radius-sm);" class="p-5">
+          <div style="color: #9f1239;" class="font-bold text-base mb-1">Tolak Pengaduan</div>
+          <p style="color: #881337;" class="text-xs mb-3">
+            Tolak pengaduan ini dengan memberikan alasan resmi (minimal 10 karakter).
+          </p>
+          <form method="POST" action="{{ url_for('admin.complaint_reject', complaint_id=complaint.id) }}">
+            {{ reject_form.csrf_token }}
+            <div class="form-group mb-3">
+              <label for="reject_reason_progress" style="color: #9f1239;" class="text-xs font-semibold block mb-1">
+                Alasan Penolakan <span class="text-danger">*</span>
+              </label>
+              {{ reject_form.admin_response(id="reject_reason_progress", rows=3, class="form-control", placeholder="Ketik alasan resmi penolakan pengaduan...", style="font-size: 13px;") }}
+            </div>
+            <button type="submit" class="btn btn-outline-light btn-rounded text-sm" style="background-color: #dc2626; color: #ffffff; border-color: #dc2626; padding: 8px 18px;">
+              Tolak Pengaduan
+            </button>
+          </form>
+        </div>
+      </div>
+
+    {% elif complaint.status == 'RESOLVED' %}
+      <div style="padding: 18px 20px; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-sm);" class="flex items-center gap-3">
+        <div style="color: #16a34a;" class="text-3xl"></div>
+        <div>
+          <div style="color: #166534;" class="font-bold text-base">Pengaduan Telah Selesai (Terminal State)</div>
+          <div style="color: #15803d;" class="text-xs">Pengaduan ini telah ditutup dengan status penyelesaian resmi. Data dan tanggapan tersimpan permanen untuk kebutuhan audit.</div>
+        </div>
+      </div>
+
+    {% elif complaint.status == 'REJECTED' %}
+      <div style="padding: 18px 20px; background-color: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius-sm);" class="flex items-center gap-3">
+        <div class="text-danger text-3xl"></div>
+        <div>
+          <div style="color: #991b1b;" class="font-bold text-base">Pengaduan Telah Ditolak (Terminal State)</div>
+          <div style="color: #b91c1c;" class="text-xs">Pengaduan ini telah ditolak beserta alasan administratif. Status bersifat permanen dan tidak dapat diproses ulang.</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

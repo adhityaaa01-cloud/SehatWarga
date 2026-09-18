@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Pengajuan {{ req.request_number }} - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px;">
+  <!-- Header / Breadcrumb -->
+  <div class="mb-6">
+    <a href="{{ url_for('citizen.service_requests_list') }}" class="text-sm text-muted">&larr; Kembali ke Daftar Layanan</a>
+    <div class="flex justify-between items-center flex-wrap gap-3 mt-2">
+      <div>
+        <h1 class="text-3xl text-primary font-bold mb-1">
+          Pengajuan <span class="mono">{{ req.request_number }}</span>
+        </h1>
+        <div class="text-sm text-muted">
+          Diajukan pada {{ req.created_at.strftime('%d %B %Y pukul %H:%M') if req.created_at else '-' }}
+        </div>
+      </div>
+      <div>
+        {% if req.status == 'SUBMITTED' %}
+          <span class="badge badge-warning text-sm" style="padding: 6px 14px;">Menunggu Verifikasi</span>
+        {% elif req.status == 'VERIFIED' %}
+          <span class="badge badge-info text-sm" style="padding: 6px 14px;">Terverifikasi</span>
+        {% elif req.status == 'SCHEDULED' %}
+          <span class="badge badge-purple text-sm" style="padding: 6px 14px;">Dijadwalkan</span>
+        {% elif req.status == 'COMPLETED' %}
+          <span class="badge badge-success text-sm" style="padding: 6px 14px;">Selesai</span>
+        {% elif req.status == 'REJECTED' %}
+          <span class="badge badge-danger text-sm" style="padding: 6px 14px;">Ditolak</span>
+        {% elif req.status == 'CANCELLED' %}
+          <span class="badge badge-secondary text-sm" style="padding: 6px 14px;">Dibatalkan</span>
+        {% else %}
+          <span class="badge badge-secondary text-sm" style="padding: 6px 14px;">{{ req.status }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div style="grid-template-columns: 1.2fr 1fr; align-items: start;" class="grid gap-6">
+    <!-- Left Column: Details -->
+    <div>
+      <div class="card p-6 surface border rounded shadow-card mb-6">
+        <h3 style="border-bottom: 1px solid var(--color-border);" class="text-lg font-semibold text-primary mb-4 pb-10px">
+          Informasi Pengajuan Layanan
+        </h3>
+
+        <div class="grid grid-two gap-4 mb-5">
+          <div>
+            <div class="text-xs text-muted font-medium">Penerima Layanan (Pasien)</div>
+            <div class="font-semibold text-body mt-2px">
+              {% if req.family_member %}
+                {{ req.family_member.full_name }}
+              {% else %}
+                {{ participant.full_name }}
+              {% endif %}
+            </div>
+            <div class="text-xs text-muted mt-2px">
+              {% if req.family_member %}
+                <span class="badge badge-secondary" style="font-size: 10px;">Keluarga ({{ req.family_member.relationship }})</span>
+                <span class="mono">{{ req.family_member.member_number }}</span>
+              {% else %}
+                <span class="badge badge-info" style="font-size: 10px;">Peserta Utama</span>
+                <span class="mono">{{ participant.participant_number }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div>
+            <div class="text-xs text-muted font-medium">Jenis Layanan</div>
+            <div class="font-semibold text-body mt-2px">
+              {{ valid_service_types.get(req.service_type, req.service_type) }}
+            </div>
+            <div class="text-xs text-muted mt-2px">
+              Tipe: {{ req.service_type }}
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-two gap-4 mb-5">
+          <div>
+            <div class="text-xs text-muted font-medium">Fasilitas Kesehatan Tujuan</div>
+            <div class="font-semibold text-body mt-2px">
+              {{ req.health_facility.name }}
+            </div>
+            <div class="text-xs text-muted mt-2px">
+              Kode: <span class="mono">{{ req.health_facility.facility_code }}</span> | {{ req.health_facility.city or '' }}
+            </div>
+            {% if req.health_facility.phone %}
+              <div class="text-xs text-muted mt-2px">
+                Telp: {{ req.health_facility.phone }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div>
+            <div class="text-xs text-muted font-medium">Rencana / Jadwal Layanan</div>
+            <div class="font-bold text-accent text-lg mt-2px">
+              {{ req.scheduled_date.strftime('%d %B %Y') if req.scheduled_date else '-' }}
+            </div>
+            <div class="text-xs text-muted mt-2px">
+              {% if req.status == 'SCHEDULED' or req.status == 'COMPLETED' %}
+                <span class="text-success">Jadwal telah dikonfirmasi</span>
+              {% else %}
+                <span>Menunggu penetapan tanggal</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if req.complaint_summary %}
+          <div style="border-top: 1px solid var(--color-border);" class="mt-4 pt-4">
+            <div class="text-xs text-muted font-medium mb-1">Keluhan Singkat / Keperluan Layanan:</div>
+            <div style="background: var(--color-surface); padding: 12px 14px; border-radius: var(--radius-sm);" class="text-sm leading-relaxed text-body border">
+              {{ req.complaint_summary }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Cancellation Action Card -->
+      {% if req.status in ['SUBMITTED', 'VERIFIED'] %}
+        <div class="card rounded" style="padding: 20px 24px; background: #fff5f5; border: 1px solid #fecaca;">
+          <h4 style="color: #991b1b;" class="text-base font-semibold mb-6px">Batalkan Pengajuan Ini</h4>
+          <p style="color: #7f1d1d; line-height: 1.5;" class="text-xs mb-14px">
+            Pengajuan layanan yang masih menunggu verifikasi atau belum dijadwalkan dapat dibatalkan jika Anda tidak lagi memerlukan layanan ini.
+          </p>
+          <form method="POST" action="{{ url_for('citizen.service_request_cancel', request_id=req.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin membatalkan pengajuan layanan ini?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+              <input type="text" name="cancel_reason" class="form-control text-sm" placeholder="Alasan pembatalan (opsional)...">
+            </div>
+            <button type="submit" class="btn btn-danger text-sm" style="padding: 8px 16px;">
+              Batalkan Pengajuan Layanan
+            </button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Audit Timeline -->
+    <div>
+      <div class="card p-6 surface border rounded shadow-card">
+        <h3 style="border-bottom: 1px solid var(--color-border);" class="text-lg font-semibold text-primary mb-4 pb-10px">
+          Riwayat &amp; Jejak Status
+        </h3>
+
+        {% if req.histories %}
+          <div class="timeline">
+            {% for h in req.histories %}
+              <div class="timeline-item">
+                <div class="timeline-dot status-{{ h.status }}"></div>
+                <div class="timeline-header">
+                  <div class="timeline-title">
+                    {% if h.status == 'SUBMITTED' %}
+                      <span class="badge badge-warning">Pengajuan Dibuat</span>
+                    {% elif h.status == 'VERIFIED' %}
+                      <span class="badge badge-info">Diverifikasi Admin</span>
+                    {% elif h.status == 'SCHEDULED' %}
+                      <span class="badge badge-purple">Dijadwalkan</span>
+                    {% elif h.status == 'COMPLETED' %}
+                      <span class="badge badge-success">Layanan Selesai</span>
+                    {% elif h.status == 'REJECTED' %}
+                      <span class="badge badge-danger">Pengajuan Ditolak</span>
+                    {% elif h.status == 'CANCELLED' %}
+                      <span class="badge badge-secondary">Pengajuan Dibatalkan</span>
+                    {% else %}
+                      <span class="badge badge-secondary">{{ h.status }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="timeline-time">
+                    {{ h.created_at.strftime('%d %b %Y %H:%M') if h.created_at else '-' }}
+                  </div>
+                </div>
+
+                {% if h.note %}
+                  <div class="timeline-body">
+                    {{ h.note }}
+                  </div>
+                {% endif %}
+
+                <div class="timeline-actor">
+                  Oleh: {% if h.actor %}{{ h.actor.name }} ({{ h.actor.role }}){% else %}Sistem{% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p class="text-sm text-muted">Belum ada riwayat aktivitas untuk permohonan ini.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

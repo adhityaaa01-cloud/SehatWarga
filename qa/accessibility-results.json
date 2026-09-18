@@ -1,0 +1,134 @@
+[
+  {
+    "role": "public",
+    "path": "/",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/login",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/register",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/facilities",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/assistant",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/login",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/register",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/facilities",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "public",
+    "path": "/assistant",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/dashboard",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/services/request",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/card",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/complaints/create",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/dashboard",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/services/request",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/card",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "citizen",
+    "path": "/citizen/complaints/create",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "admin",
+    "path": "/admin/dashboard",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "admin",
+    "path": "/admin/facilities",
+    "width": 375,
+    "violations": []
+  },
+  {
+    "role": "admin",
+    "path": "/admin/dashboard",
+    "width": 1440,
+    "violations": []
+  },
+  {
+    "role": "admin",
+    "path": "/admin/facilities",
+    "width": 1440,
+    "violations": []
+  }
+]

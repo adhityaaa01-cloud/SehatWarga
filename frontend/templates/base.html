@@ -1,0 +1,106 @@
+{% macro navlink(endpoint, label) -%}
+{% set href = url_for(endpoint) %}
+{% set active = request.path == href or (href != '/' and request.path.startswith(href + '/')) %}
+<a href="{{ href }}" class="nav-link{% if active %} active{% endif %}"{% if active %} aria-current="page"{% endif %}>{{ label }}</a>
+{%- endmacro %}
+{% set is_admin = current_user.is_authenticated and current_user.role == 'admin' %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SehatWarga — Layanan dalam satu ruang{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="{% if is_admin %}admin-shell {% endif %}page-{{ (request.endpoint or 'unknown')|replace('.', '-') }}">
+  <div class="ambient-world" id="ambient-world" aria-hidden="true">
+    <div class="ambient-mesh"></div>
+    <div class="ambient-aurora aurora-teal"></div>
+    <div class="ambient-aurora aurora-blue"></div>
+    <div class="ambient-aurora aurora-violet"></div>
+    <div class="ambient-aurora aurora-coral"></div>
+    <div class="ambient-aurora aurora-amber"></div>
+    <div class="ambient-orbit orbit-a"></div>
+    <div class="ambient-orbit orbit-b"></div>
+    <div class="ambient-perspective-grid"></div>
+  </div>
+  <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
+  <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="{{ url_for('main.index') }}" class="navbar-brand"><span class="brand-mark" aria-hidden="true"><i></i>s<span>+</span></span><span>SehatWarga<small>Portal layanan warga</small></span></a>
+      <button type="button" id="nav-toggle" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" aria-label="Buka menu navigasi">Menu <span aria-hidden="true">☰</span></button>
+      <nav id="site-navigation" class="site-navigation" aria-label="Navigasi utama" tabindex="-1">
+        <div class="drawer-heading"><strong>Menu SehatWarga</strong><button type="button" id="nav-close" class="btn" aria-label="Tutup menu navigasi">Tutup</button></div>
+        <div class="navbar-nav">
+          {% if is_admin %}
+            <span class="nav-section-label">RUANG ADMINISTRASI</span>
+            {{ navlink('admin.dashboard', 'Dashboard Admin') }}
+            {{ navlink('admin.services_list', 'Pengajuan Layanan') }}
+            {{ navlink('admin.complaints_list', 'Pengaduan') }}
+            {{ navlink('admin.facilities_list', 'Fasilitas') }}
+            {{ navlink('admin.contributions_list', 'Iuran') }}
+            {{ navlink('admin.payments_list', 'Pembayaran') }}
+            {{ navlink('assistant.chat_page', 'Asisten') }}
+          {% elif current_user.is_authenticated %}
+            {{ navlink('citizen.dashboard', 'Dashboard') }}
+            {{ navlink('citizen.service_requests_list', 'Layanan') }}
+            {{ navlink('facilities.list_facilities', 'Fasilitas') }}
+            <details class="nav-dropdown"><summary>Administrasi</summary><div class="dropdown-panel">
+              {{ navlink('citizen.contributions_list', 'Iuran') }}
+              {{ navlink('citizen.payments_list', 'Pembayaran') }}
+              {{ navlink('citizen.complaints_list', 'Pengaduan') }}
+              {{ navlink('citizen.family_list', 'Keluarga') }}
+              {{ navlink('assistant.chat_page', 'Asisten') }}
+            </div></details>
+          {% else %}
+            {{ navlink('main.index', 'Beranda') }}
+            {{ navlink('facilities.list_facilities', 'Fasilitas Kesehatan') }}
+            {{ navlink('assistant.chat_page', 'Asisten') }}
+            <a class="nav-link" href="{{ url_for('main.index') }}#layanan">Layanan</a>
+            <a class="nav-link" href="{{ url_for('main.index') }}#informasi">Informasi</a>
+          {% endif %}
+        </div>
+        <div class="nav-actions">
+          {% if current_user.is_authenticated %}
+            <details class="nav-dropdown user-menu"><summary>{{ current_user.name }}</summary><div class="dropdown-panel">
+              {% if current_user.role == 'citizen' %}
+                {{ navlink('citizen.profile', 'Profil Saya') }}
+                {{ navlink('citizen.card', 'Kartu Digital') }}
+              {% endif %}
+              <form action="{{ url_for('auth.logout') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline-primary">Keluar</button>
+              </form>
+            </div></details>
+          {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary">Masuk</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Daftar</a>
+          {% endif %}
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div id="nav-overlay" class="nav-overlay" hidden></div>
+  <main id="main-content" class="main-content" tabindex="-1">
+    <div class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}<div class="alert-container">
+          {% for category, message in messages %}
+          <div role="{{ 'alert' if category in ['danger', 'warning'] else 'status' }}" class="alert alert-{{ category if category != 'message' else 'info' }}">{{ message }}</div>
+          {% endfor %}
+        </div>{% endif %}
+      {% endwith %}
+    </div>
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer"><div class="container footer-content">
+    <strong class="footer-brand"><span class="footer-brand-mark" aria-hidden="true">S+</span>SehatWarga</strong><span>Prototype akademik independen.</span>
+    <p class="footer-disclaimer">Bukan situs resmi BPJS atau lembaga pemerintah. Pembayaran dan layanan merupakan simulasi.</p>
+    {% if request.endpoint != 'assistant.chat_page' %}<a href="{{ url_for('assistant.chat_page') }}" class="assistant-floating-btn" aria-label="Buka Asisten SehatWarga">Bantuan Asisten <span aria-hidden="true">↗</span></a>{% endif %}
+  </div></footer>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body></html>

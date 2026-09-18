@@ -1,0 +1,12 @@
+[
+  {
+    "path": "/citizen/card",
+    "navbar_hidden": true,
+    "no_overflow": true
+  },
+  {
+    "path": "/citizen/payments/1",
+    "navbar_hidden": true,
+    "no_overflow": true
+  }
+]

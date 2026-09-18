@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}500 Kesalahan Server - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="error-box">
+    <div class="error-code">500</div>
+    <h2 class="error-title">Terjadi Kesalahan pada Sistem</h2>
+    <p class="error-message">Terjadi kendala teknis internal pada server saat memproses permintaan Anda. Mohon kembali ke beranda atau coba beberapa saat lagi.</p>
+    <div class="flex justify-center gap-3">
+      <a href="{{ url_for('main.index') }}" class="btn btn-primary btn-rounded">Kembali ke Beranda</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

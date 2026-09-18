@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Profil Peserta - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="profile-card">
+    <div class="profile-card-header">
+      <h2 class="profile-card-title">Profil Kepesertaan SehatWarga</h2>
+      <p class="profile-card-desc">Data identitas dan informasi kepesertaan terdaftar dalam sistem.</p>
+    </div>
+
+    <div class="profile-grid">
+      <div class="profile-field">
+        <span class="profile-field-label">Nama Lengkap</span>
+        <span class="profile-field-value">{{ user.name }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Alamat Email</span>
+        <span class="profile-field-value">{{ user.email }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Nomor Peserta</span>
+        <span class="profile-field-value mono font-bold">{{ participant.participant_number }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Status Kepesertaan</span>
+        <div class="mt-2px">
+          {% if participant.membership_status == 'ACTIVE' %}
+            <span class="badge badge-success">AKTIF</span>
+          {% else %}
+            <span class="badge badge-danger">NONAKTIF</span>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Tanggal Lahir</span>
+        <span class="profile-field-value">{{ participant.birth_date.strftime('%d %B %Y') if participant.birth_date else '-' }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Jenis Kelamin</span>
+        <span class="profile-field-value">
+          {% if participant.gender == 'MALE' %}
+            Laki-laki
+          {% elif participant.gender == 'FEMALE' %}
+            Perempuan
+          {% else %}
+            {{ participant.gender }}
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Kelas Layanan Simulasi</span>
+        <span class="profile-field-value">
+          {% if participant.service_class == 'CLASS_1' %}
+            Kelas 1
+          {% elif participant.service_class == 'CLASS_2' %}
+            Kelas 2
+          {% elif participant.service_class == 'CLASS_3' %}
+            Kelas 3
+          {% else %}
+            {{ participant.service_class }}
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Tanggal Terdaftar</span>
+        <span class="profile-field-value">{{ participant.registered_at.strftime('%d %B %Y %H:%M') if participant.registered_at else '-' }} WIB</span>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid var(--color-border);" class="mt-8 pt-5 flex justify-between items-center flex-wrap gap-3">
+      <a href="{{ url_for('citizen.dashboard') }}" class="btn btn-outline-primary">&larr; Kembali ke Dashboard</a>
+      <a href="{{ url_for('citizen.card') }}" class="btn btn-primary">Lihat Kartu Digital &rarr;</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

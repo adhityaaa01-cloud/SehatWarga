@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Peserta - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-greeting">
+      <h1>Selamat Datang, {{ user.name }}</h1>
+      <p>Akses informasi kepesertaan dan layanan digital SehatWarga Anda.</p>
+    </div>
+    <div class="flex gap-10px flex-wrap">
+      <a href="{{ url_for('citizen.service_request_create') }}" class="btn btn-primary btn-rounded">+ Ajukan Layanan</a>
+      <a href="{{ url_for('citizen.complaint_create') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">+ Buat Pengaduan</a>
+      <a href="{{ url_for('citizen.complaints_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Lihat Pengaduan</a>
+      <a href="{{ url_for('citizen.contributions_list') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Lihat Tagihan Iuran</a>
+      <a href="{{ url_for('citizen.card') }}" class="btn btn-outline-light btn-rounded text-primary surface" style="border-color: var(--color-border);">Kartu Digital</a>
+    </div>
+  </div>
+
+  <section class="summary-panel" aria-label="Ringkasan kepesertaan">
+    <div><p class="eyebrow">KEPESERTAAN ANDA</p><h2>{{ participant.full_name }}</h2><p class="mono">{{ participant.participant_number }}</p></div>
+    <div><span class="badge {{ 'badge-success' if participant.membership_status == 'ACTIVE' else 'badge-danger' }}">{{ 'AKTIF' if participant.membership_status == 'ACTIVE' else 'NONAKTIF' }}</span><p>{{ participant.service_class.replace('CLASS_', 'Kelas ') }} · {{ active_family_count }} anggota keluarga aktif</p></div>
+    <a class="btn" href="{{ url_for('citizen.card') }}">Lihat kartu digital</a>
+  </section>
+  {% if current_bill and current_bill.status in ['UNPAID', 'OVERDUE'] %}
+    <div style="background-color: #fffbeb; border: 1px solid #fef3c7; padding: 16px 20px;" class="rounded mb-6 flex justify-between items-center flex-wrap gap-3">
+      <div>
+        <div style="color: #92400e;" class="text-base font-bold">
+          Tagihan Iuran Periode {{ current_bill.billing_period.strftime('%B %Y') }}: {{ current_bill.amount|rupiah }}
+        </div>
+        <div style="color: #b45309;" class="text-xs mt-2px">
+          Jatuh tempo simulasi: {{ current_bill.due_date.strftime('%d %B %Y') }}. Status:
+          {% if current_bill.status == 'UNPAID' %}
+            <span class="badge badge-warning" style="font-size: 10px;">Belum Dibayar</span>
+          {% else %}
+            <span class="badge badge-danger" style="font-size: 10px;">Terlambat</span>
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        <a href="{{ url_for('citizen.contribution_pay', contribution_id=current_bill.id) }}" class="btn btn-primary btn-rounded text-sm" style="padding: 8px 18px;">Bayar Sekarang (Simulasi) &rarr;</a>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">Tagihan Bulan Ini</div><div class="stat-value">{{ current_bill.amount|rupiah if current_bill else '—' }}</div><p class="stat-desc">{{ contribution_status_labels.get(current_bill.status) if current_bill else 'Belum diterbitkan' }}</p></div>
+    <a class="stat-card" href="{{ url_for('citizen.service_requests_list') }}"><div class="stat-label">Layanan Aktif / Berjalan</div><div class="stat-value">{{ active_services }}</div><p class="stat-desc">Pantau verifikasi dan jadwal →</p></a>
+    <a class="stat-card" href="{{ url_for('citizen.complaints_list') }}"><div class="stat-label">Pengaduan Diproses</div><div class="stat-value">{{ processing_complaints }}</div><p class="stat-desc">Lihat Pengaduan →</p></a>
+    <a class="stat-card" href="{{ url_for('citizen.contributions_list') }}"><div class="stat-label">Tagihan Belum Lunas</div><div class="stat-value">{{ total_unpaid_amount|rupiah }}</div><p class="stat-desc">{{ unpaid_contributions_count }} tagihan perlu ditinjau →</p></a>
+  </div>
+<details class="secondary-details"><summary>Rincian kepesertaan dan statistik</summary>  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Nomor Peserta</div>
+      <div class="stat-value mono text-2xl">{{ participant.participant_number }}</div>
+      <div class="stat-desc">Nomor unik identitas kepesertaan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Status Kepesertaan</div>
+      <div class="mt-1">
+        {% if participant.membership_status == 'ACTIVE' %}
+          <span class="badge badge-success">AKTIF</span>
+        {% else %}
+          <span class="badge badge-danger">NONAKTIF</span>
+        {% endif %}
+      </div>
+      <div class="stat-desc">Status keaktifan jaminan kesehatan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Tagihan Bulan Ini</div>
+      {% if current_bill %}
+        <div class="stat-value text-2xl text-primary">
+          {{ current_bill.amount|rupiah }}
+        </div>
+        <div class="mt-1">
+          {% if current_bill.status == 'PAID' %}
+            <span class="badge badge-success">Lunas</span>
+          {% elif current_bill.status == 'UNPAID' %}
+            <span class="badge badge-warning">Belum Dibayar</span>
+          {% elif current_bill.status == 'OVERDUE' %}
+            <span class="badge badge-danger">Terlambat</span>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="stat-value text-lg text-muted">-</div>
+        <div class="stat-desc">Belum diterbitkan</div>
+      {% endif %}
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Tunggakan Iuran</div>
+      <div class="stat-value" style="font-size: 20px; color: {% if unpaid_contributions_count > 0 %}#dc2626{% else %}#059669{% endif %};">
+        {{ total_unpaid_amount|rupiah }}
+      </div>
+      <div class="stat-desc">{{ unpaid_contributions_count }} tagihan belum lunas</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Layanan Aktif / Berjalan</div>
+      <div class="stat-value text-3xl" style="color: #f59e0b;">{{ active_services }}</div>
+      <div class="stat-desc">Menunggu verifikasi / dijadwalkan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total Layanan Diajukan</div>
+      <div class="stat-value text-3xl text-primary">{{ total_services }}</div>
+      <div class="stat-desc">Semua riwayat permohonan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Anggota Keluarga</div>
+      <div class="stat-value text-3xl text-accent">{{ active_family_count }} Orang</div>
+      <div class="stat-desc">Tanggungan kepesertaan aktif</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Total Pengaduan</div>
+      <div class="stat-value text-3xl text-primary">{{ total_complaints }}</div>
+      <div class="stat-desc">Semua pengaduan layanan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Sedang Diproses</div>
+      <div class="stat-value text-3xl" style="color: #7c3aed;">{{ processing_complaints }}</div>
+      <div class="stat-desc">Pengaduan dalam penanganan</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-label">Selesai</div>
+      <div class="stat-value text-3xl text-success">{{ resolved_complaints }}</div>
+      <div class="stat-desc">Pengaduan telah tuntas</div>
+    </div>
+  </div>
+
+</details>  <details class="secondary-details"><summary>Layanan & Menu Kepesertaan</summary>
+  <div class="action-grid">
+    <a href="{{ url_for('citizen.service_request_create') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-success">Aktif</span>
+        </div>
+        <h3 class="action-card-title">Ajukan Layanan</h3>
+        <p class="action-card-desc">Pengajuan permohonan layanan kesehatan untuk diri sendiri atau anggota keluarga.</p>
+      </div>
+      <div class="action-card-footer">
+        Ajukan Sekarang &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.service_requests_list') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-success">Aktif</span>
+        </div>
+        <h3 class="action-card-title">Layanan &amp; Riwayat</h3>
+        <p class="action-card-desc">Pantau status verifikasi berkas, jadwal layanan, dan rekam jejak pengajuan.</p>
+      </div>
+      <div class="action-card-footer">
+        Buka Layanan Saya &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.contributions_list') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-success">Aktif</span>
+        </div>
+        <h3 class="action-card-title">Iuran Bulanan</h3>
+        <p class="action-card-desc">Lihat daftar tagihan berkala, status lunas, jatuh tempo, dan simulasi pembayaran.</p>
+      </div>
+      <div class="action-card-footer">
+        Kelola Iuran &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.payments_list') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-success">Aktif</span>
+        </div>
+        <h3 class="action-card-title">Riwayat Pembayaran</h3>
+        <p class="action-card-desc">Cek bukti transaksi simulasi resmi dan rekam jejak setoran iuran kepesertaan.</p>
+      </div>
+      <div class="action-card-footer">
+        Lihat Riwayat &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.profile') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-info">Tersedia</span>
+        </div>
+        <h3 class="action-card-title">Profil Kepesertaan</h3>
+        <p class="action-card-desc">Lihat detail data pribadi, data identitas, dan informasi keanggotaan terdaftar.</p>
+      </div>
+      <div class="action-card-footer">
+        Buka Profil &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.card') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-info">Tersedia</span>
+        </div>
+        <h3 class="action-card-title">Kartu Digital</h3>
+        <p class="action-card-desc">Tampilkan kartu identitas peserta elektronik resmi dari portal SehatWarga.</p>
+      </div>
+      <div class="action-card-footer">
+        Lihat Kartu &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.family_list') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-info">Tersedia</span>
+        </div>
+        <h3 class="action-card-title">Anggota Keluarga</h3>
+        <p class="action-card-desc">Kelola dan daftarkan data tanggungan keluarga yang terhubung dengan kepesertaan Anda.</p>
+      </div>
+      <div class="action-card-footer">
+        Kelola Keluarga &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('facilities.list_facilities') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-info">Tersedia</span>
+        </div>
+        <h3 class="action-card-title">Fasilitas Kesehatan</h3>
+        <p class="action-card-desc">Cari informasi puskesmas, klinik, dan rumah sakit rujukan terdekat menggunakan peta.</p>
+      </div>
+      <div class="action-card-footer">
+        Cari Faskes &rarr;
+      </div>
+    </a>
+
+    <a href="{{ url_for('citizen.complaints_list') }}" class="action-card">
+      <div>
+        <div class="action-card-header">
+          <span class="badge badge-success">Aktif</span>
+        </div>
+        <h3 class="action-card-title">Pengaduan Layanan</h3>
+        <p class="action-card-desc">Sampaikan keluhan dan aspirasi terkait pelayanan administratif SehatWarga.</p>
+      </div>
+      <div class="action-card-footer">
+        Lihat Pengaduan &rarr;
+      </div>
+    </a>
+  </div>
+
+</details>
+  {% if recent_services %}
+  <div class="mt-10">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="section-heading mb-0">Pengajuan Layanan Terkini</h2>
+      <a href="{{ url_for('citizen.service_requests_list') }}" class="btn btn-outline-light btn-rounded text-accent text-sm" style="border-color: var(--color-border); padding: 6px 14px;">Lihat Semua &rarr;</a>
+    </div>
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nomor Pengajuan</th>
+            <th>Penerima Layanan</th>
+            <th>Fasilitas Kesehatan</th>
+            <th>Jenis Layanan</th>
+            <th>Rencana / Jadwal</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in recent_services %}
+            <tr>
+              <td class="mono font-semibold">
+                <a href="{{ url_for('citizen.service_request_detail', request_id=r.id) }}">{{ r.request_number }}</a>
+              </td>
+              <td>
+                {% if r.family_member %}
+                  {{ r.family_member.full_name }} <span class="badge badge-secondary" style="font-size: 10px;">Keluarga</span>
+                {% else %}
+                  {{ participant.full_name }} <span class="badge badge-info" style="font-size: 10px;">Peserta Utama</span>
+                {% endif %}
+              </td>
+              <td>{{ r.health_facility.name }}</td>
+              <td>{{ valid_service_types.get(r.service_type, r.service_type) }}</td>
+              <td>{{ r.scheduled_date.strftime('%d/%m/%Y') if r.scheduled_date else '-' }}</td>
+              <td>
+                {% if r.status == 'SUBMITTED' %}
+                  <span class="badge badge-warning">Menunggu Verifikasi</span>
+                {% elif r.status == 'VERIFIED' %}
+                  <span class="badge badge-info">Terverifikasi</span>
+                {% elif r.status == 'SCHEDULED' %}
+                  <span class="badge badge-purple">Dijadwalkan</span>
+                {% elif r.status == 'COMPLETED' %}
+                  <span class="badge badge-success">Selesai</span>
+                {% elif r.status == 'REJECTED' %}
+                  <span class="badge badge-danger">Ditolak</span>
+                {% elif r.status == 'CANCELLED' %}
+                  <span class="badge badge-secondary">Dibatalkan</span>
+                {% else %}
+                  <span class="badge badge-secondary">{{ r.status }}</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('citizen.service_request_detail', request_id=r.id) }}" class="btn btn-outline-light text-xs text-accent" style="padding: 4px 10px; border-color: var(--color-border);">Lihat Detail</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <details class="secondary-details"><summary>Jejak status pengajuan terbaru</summary><div class="timeline">
+    {% for r in recent_services[:3] %}{% if r.histories %}{% set event = r.histories[-1] %}
+    <div class="timeline-item"><span class="timeline-dot status-{{ event.status }}" aria-hidden="true"></span><div class="timeline-header"><h2 class="timeline-title">{{ valid_statuses.get(event.status, event.status) }}</h2><time class="timeline-time">{{ event.created_at.strftime('%d %b %Y, %H:%M') }}</time></div><p class="timeline-body"><a href="{{ url_for('citizen.service_request_detail', request_id=r.id) }}" class="mono">{{ r.request_number }}</a> · {{ r.health_facility.name }}</p></div>
+    {% endif %}{% endfor %}
+  </div></details>
+  {% else %}<div class="empty-state"><h2>Belum ada pengajuan layanan</h2><p>Pengajuan Anda akan muncul di sini beserta statusnya.</p><a class="btn btn-primary" href="{{ url_for('citizen.service_request_create') }}">Ajukan Layanan</a></div>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Kelola Fasilitas Kesehatan - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="dashboard-header">
+    <div class="dashboard-greeting">
+      <h1>Manajemen Fasilitas Kesehatan</h1>
+      <p>Kelola data fasilitas kesehatan, status operasional, dan lokasi koordinat faskes.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('admin.facility_create') }}" class="btn btn-primary btn-rounded">+ Tambah Faskes Baru</a>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <form method="GET" action="{{ url_for('admin.facilities_list') }}">
+      <div class="filter-grid" style="grid-template-columns: 2fr 1.2fr 1fr auto;">
+        <div class="form-group mb-0">
+          <label for="search" class="form-label">Pencarian</label>
+          <input type="text" name="search" id="search" class="form-control" placeholder="Cari nama faskes, kode, kota..." value="{{ search_query }}">
+        </div>
+
+        <div class="form-group mb-0">
+          <label for="facility_type" class="form-label">Jenis Faskes</label>
+          <select name="facility_type" id="facility_type" class="form-control">
+            <option value="">Semua Jenis</option>
+            {% for code, label in facility_types.items() %}
+              <option value="{{ code }}" {% if selected_type == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group mb-0">
+          <label for="status" class="form-label">Status</label>
+          <select name="status" id="status" class="form-control">
+            <option value="">Semua Status</option>
+            <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Aktif Saja</option>
+            <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Nonaktif Saja</option>
+          </select>
+        </div>
+
+        <div class="flex gap-2">
+          <button type="submit" class="btn btn-primary" style="height: 42px;">Filter</button>
+          {% if search_query or selected_type or selected_status %}
+            <a href="{{ url_for('admin.facilities_list') }}" class="btn btn-outline-primary" style="height: 42px;">Reset</a>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Facilities Table -->
+  {% if facilities %}
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Kode</th>
+            <th>Nama Fasilitas Kesehatan</th>
+            <th>Jenis</th>
+            <th>Kota</th>
+            <th>Telepon</th>
+            <th>Status</th>
+            <th class="text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for f in facilities %}
+            <tr>
+              <td class="mono font-semibold">{{ f.facility_code }}</td>
+              <td>
+                <a href="{{ url_for('facilities.detail_facility', facility_id=f.id) }}" target="_blank" class="font-semibold">
+                  {{ f.name }} &#x2197;
+                </a>
+              </td>
+              <td>{{ facility_types.get(f.facility_type, f.facility_type) }}</td>
+              <td>{{ f.city if f.city else '-' }}</td>
+              <td>{{ f.phone if f.phone else '-' }}</td>
+              <td>
+                {% if f.is_active %}
+                  <span class="badge badge-success">AKTIF</span>
+                {% else %}
+                  <span class="badge badge-danger">NONAKTIF</span>
+                {% endif %}
+              </td>
+              <td class="text-right">
+                <a href="{{ url_for('admin.facility_edit', facility_id=f.id) }}" class="btn btn-outline-primary text-xs" style="padding: 4px 10px; margin-right: 4px;">Edit</a>
+                <form action="{{ url_for('admin.facility_toggle_status', facility_id=f.id) }}" method="POST" onsubmit="return confirm('Ubah status fasilitas ini?');" class="inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  {% if f.is_active %}
+                    <button type="submit" class="btn btn-outline-primary text-xs text-danger" style="padding: 4px 10px; border-color: #fecaca;">Nonaktifkan</button>
+                  {% else %}
+                    <button type="submit" class="btn btn-outline-primary text-xs text-success" style="padding: 4px 10px; border-color: #a7f3d0;">Aktifkan</button>
+                  {% endif %}
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('admin.facilities_list', page=pagination.prev_num, search=search_query, facility_type=selected_type, status=selected_status) }}" class="page-link">&laquo;</a>
+        {% else %}
+          <span class="page-link disabled">&laquo;</span>
+        {% endif %}
+
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            {% if p == pagination.page %}
+              <span class="page-link active">{{ p }}</span>
+            {% else %}
+              <a href="{{ url_for('admin.facilities_list', page=p, search=search_query, facility_type=selected_type, status=selected_status) }}" class="page-link">{{ p }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-link disabled">&hellip;</span>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+          <a href="{{ url_for('admin.facilities_list', page=pagination.next_num, search=search_query, facility_type=selected_type, status=selected_status) }}" class="page-link">&raquo;</a>
+        {% else %}
+          <span class="page-link disabled">&raquo;</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="stat-card text-center" style="padding: 48px 24px;">
+      <div class="text-lg font-semibold text-primary mb-2">
+        Tidak ada fasilitas kesehatan yang ditemukan.
+      </div>
+      <p class="text-sm text-muted mb-5">
+        Gunakan tombol Tambah Faskes atau lakukan seed data dummy melalui CLI.
+      </p>
+      <a href="{{ url_for('admin.facility_create') }}" class="btn btn-primary btn-rounded">+ Tambah Faskes Baru</a>
+    </div>
+  {% endif %}
+
+  <div class="mt-6">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-primary">&larr; Kembali ke Dashboard Admin</a>
+  </div>
+</div>
+{% endblock %}

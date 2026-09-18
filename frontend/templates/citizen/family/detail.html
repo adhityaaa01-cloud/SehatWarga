@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Detail Anggota Keluarga - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container dashboard-wrapper">
+  <div class="profile-card">
+    <div class="profile-card-header flex justify-between items-center flex-wrap gap-3">
+      <div>
+        <h2 class="profile-card-title">{{ member.full_name }}</h2>
+        <p class="profile-card-desc">Detail data anggota keluarga terdaftar pada kepesertaan Anda.</p>
+      </div>
+      <div>
+        {% if member.membership_status == 'ACTIVE' %}
+          <span class="badge badge-success">AKTIF</span>
+        {% else %}
+          <span class="badge badge-danger">NONAKTIF</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <div class="profile-field">
+        <span class="profile-field-label">Nomor Anggota Keluarga</span>
+        <span class="profile-field-value mono font-bold">{{ member.member_number }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Hubungan Keluarga</span>
+        <span class="profile-field-value">
+          {% if member.relationship == 'SPOUSE' %}
+            Pasangan
+          {% elif member.relationship == 'CHILD' %}
+            Anak
+          {% elif member.relationship == 'PARENT' %}
+            Orang Tua
+          {% else %}
+            Lainnya
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Jenis Kelamin</span>
+        <span class="profile-field-value">
+          {% if member.gender == 'MALE' %}
+            Laki-laki
+          {% elif member.gender == 'FEMALE' %}
+            Perempuan
+          {% else %}
+            {{ member.gender }}
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Tanggal Lahir</span>
+        <span class="profile-field-value">{{ member.birth_date.strftime('%d %B %Y') if member.birth_date else '-' }}</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Tanggal Ditambahkan</span>
+        <span class="profile-field-value">{{ member.created_at.strftime('%d %B %Y %H:%M') if member.created_at else '-' }} WIB</span>
+      </div>
+
+      <div class="profile-field">
+        <span class="profile-field-label">Terakhir Diperbarui</span>
+        <span class="profile-field-value">{{ member.updated_at.strftime('%d %B %Y %H:%M') if member.updated_at else '-' }} WIB</span>
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid var(--color-border);" class="mt-8 pt-5 flex justify-between items-center flex-wrap gap-3">
+      <a href="{{ url_for('citizen.family_list') }}" class="btn btn-outline-primary">&larr; Kembali ke Daftar Keluarga</a>
+      
+      <div class="flex gap-2">
+        <a href="{{ url_for('citizen.family_edit', member_id=member.id) }}" class="btn btn-primary">Edit Data</a>
+        
+        {% if member.membership_status == 'ACTIVE' %}
+          <form action="{{ url_for('citizen.family_remove', member_id=member.id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menonaktifkan anggota keluarga ini?');" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-outline-primary text-danger" style="border-color: #fecaca;">Nonaktifkan</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

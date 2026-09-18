@@ -1,0 +1,22 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.DS_Store
+
+# Runtime uploads
+frontend/static/uploads/*
+!frontend/static/uploads/.gitkeep
+
+# Local databases, secret variants and optional browser tooling
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+node_modules/
+playwright-report/
+test-results/

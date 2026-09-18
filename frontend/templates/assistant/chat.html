@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Asisten SehatWarga - Panduan Layanan & Rekomendasi Fasilitas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+{% endblock %}
+
+{% block content %}
+<div class="assistant-container">
+  <div class="assistant-card">
+    <div class="assistant-header">
+      <div class="assistant-header-title">
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <h1>Asisten SehatWarga</h1>
+      </div>
+      <div>
+        <span class="assistant-badge">Prototype Akademik</span>
+      </div>
+    </div>
+
+    <div class="assistant-disclaimer-banner">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5a7184" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px;">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      <span>
+        <strong>Pemberitahuan:</strong> Asisten SehatWarga adalah asisten simulasi untuk panduan layanan dan informasi faskes. Bot bukan dokter dan tidak memberikan diagnosis medis. Untuk kondisi darurat medis, segera datangi unit gawat darurat (UGD) terdekat.
+      </span>
+    </div>
+
+    <!-- Message Area -->
+    <div id="chat-messages" class="assistant-messages" role="log" aria-live="polite" aria-label="Percakapan asisten">
+      <div class="message-row assistant-row">
+        <div class="message-avatar">SW</div>
+        <div class="message-bubble">
+          <div class="message-text message-welcome">
+            <p>Halo. Saya Asisten SehatWarga.</p>
+            <p>Saya dapat membantu Anda memahami layanan SehatWarga atau mencari fasilitas kesehatan.</p>
+            <p>Coba tanyakan:<br><em>'Puskesmas terdekat dari saya di mana?'</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggested Questions -->
+    <div class="suggested-questions-area">
+      <span class="suggested-label">Saran Pertanyaan:</span>
+      {% if current_user.is_authenticated and current_user.role == 'citizen' %}<button type="button" class="suggested-pill" data-query="Ringkasan kepesertaan saya">Kepesertaan saya</button>{% else %}<button type="button" class="suggested-pill" data-query="Bagaimana cara daftar akun?">Cara daftar akun</button>{% endif %}
+      <button type="button" class="suggested-pill" data-query="Cari fasilitas terdekat">Cari fasilitas terdekat</button>
+      <button type="button" class="suggested-pill" data-query="Cara mengajukan layanan">Cara mengajukan layanan</button>
+      <button type="button" class="suggested-pill" data-query="Cara melihat iuran">Cara melihat iuran</button>
+      <button type="button" class="suggested-pill" data-query="Cara membuat pengaduan">Cara membuat pengaduan</button>
+    </div>
+
+    <!-- Input Form -->
+    <div class="assistant-input-area">
+      <form id="chat-form" class="assistant-form" data-chat-url="{{ url_for('assistant.chat_api') }}" data-location-url="{{ url_for('assistant.location_api') }}">
+        <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+        <label for="chat-input" class="sr-only">Pertanyaan untuk asisten</label>
+        <textarea id="chat-input" class="assistant-input" placeholder="Tanyakan layanan SehatWarga…" maxlength="2000" rows="2" autocomplete="off" required></textarea>
+        <button type="submit" id="chat-submit" class="assistant-send-btn">
+          <span>Kirim</span>
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form><p class="assistant-privacy small muted">Bukan rekam medis. Percakapan tidak disimpan permanen. Jangan kirim identitas, sandi, atau data kesehatan pribadi. Jika Gemini diaktifkan, pesan tersaring diproses penyedia AI.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="{{ url_for('static', filename='js/assistant.js') }}"></script>
+{% endblock %}

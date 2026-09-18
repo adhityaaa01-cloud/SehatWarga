@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Tambah Anggota Keluarga - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+  <div class="auth-card" style="max-width: 560px;">
+    <div class="auth-header">
+      <h2 class="auth-title">Tambah Anggota Keluarga</h2>
+      <p class="auth-subtitle">Daftarkan tanggungan keluarga untuk kepesertaan SehatWarga Anda</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('citizen.family_add') }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        <label for="full_name" class="form-label">Nama Lengkap</label>
+        {{ form.full_name(class="form-control" + (" is-invalid" if form.full_name.errors else ""), placeholder="Nama sesuai kartu identitas keluarga", id="full_name") }}
+        {% for error in form.full_name.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="relationship" class="form-label">Hubungan Keluarga</label>
+        {{ form.relationship(class="form-control" + (" is-invalid" if form.relationship.errors else ""), id="relationship") }}
+        {% for error in form.relationship.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="grid grid-two gap-4">
+        <div class="form-group">
+          <label for="gender" class="form-label">Jenis Kelamin</label>
+          {{ form.gender(class="form-control" + (" is-invalid" if form.gender.errors else ""), id="gender") }}
+          {% for error in form.gender.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="form-group">
+          <label for="birth_date" class="form-label">Tanggal Lahir</label>
+          {{ form.birth_date(class="form-control" + (" is-invalid" if form.birth_date.errors else ""), type="date", id="birth_date") }}
+          {% for error in form.birth_date.errors %}
+            <div class="form-error">{{ error }}</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group mt-6 flex gap-3">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Anggota Keluarga</button>
+        <a href="{{ url_for('citizen.family_list') }}" class="btn btn-outline-primary">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Manajemen Iuran Peserta - Admin SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px;">
+  <!-- Header -->
+  <div class="flex justify-between items-start mb-6 flex-wrap gap-4">
+    <div>
+      <h1 class="text-4xl text-primary font-bold mb-1">Manajemen Iuran Peserta</h1>
+      <p class="text-muted text-base">Monitoring penagihan iuran bulanan kepesertaan SehatWarga dan generator tagihan otomatis.</p>
+    </div>
+    <div class="flex gap-10px">
+      <a href="{{ url_for('admin.payments_list') }}" class="btn btn-outline-light text-primary surface" style="border-color: var(--color-primary);">
+        Riwayat Pembayaran
+      </a>
+    </div>
+  </div>
+
+  <!-- Academic Simulation Notice -->
+  <div class="card mb-6 rounded flex items-center gap-3" style="padding: 14px 18px; background: #eff6ff; border: 1px solid #bfdbfe;">
+    <div style="color: #1d4ed8; width: 22px; height: 22px; border: 1.5px solid #1d4ed8; border-radius: 50%; line-height: 1; flex-shrink: 0;" class="font-bold text-md flex items-center justify-center">i</div>
+    <div style="color: #1e40af; line-height: 1.5;" class="text-sm">
+      <strong>Simulasi Tarif SehatWarga:</strong> {{ rate_desc }}. Sistem ini tidak melakukan penarikan dana nyata ataupun menggunakan gateway pembayaran perbankan riil.
+    </div>
+  </div>
+
+  <!-- Billing Generation Card -->
+  <div class="card p-5 mb-6 border rounded" style="background: #f8fafc;">
+    <h3 class="text-lg font-bold text-primary mb-2">
+      Generator Tagihan Bulanan (Idempoten)
+    </h3>
+    <p class="text-sm text-muted mb-4">
+      Terbitkan tagihan iuran serentak untuk seluruh peserta dengan status kepesertaan <strong>AKTIF</strong>. Sistem otomatis melewati (skip) peserta yang sudah memiliki tagihan pada bulan yang sama.
+    </p>
+
+    <form method="POST" action="{{ url_for('admin.contributions_generate') }}" class="flex flex-wrap gap-3 items-end">
+      {{ generate_form.hidden_tag() }}
+      <div style="min-width: 220px;">
+        <label for="{{ generate_form.billing_month.id }}" class="text-xs font-semibold text-muted block mb-1">
+          Pilih Bulan Tagihan (YYYY-MM)
+        </label>
+        {{ generate_form.billing_month(class="form-control", type="month", style="height: 38px; font-size: 13px;") }}
+      </div>
+      <div>
+        <button type="submit" class="btn btn-primary text-sm font-semibold" style="height: 38px; padding: 0 20px;">
+          Generate Tagihan Bulan Terpilih
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Search & Filter Card -->
+  <div class="card p-5 mb-6 surface border rounded">
+    <form method="GET" action="{{ url_for('admin.contributions_list') }}" class="flex flex-col gap-14px">
+      <div class="flex flex-wrap gap-14px">
+        <!-- Search Query -->
+        <div style="flex: 2; min-width: 200px;">
+          <label for="search" class="text-xs font-semibold text-muted block mb-1">Cari Peserta (Nama / No. Peserta)</label>
+          <input type="text" name="search" id="search" class="form-control text-sm" value="{{ search_query }}" placeholder="Contoh: SW-2026 atau Nama Peserta..." style="height: 38px;">
+        </div>
+
+        <!-- Status Filter -->
+        <div style="flex: 1; min-width: 150px;">
+          <label for="status" class="text-xs font-semibold text-muted block mb-1">Status Iuran</label>
+          <select name="status" id="status" class="form-control text-sm" style="height: 38px;">
+            <option value="">-- Semua Status --</option>
+            {% for code, label in status_labels.items() %}
+              <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Service Class Filter -->
+        <div style="flex: 1; min-width: 150px;">
+          <label for="service_class" class="text-xs font-semibold text-muted block mb-1">Kelas Layanan</label>
+          <select name="service_class" id="service_class" class="form-control text-sm" style="height: 38px;">
+            <option value="">-- Semua Kelas --</option>
+            {% for sc in simulated_rates.keys() %}
+              <option value="{{ sc }}" {% if selected_class == sc %}selected{% endif %}>{{ sc }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Month Filter -->
+        <div style="flex: 1; min-width: 150px;">
+          <label for="month" class="text-xs font-semibold text-muted block mb-1">Bulan Tagihan</label>
+          <input type="month" name="month" id="month" class="form-control text-sm" value="{{ selected_month }}" style="height: 38px;">
+        </div>
+      </div>
+
+      <div style="justify-content: flex-end;" class="flex gap-2">
+        <button type="submit" class="btn btn-primary text-sm" style="height: 36px; padding: 0 18px;">Terapkan Filter</button>
+        {% if search_query or selected_status or selected_class or selected_month %}
+          <a href="{{ url_for('admin.contributions_list') }}" class="btn btn-outline-light text-sm text-body surface flex items-center" style="height: 36px; padding: 0 14px; border-color: var(--color-border);">Reset Filter</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Table -->
+  {% if contributions %}
+    <div class="table-responsive surface border rounded shadow-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Peserta</th>
+            <th>Kelas Layanan</th>
+            <th>Periode Tagihan</th>
+            <th>Besaran Iuran</th>
+            <th>Jatuh Tempo</th>
+            <th>Status</th>
+            <th>Waktu Pelunasan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in contributions %}
+            <tr>
+              <td>
+                <div class="font-semibold text-primary">{{ c.participant.full_name }}</div>
+                <div style="font-size: 11px;" class="mono text-muted">{{ c.participant.participant_number }}</div>
+              </td>
+              <td>
+                <span class="badge badge-info">{{ c.participant.service_class }}</span>
+              </td>
+              <td class="font-semibold">
+                {{ c.billing_period.strftime('%B %Y') }}
+              </td>
+              <td class="font-bold text-body">
+                {{ c.amount|rupiah }}
+              </td>
+              <td class="text-sm">
+                {{ c.due_date.strftime('%d %b %Y') if c.due_date else '-' }}
+              </td>
+              <td>
+                {% if c.status == 'PAID' %}
+                  <span class="badge badge-success">Lunas</span>
+                {% elif c.status == 'OVERDUE' %}
+                  <span class="badge badge-danger">Menunggak</span>
+                {% else %}
+                  <span class="badge badge-warning">Belum Lunas</span>
+                {% endif %}
+              </td>
+              <td class="text-xs text-muted">
+                {{ c.paid_at.strftime('%d %b %Y %H:%M') if c.paid_at else '-' }}
+              </td>
+              <td>
+                <a href="{{ url_for('admin.contribution_detail', contribution_id=c.id) }}" class="btn btn-outline-light text-xs text-primary" style="padding: 4px 10px; border-color: var(--color-border);">
+                  Detail
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+      <div class="pagination">
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('admin.contributions_list', page=pagination.prev_num, search=search_query, status=selected_status, service_class=selected_class, month=selected_month) }}" class="page-link">&laquo;</a>
+        {% else %}
+          <span class="page-link disabled">&laquo;</span>
+        {% endif %}
+
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+            {% if p == pagination.page %}
+              <span class="page-link active">{{ p }}</span>
+            {% else %}
+              <a href="{{ url_for('admin.contributions_list', page=p, search=search_query, status=selected_status, service_class=selected_class, month=selected_month) }}" class="page-link">{{ p }}</a>
+            {% endif %}
+          {% else %}
+            <span class="page-link disabled">&hellip;</span>
+          {% endif %}
+        {% endfor %}
+
+        {% if pagination.has_next %}
+          <a href="{{ url_for('admin.contributions_list', page=pagination.next_num, search=search_query, status=selected_status, service_class=selected_class, month=selected_month) }}" class="page-link">&raquo;</a>
+        {% else %}
+          <span class="page-link disabled">&raquo;</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <div class="card text-center surface border rounded" style="padding: 48px 24px;">
+      <h3 class="text-xl text-primary mb-2">Tidak Ada Data Iuran Ditemukan</h3>
+      <p class="text-muted text-base mb-5">
+        {% if search_query or selected_status or selected_class or selected_month %}
+          Tidak ada tagihan yang sesuai dengan parameter filter yang dimasukkan.
+        {% else %}
+          Belum ada tagihan iuran yang digenerate di dalam sistem.
+        {% endif %}
+      </p>
+      {% if search_query or selected_status or selected_class or selected_month %}
+        <a href="{{ url_for('admin.contributions_list') }}" class="btn btn-outline-light btn-rounded text-body surface" style="border-color: var(--color-border);">Reset Filter</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

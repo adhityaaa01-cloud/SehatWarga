@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Ajukan Layanan Kesehatan - SehatWarga{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 36px 20px 60px; max-width: 760px;">
+  <div class="mb-6">
+    <a href="{{ url_for('citizen.service_requests_list') }}" class="text-sm text-muted">&larr; Kembali ke Daftar Layanan</a>
+    <h1 class="text-4xl text-primary font-bold mt-2">Pengajuan Layanan Kesehatan</h1>
+    <p class="text-muted text-base">Silakan isi formulir permohonan layanan kesehatan untuk diri Anda atau anggota keluarga terdaftar.</p>
+  </div>
+
+  <div class="card p-8 surface border rounded-lg shadow-card">
+    <form method="POST" action="{{ url_for('citizen.service_request_create') }}" novalidate id="serviceRequestForm">
+      {{ form.hidden_tag() }}
+
+      <!-- Beneficiary Selection -->
+      <div class="form-group mb-5">
+        <label for="beneficiary_type" class="form-label font-semibold mb-6px block">
+          Penerima Layanan <span class="text-danger">*</span>
+        </label>
+        {{ form.beneficiary_type(class="form-control" + (" is-invalid" if form.beneficiary_type.errors else ""), id="beneficiary_type", onchange="toggleFamilyMemberSelect()") }}
+        {% for error in form.beneficiary_type.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Family Member Selection (Shown conditionally) -->
+      <div class="form-group" id="familyMemberGroup" style="margin-bottom: 20px; display: {% if form.beneficiary_type.data == 'FAMILY' %}block{% else %}none{% endif %};">
+        <label for="family_member_id" class="form-label font-semibold mb-6px block">
+          Pilih Anggota Keluarga <span class="text-danger">*</span>
+        </label>
+        {% if has_family_members %}
+          {{ form.family_member_id(class="form-control" + (" is-invalid" if form.family_member_id.errors else ""), id="family_member_id") }}
+        {% else %}
+          <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: var(--radius-sm); color: #991b1b;" class="p-3 text-sm">
+            Belum ada anggota keluarga aktif yang terdaftar pada akun Anda.
+            <a href="{{ url_for('citizen.family_add') }}" class="font-semibold underline">Tambah Anggota Keluarga</a>
+          </div>
+        {% endif %}
+        {% for error in form.family_member_id.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Health Facility Selection -->
+      <div class="form-group mb-5">
+        <label for="health_facility_id" class="form-label font-semibold mb-6px block">
+          Fasilitas Kesehatan Tujuan <span class="text-danger">*</span>
+        </label>
+        {{ form.health_facility_id(class="form-control" + (" is-invalid" if form.health_facility_id.errors else "")) }}
+        <small class="block text-muted text-xs mt-1">
+          Hanya fasilitas kesehatan mitra dengan status aktif yang tersedia untuk rujukan.
+        </small>
+        {% for error in form.health_facility_id.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Service Type Selection -->
+      <div class="form-group mb-5">
+        <label for="service_type" class="form-label font-semibold mb-6px block">
+          Jenis Layanan Kesehatan <span class="text-danger">*</span>
+        </label>
+        {{ form.service_type(class="form-control" + (" is-invalid" if form.service_type.errors else "")) }}
+        {% for error in form.service_type.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Scheduled Date -->
+      <div class="form-group mb-5">
+        <label for="scheduled_date" class="form-label font-semibold mb-6px block">
+          Rencana Tanggal Kunjungan <span class="text-danger">*</span>
+        </label>
+        {{ form.scheduled_date(class="form-control" + (" is-invalid" if form.scheduled_date.errors else ""), type="date") }}
+        <small class="block text-muted text-xs mt-1">
+          Pilih tanggal kunjungan hari ini atau di masa mendatang.
+        </small>
+        {% for error in form.scheduled_date.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Complaint / Requirement Summary -->
+      <div class="form-group mb-7">
+        <label for="complaint_summary" class="form-label font-semibold mb-6px block">
+          Keluhan Singkat / Keperluan Layanan
+        </label>
+        {{ form.complaint_summary(class="form-control" + (" is-invalid" if form.complaint_summary.errors else ""), rows=3, placeholder="Deskripsikan secara singkat kebutuhan pemeriksaan atau keluhan kesehatan (opsional, min. 5 karakter jika diisi)...") }}
+        {% for error in form.complaint_summary.errors %}
+          <div class="form-error text-danger text-xs mt-1">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <!-- Form Actions -->
+      <div style="border-top: 1px solid var(--color-border);" class="flex gap-3 items-center pt-5">
+        {{ form.submit(class="btn btn-primary btn-rounded", style="min-width: 180px;") }}
+        <a href="{{ url_for('citizen.service_requests_list') }}" class="btn btn-outline-light btn-rounded text-body surface" style="border-color: var(--color-border);">Batal</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function toggleFamilyMemberSelect() {
+  var beneficiarySelect = document.getElementById("beneficiary_type");
+  var familyGroup = document.getElementById("familyMemberGroup");
+  if (beneficiarySelect && familyGroup) {
+    if (beneficiarySelect.value === "FAMILY") {
+      familyGroup.style.display = "block";
+    } else {
+      familyGroup.style.display = "none";
+    }
+  }
+}
+</script>
+{% endblock %}
