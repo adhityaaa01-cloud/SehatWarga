@@ -50,10 +50,41 @@ document.addEventListener('DOMContentLoaded', () => {
     card.append(el('h2','facility-result-name',f.name),el('p','facility-result-meta',`${f.facility_type_label || f.facility_type} · ${f.city || ''}`),el('p','facility-result-meta',f.address || 'Alamat belum tersedia'));
     if(typeof f.distance_km==='number') card.append(el('p','facility-result-distance',`± ${f.distance_km} km (perkiraan garis lurus)`));
     if(Number.isInteger(f.id) && f.id>0) {const link=el('a','facility-result-link','Lihat Detail Fasilitas →');link.href=`/facilities/${f.id}`;card.append(link);}
+    if(typeof f.action_url==='string' && f.action_url.startsWith('/')) {
+      const action=el('a','facility-result-action','Ajukan layanan ini');
+      action.href=f.action_url;
+      card.append(action);
+    }
     return card;
   }
   function render(data) {
     const bubble=row(data.message || 'Tidak ada informasi yang tersedia.');
+    if(data.service_recommendation && typeof data.service_recommendation==='object') {
+      const recommendation=el('section','service-recommendation-card');
+      recommendation.setAttribute(
+        'aria-label',
+        'Rekomendasi layanan SehatWarga AI'
+      );
+      recommendation.append(
+        el('span','service-recommendation-kicker','AI HEALTH NAVIGATOR'),
+        el(
+          'h2',
+          'service-recommendation-title',
+          data.service_recommendation.label || 'Rekomendasi layanan'
+        ),
+        el(
+          'p',
+          'service-recommendation-basis',
+          data.service_recommendation.basis || 'Data terverifikasi'
+        ),
+        el(
+          'p',
+          'service-recommendation-disclaimer',
+          data.service_recommendation.disclaimer || 'Bukan diagnosis medis.'
+        )
+      );
+      bubble.append(recommendation);
+    }
     if(data.requires_location) {
       const card=el('div','location-request-card');card.append(el('p','location-request-text','Bagikan lokasi untuk pencarian ini saja. Koordinat tidak disimpan.'));
       const button=el('button','btn-location-action','Gunakan Lokasi Saya');button.type='button';

@@ -1,8 +1,20 @@
 import logging
 from typing import Dict, Any, Optional, List, Tuple
-from app.services.facility_service import find_nearest_facilities, search_facilities
-from app.services.ai_service import get_ai_provider, FallbackAIProvider, extract_facility_filter, extract_city_filter
+from app.services.facility_service import (
+    find_nearest_facilities,
+    recommend_facilities_for_service,
+    search_facilities,
+)
+from app.services.ai_service import (
+    get_ai_provider,
+    FallbackAIProvider,
+    extract_facility_filter,
+    extract_city_filter,
+    extract_service_type,
+)
 from app.services.assistant_safety import deterministic_safety
+from app.services.service_request_service import VALID_SERVICE_TYPES
+from flask import url_for
 from flask_login import current_user
 
 logger = logging.getLogger(__name__)
@@ -63,32 +75,25 @@ def process_assistant_chat(
         except (ValueError, TypeError):
             return {"success": False, "message": "Koordinat tidak valid."}, 400
 
+    # Safety lokal selalu berjalan sebelum Gemini.
     safety = deterministic_safety(validated_msg)
 
-    # Intent fungsional ditentukan secara lokal agar map, database,
-    # akun, dan sistem keamanan tetap stabil.
     local_provider = FallbackAIProvider()
     local_intent = local_provider.classify_intent(validated_msg)
 
-    # Variabel intent harus selalu dibuat.
-    intent = safety or local_intent
-
-    local_required_intents = {
-        "FACILITY_NEARBY",
-        "FACILITY_SEARCH",
-        "MEMBERSHIP_SUMMARY",
-        "EMERGENCY",
-        "SECURITY_INQUIRY",
-    }
-
-    if intent in local_required_intents:
+    if safety:
+        intent = safety
+        ai_provider = local_provider
+    elif local_intent == "MEMBERSHIP_SUMMARY":
+        intent = local_intent
         ai_provider = local_provider
     else:
-        
         ai_provider = get_ai_provider()
+        intent = ai_provider.classify_intent(validated_msg)
 
     facility_type = extract_facility_filter(validated_msg)
     city = extract_city_filter(validated_msg)
+    service_type = extract_service_type(validated_msg)
 
     classification = getattr(ai_provider, "classification", None)
 
@@ -98,6 +103,7 @@ def process_assistant_chat(
             or facility_type
         )
         city = classification.get("city") or city
+        service_type = classification.get("service_type") or service_type
     if intent == "MEMBERSHIP_SUMMARY":
         if not current_user.is_authenticated:
             return {"success": False, "intent": intent, "message": "Silakan masuk sebagai warga untuk melihat ringkasan kepesertaan Anda."}, 401
@@ -111,6 +117,71 @@ def process_assistant_chat(
             f"Kelas layanan: {participant.service_class}. "
             "Lihat rincian tagihan dan pengajuan pada dashboard Anda.",
             "requires_location": False, "facilities": []}, 200
+
+    # Health Navigator: AI memahami bahasa, backend menentukan fakta.
+    if intent == "SERVICE_RECOMMENDATION":
+        if service_type not in VALID_SERVICE_TYPES:
+            return {
+                "success": True,
+                "intent": intent,
+                "message": (
+                    "Sebutkan kebutuhan secara umum, misalnya pemeriksaan umum, "
+                    "layanan gigi, layanan ibu dan anak, atau layanan spesialis."
+                ),
+                "requires_location": False,
+                "service_recommendation": None,
+                "facilities": [],
+            }, 200
+
+        facilities = recommend_facilities_for_service(
+            service_type=service_type,
+            city=city,
+            limit=5,
+        )
+
+        is_citizen = (
+            current_user.is_authenticated
+            and current_user.is_active
+            and current_user.role == "citizen"
+        )
+
+        for facility in facilities:
+            if is_citizen:
+                facility["action_url"] = url_for(
+                    "citizen.service_request_create",
+                    health_facility_id=facility["id"],
+                    service_type=service_type,
+                )
+
+        label = VALID_SERVICE_TYPES[service_type]
+        area = f" di {city}" if city else ""
+
+        if facilities:
+            message_text = (
+                f"Kebutuhan Anda cocok dengan kategori {label}. "
+                f"Saya menemukan {len(facilities)} fasilitas aktif{area} "
+                "dari database SehatWarga."
+            )
+        else:
+            message_text = (
+                f"Kebutuhan Anda cocok dengan kategori {label}, tetapi "
+                f"belum ada fasilitas aktif{area} yang sesuai di database."
+            )
+
+        return {
+            "success": True,
+            "intent": intent,
+            "message": message_text,
+            "requires_location": False,
+            "service_type": service_type,
+            "service_recommendation": {
+                "service_type": service_type,
+                "label": label,
+                "basis": "Klasifikasi kebutuhan dan data fasilitas terverifikasi",
+                "disclaimer": "Rekomendasi administratif, bukan diagnosis medis.",
+            },
+            "facilities": facilities,
+        }, 200
 
     # 1. Handle FACILITY_NEARBY
     if intent == "FACILITY_NEARBY":

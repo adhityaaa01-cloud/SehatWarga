@@ -349,6 +349,27 @@ def service_request_create():
         (str(m.id), f"{m.full_name} ({m.member_number}) - {m.relationship}") for m in family_members
     ]
 
+    # Prefill aman dari rekomendasi AI Health Navigator.
+    # Nilai asing yang tidak tersedia di database akan diabaikan.
+    if request.method == "GET":
+        suggested_facility_id = request.args.get(
+            "health_facility_id", ""
+        ).strip()
+        suggested_service_type = request.args.get(
+            "service_type", ""
+        ).strip().upper()
+
+        active_facility_ids = {
+            str(facility.id)
+            for facility in facilities
+        }
+
+        if suggested_facility_id in active_facility_ids:
+            form.health_facility_id.data = suggested_facility_id
+
+        if suggested_service_type in VALID_SERVICE_TYPES:
+            form.service_type.data = suggested_service_type
+
     if form.validate_on_submit():
         target_family_id = None
         if form.beneficiary_type.data == "FAMILY":

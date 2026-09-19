@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Asisten SehatWarga - Panduan Layanan & Rekomendasi Fasilitas{% endblock %}
+{% block title %}AI Health Navigator - SehatWarga{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -15,10 +15,10 @@
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
-        <h1>Asisten SehatWarga</h1>
+        <h1>AI Health Navigator — Asisten SehatWarga</h1>
       </div>
       <div>
-        <span class="assistant-badge">Prototype Akademik</span>
+        <span class="assistant-badge">AI + Data Terverifikasi</span>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
       <span>
-        <strong>Pemberitahuan:</strong> Asisten SehatWarga adalah asisten simulasi untuk panduan layanan dan informasi faskes. Bot bukan dokter dan tidak memberikan diagnosis medis. Untuk kondisi darurat medis, segera datangi unit gawat darurat (UGD) terdekat.
+        <strong>Responsible AI:</strong> Navigator membantu memilih kategori layanan dan fasilitas dari database SehatWarga. AI bukan dokter dan tidak memberikan diagnosis medis atau resep. Untuk kondisi darurat medis, segera datangi unit gawat darurat (UGD) terdekat.
       </span>
     </div>
 
@@ -39,9 +39,9 @@
         <div class="message-avatar">SW</div>
         <div class="message-bubble">
           <div class="message-text message-welcome">
-            <p>Halo. Saya Asisten SehatWarga.</p>
-            <p>Saya dapat membantu Anda memahami layanan SehatWarga atau mencari fasilitas kesehatan.</p>
-            <p>Coba tanyakan:<br><em>'Puskesmas terdekat dari saya di mana?'</em></p>
+            <p>Halo. Saya AI Health Navigator SehatWarga.</p>
+            <p>Ceritakan kebutuhan layanan secara umum. Saya akan membantu memilih kategori layanan dan mencocokkannya dengan fasilitas aktif di database.</p>
+            <p>Coba tanyakan:<br><em>“Saya ingin memeriksakan anak, tetapi bingung memilih layanan.”</em></p>
           </div>
         </div>
       </div>
@@ -51,6 +51,8 @@
     <div class="suggested-questions-area">
       <span class="suggested-label">Saran Pertanyaan:</span>
       {% if current_user.is_authenticated and current_user.role == 'citizen' %}<button type="button" class="suggested-pill" data-query="Ringkasan kepesertaan saya">Kepesertaan saya</button>{% else %}<button type="button" class="suggested-pill" data-query="Bagaimana cara daftar akun?">Cara daftar akun</button>{% endif %}
+      <button type="button" class="suggested-pill" data-query="Saya ingin memeriksakan anak, tetapi bingung memilih layanan">Pilih layanan anak</button>
+      <button type="button" class="suggested-pill" data-query="Saya ingin periksa gigi dan butuh rekomendasi layanan">Pilih layanan gigi</button>
       <button type="button" class="suggested-pill" data-query="Cari fasilitas terdekat">Cari fasilitas terdekat</button>
       <button type="button" class="suggested-pill" data-query="Cara mengajukan layanan">Cara mengajukan layanan</button>
       <button type="button" class="suggested-pill" data-query="Cara melihat iuran">Cara melihat iuran</button>
@@ -62,7 +64,7 @@
       <form id="chat-form" class="assistant-form" data-chat-url="{{ url_for('assistant.chat_api') }}" data-location-url="{{ url_for('assistant.location_api') }}">
         <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
         <label for="chat-input" class="sr-only">Pertanyaan untuk asisten</label>
-        <textarea id="chat-input" class="assistant-input" placeholder="Tanyakan layanan SehatWarga…" maxlength="2000" rows="2" autocomplete="off" required></textarea>
+        <textarea id="chat-input" class="assistant-input" placeholder="Ceritakan kebutuhan layanan secara umum…" maxlength="2000" rows="2" autocomplete="off" required></textarea>
         <button type="submit" id="chat-submit" class="assistant-send-btn">
           <span>Kirim</span>
           <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

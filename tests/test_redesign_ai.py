@@ -21,7 +21,8 @@ from app.models.health_facility import HealthFacility
 
 def classification(intent='GREETING', **changes):
     result=dict(intent=intent,confidence=.98,requires_location=intent=='FACILITY_NEARBY',
-                facility_type=None,city=None,safe_to_answer=True,reason='Administrative intent')
+                facility_type=None,service_type=None,city=None,
+                safe_to_answer=True,reason='Administrative intent')
     result.update(changes)
     return result
 
@@ -94,7 +95,7 @@ class AdapterSafetyTest(unittest.TestCase):
                     self.assertEqual(provider.classify_intent('Pertanyaan administratif'),intent)
 
     def test_invalid_provider_schema_falls_back(self):
-        invalid=[{},[],classification(confidence=2),classification(intent='EXECUTE_SQL'),classification(safe_to_answer='true'),classification(city='Invented City'),classification(requires_location=True),classification(reason=['bad'])]
+        invalid=[{},[],classification(confidence=2),classification(intent='EXECUTE_SQL'),classification(safe_to_answer='true'),classification(city='Invented City'),classification(requires_location=True),classification(service_type='DIAGNOSIS'),classification(reason=['bad'])]
         for payload in invalid:
             with self.subTest(payload=payload):
                 provider=GeminiAIProvider('test','model')
@@ -172,6 +173,76 @@ class AdapterSafetyTest(unittest.TestCase):
             data,status=process_assistant_chat('Cari klinik di Lamongan')
         self.assertEqual(status,200);self.assertEqual([x['id'] for x in data['facilities']],[f.id]);self.assertIsNone(data['facilities'][0]['latitude'])
 
+    def test_gemini_health_navigator_uses_database_facilities(self):
+        facility = HealthFacility(
+            facility_code='NAV-DENTAL',
+            name='Klinik Gigi Lamongan',
+            facility_type='DENTAL_CLINIC',
+            city='Lamongan',
+            is_active=True,
+        )
+        db.session.add(facility)
+        db.session.commit()
+
+        self.app.config.update(
+            AI_PROVIDER='gemini',
+            AI_API_KEY='test',
+            AI_MODEL='model',
+        )
+
+        payload = classification(
+            'SERVICE_RECOMMENDATION',
+            service_type='DENTAL',
+            city='Lamongan',
+        )
+
+        with patch.object(
+            GeminiAIProvider,
+            '_request',
+            return_value=payload,
+        ) as request:
+            data, status = process_assistant_chat(
+                'Saya butuh layanan gigi di Lamongan'
+            )
+
+        self.assertEqual(status, 200)
+        request.assert_called_once()
+        self.assertEqual(data['intent'], 'SERVICE_RECOMMENDATION')
+        self.assertEqual(
+            data['service_recommendation']['service_type'],
+            'DENTAL',
+        )
+        self.assertEqual(
+            [item['id'] for item in data['facilities']],
+            [facility.id],
+        )
+
+    def test_navigator_never_invents_facility(self):
+        self.app.config.update(
+            AI_PROVIDER='gemini',
+            AI_API_KEY='test',
+            AI_MODEL='model',
+        )
+
+        payload = classification(
+            'SERVICE_RECOMMENDATION',
+            service_type='SPECIALIST',
+            city='Lamongan',
+        )
+
+        with patch.object(
+            GeminiAIProvider,
+            '_request',
+            return_value=payload,
+        ):
+            data, status = process_assistant_chat(
+                'Saya butuh layanan spesialis di Lamongan'
+            )
+
+        self.assertEqual(status, 200)
+        self.assertEqual(data['facilities'], [])
+        self.assertIn('belum ada fasilitas aktif', data['message'])
+
     def test_history_and_app_context_never_sent(self):
         provider=GeminiAIProvider('test','model')
         self.assertEqual(provider.build_context([{'role':'user','content':'private'}],{'password':'private'}),[])
@@ -215,6 +286,44 @@ class AdapterSafetyTest(unittest.TestCase):
     def test_demo_domain_does_not_bypass_password(self):
         response=self.client.post('/login',data={'csrf_token':self.token(),'email':'missing@sehatwarga.test','password':'incorrect'})
         self.assertEqual(response.status_code,401)
+
+    def test_navigator_query_prefills_service_form(self):
+        user, _ = register_citizen(
+            'Navigator Citizen',
+            'navigator@example.com',
+            'Password123!',
+            date(1990, 1, 1),
+            'MALE',
+            'CLASS_1',
+        )
+        facility = HealthFacility(
+            facility_code='NAV-PREFILL',
+            name='Navigator Clinic',
+            facility_type='CLINIC',
+            city='Lamongan',
+            is_active=True,
+        )
+        db.session.add(facility)
+        db.session.commit()
+
+        with self.client.session_transaction() as session:
+            session['_user_id'] = str(user.id)
+            session['_fresh'] = True
+
+        response = self.client.get(
+            f'/citizen/services/request?'
+            f'health_facility_id={facility.id}&service_type=GENERAL'
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            f'<option selected value="{facility.id}">',
+            response.text,
+        )
+        self.assertIn(
+            '<option selected value="GENERAL">',
+            response.text,
+        )
 
     def test_service_form_with_active_family_member_renders(self):
         from app.services.family_service import create_family_member

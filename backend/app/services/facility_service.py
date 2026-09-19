@@ -13,6 +13,15 @@ FACILITY_TYPE_LABELS = {
 }
 
 
+
+SERVICE_FACILITY_TYPES = {
+    "GENERAL": ("PUSKESMAS", "CLINIC"),
+    "DENTAL": ("DENTAL_CLINIC", "CLINIC"),
+    "MATERNAL": ("PUSKESMAS", "CLINIC", "HOSPITAL"),
+    "SPECIALIST": ("HOSPITAL",),
+    "OTHER": tuple(FACILITY_TYPE_LABELS.keys()),
+}
+
 def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
     Calculate great-circle distance in kilometers between two geographic coordinates
@@ -132,6 +141,38 @@ def search_facilities(
 
     return [format_facility_dict(f) for f in facilities]
 
+
+
+def recommend_facilities_for_service(
+    service_type: str,
+    city: Optional[str] = None,
+    limit: int = 5,
+) -> List[Dict[str, Any]]:
+    """Mengambil fasilitas aktif yang cocok dari database."""
+    normalized = (service_type or "").upper().strip()
+    compatible_types = SERVICE_FACILITY_TYPES.get(normalized)
+
+    if not compatible_types:
+        return []
+
+    stmt = select(HealthFacility).filter(
+        HealthFacility.is_active.is_(True),
+        HealthFacility.facility_type.in_(compatible_types),
+    )
+
+    if city:
+        stmt = stmt.filter(
+            HealthFacility.city.ilike(f"%{city.strip()}%")
+        )
+
+    facilities = db.session.execute(
+        stmt.order_by(HealthFacility.name.asc()).limit(limit)
+    ).scalars().all()
+
+    return [
+        format_facility_dict(facility)
+        for facility in facilities
+    ]
 
 def get_facility_by_id(facility_id: int) -> Optional[Dict[str, Any]]:
     """
