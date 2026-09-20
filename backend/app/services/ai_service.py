@@ -527,9 +527,12 @@ class GeminiAIProvider(BaseAIProvider):
                 raise RuntimeError("Gemini tidak menghasilkan jawaban.")
 
             return response.text.strip()
-        except Exception:
-            logger.warning("Gemini response unavailable; using local fallback")
-            return self.fallback.generate_response(message, intent, context)
+        except Exception as exc:
+            logger.warning(
+                "Gemini response unavailable; forwarding error to Groq fallback: %s",
+                exc,
+            )
+            raise
 
     def build_context(self, conversation_history=None, app_context=None):
         """Return only a small, validated conversation window."""

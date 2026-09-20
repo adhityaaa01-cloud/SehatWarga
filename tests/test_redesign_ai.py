@@ -9,7 +9,10 @@ from tests import create_test_app
 from app import create_app
 from app.extensions import db
 from app.services.ai_service import GeminiAIProvider, FallbackAIProvider, get_ai_provider, INTENTS
-from app.services.assistant_service import process_assistant_chat
+from app.services.assistant_service import (
+    process_assistant_chat,
+    generate_ai_response_with_fallback,
+)
 from app.services.assistant_safety import redact_sensitive
 from app.services.assistant_knowledge import KNOWLEDGE_TOPICS, rupiah
 from app.services.contribution_service import SIMULATED_RATES
@@ -75,12 +78,38 @@ class AdapterSafetyTest(unittest.TestCase):
         self.assertEqual(factory.call_args.kwargs['http_options'].retry_options.attempts,1)
 
     def test_api_failure_and_timeout_fallback(self):
-        for error in [TimeoutError(),RuntimeError('upstream failed')]:
-            provider=GeminiAIProvider('test','model')
-            with patch.object(provider,'_request',side_effect=error):
-                self.assertEqual(provider.classify_intent('Berapa tarif iuran?'),'CONTRIBUTION_GUIDE')
-                self.assertIn('Rp50.000',provider.generate_response('tarif','CONTRIBUTION_GUIDE'))
+        provider = MagicMock()
+        provider.generate_response.side_effect = RuntimeError('primary failed')
 
+        with patch(
+            'app.services.assistant_service.generate_groq_response',
+            return_value='Jawaban dari Groq',
+        ) as groq:
+            result = generate_ai_response_with_fallback(
+                provider,
+                'tarif',
+                'CONTRIBUTION_GUIDE',
+            )
+
+        self.assertEqual(result, 'Jawaban dari Groq')
+        groq.assert_called_once()
+
+
+    def test_primary_and_groq_failure_use_local_fallback(self):
+        provider = MagicMock()
+        provider.generate_response.side_effect = RuntimeError('primary failed')
+
+        with patch(
+            'app.services.assistant_service.generate_groq_response',
+            side_effect=RuntimeError('groq failed'),
+        ):
+            result = generate_ai_response_with_fallback(
+                provider,
+                'tarif',
+                'CONTRIBUTION_GUIDE',
+            )
+
+        self.assertIn('Rp50.000', result)
     def test_sdk_error_is_not_logged(self):
         provider=GeminiAIProvider('test','model')
         with patch.object(provider,'_request',side_effect=RuntimeError('private-credential')),self.assertLogs('app.services.ai_service',level='WARNING') as logs:
