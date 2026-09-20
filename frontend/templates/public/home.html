@@ -18,26 +18,492 @@
       </div>
       <p class="small muted hero-note">Prototipe akademik independen. Seluruh transaksi merupakan simulasi.</p>
     </div>
-    <div class="health-orbit tilt-card" data-tilt aria-label="Gambaran ekosistem layanan SehatWarga">
-      <div class="orbit-grid" aria-hidden="true"></div><div class="orbit-ring orbit-ring-one" aria-hidden="true"></div><div class="orbit-ring orbit-ring-two" aria-hidden="true"></div>
-      <div class="orbit-core"><span class="orbit-logo">S<span>+</span></span><strong>SehatWarga</strong><small>Satu ruang layanan</small></div>
-      <div class="orbit-node orbit-node-family"><span aria-hidden="true">◆</span><strong>Keluarga</strong><small>Data terhubung</small></div>
-      <div class="orbit-node orbit-node-service"><span aria-hidden="true">●</span><strong>Layanan</strong><small>Status real-time</small></div>
-      <div class="orbit-node orbit-node-facility"><span aria-hidden="true">+</span><strong>Fasilitas</strong><small>Cari lebih dekat</small></div>
-      <div class="orbit-node orbit-node-help"><span aria-hidden="true">✦</span><strong>Asisten</strong><small>Panduan cepat</small></div>
-      <div class="orbit-status"><span aria-hidden="true"></span> Sistem layanan aktif</div>
+<div class="health-orbit tilt-card" data-tilt aria-label="Gambaran ekosistem layanan SehatWarga">
+  <div class="orbit-ring orbit-ring-one" aria-hidden="true"></div>
+  <div class="orbit-ring orbit-ring-two" aria-hidden="true"></div>
+
+<div class="orbit-core">
+  <img
+    src="{{ url_for('static', filename='images/branding/sehatwargalogo.png') }}"
+    alt="SehatWarga"
+    class="orbit-brand-logo"
+  >
+  <span class="orbit-core-caption">Ekosistem layanan warga</span>
+</div>
+
+<div class="orbit-node orbit-node-family">
+  <span aria-hidden="true" class="orbit-node-icon">
+    <svg viewBox="0 0 64 64" fill="none">
+      <circle cx="20" cy="18" r="7" fill="currentColor"/>
+      <circle cx="44" cy="18" r="7" fill="currentColor"/>
+      <circle cx="16" cy="32" r="5" fill="currentColor" opacity=".92"/>
+      <circle cx="48" cy="32" r="5" fill="currentColor" opacity=".92"/>
+      <path d="M10 50c0-6 4-10 10-10s10 4 10 10" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M34 50c0-6 4-10 10-10s10 4 10 10" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M22 46c0-5 4-8 10-8s10 3 10 8" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity=".92"/>
+    </svg>
+  </span>
+  <strong>Keluarga</strong>
+  <small>Data terhubung</small>
+</div>
+
+<div class="orbit-node orbit-node-service">
+  <span aria-hidden="true" class="orbit-node-icon">
+    <svg viewBox="0 0 64 64" fill="none">
+      <rect x="14" y="10" width="36" height="44" rx="10" fill="currentColor" opacity=".18"/>
+      <rect x="20" y="8" width="24" height="48" rx="8" stroke="currentColor" stroke-width="5"/>
+      <path d="M26 24h12" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M26 34h12" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M26 44h7" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+  </span>
+  <strong>Layanan</strong>
+  <small>Status real-time</small>
+</div>
+
+<div class="orbit-node orbit-node-facility">
+  <span aria-hidden="true" class="orbit-node-icon">
+    <svg viewBox="0 0 64 64" fill="none">
+      <path d="M20 52V20h24v32" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M28 20v-8h8v8" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M27 30h10" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M32 25v10" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+      <path d="M14 52h36" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+    </svg>
+  </span>
+  <strong>Fasilitas</strong>
+  <small>Cari lebih dekat</small>
+</div>
+
+<div class="orbit-node orbit-node-help">
+  <span aria-hidden="true" class="orbit-node-icon">
+    <svg viewBox="0 0 64 64" fill="none">
+      <path d="M16 18c0-4.4 3.6-8 8-8h16c4.4 0 8 3.6 8 8v14c0 4.4-3.6 8-8 8H30l-10 8v-8h-4c-4.4 0-8-3.6-8-8V18z" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M28 22l1.5 4.5L34 28l-4.5 1.5L28 34l-1.5-4.5L22 28l4.5-1.5L28 22z" fill="currentColor"/>
+      <path d="M40 20l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" fill="currentColor" opacity=".9"/>
+    </svg>
+  </span>
+  <strong>Asisten</strong>
+  <small>Panduan cepat</small>
+</div>
+
+  <div class="orbit-status">
+    <span aria-hidden="true"></span>
+    Sistem layanan aktif
+  </div>
+</div>
+  </div>
+</section>
+<div class="service-strip-grid">
+  {% for image,title,desc,endpoint,color in [
+    ('jack-family.png',
+     'Kelola kepesertaan',
+     'Perbarui data diri dan anggota keluarga dalam satu tempat.',
+     'citizen.profile',
+     'teal'),
+
+    ('jack-service.png',
+     'Ajukan layanan',
+     'Buat pengajuan layanan kesehatan dan pantau progresnya.',
+     'citizen.service_requests_list',
+     'blue'),
+
+    ('jack-payment.png',
+     'Cek iuran & pembayaran',
+     'Lihat tagihan, status pembayaran, dan riwayat transaksi.',
+     'citizen.contributions_list',
+     'amber'),
+
+    ('jack-complaint.png',
+     'Laporkan kendala',
+     'Sampaikan kendala layanan dan pantau tindak lanjutnya.',
+     'citizen.complaints_list',
+     'coral')
+  ] %}
+
+  <a
+    class="service-tile service-tile-{{ color }}"
+    href="{{ url_for(endpoint) }}"
+  >
+    <div class="service-jack-wrap">
+      <img
+        src="{{ url_for('static', filename='images/jack/' ~ image) }}"
+        alt=""
+        class="service-jack"
+        aria-hidden="true"
+      >
+    </div>
+
+    <div class="service-tile-content">
+      <h3>{{ title }}</h3>
+      <p>{{ desc }}</p>
+    </div>
+
+    <span class="service-tile-arrow" aria-hidden="true">→</span>
+  </a>
+
+  {% endfor %}
+</div>
+<section id="layanan" class="features-section">
+  <div class="container">
+
+    <div class="section-title-wrap">
+      <p class="eyebrow">LAYANAN DALAM SATU EKOSISTEM</p>
+
+      <h2 class="section-title">
+        Lebih mudah di setiap kebutuhan.
+      </h2>
+
+      <p class="section-subtitle">
+        Dirancang agar informasi penting cepat ditemukan,
+        proses mudah dipahami, dan setiap status dapat dipantau.
+      </p>
+    </div>
+
+
+    <div class="features-grid">
+
+      <!-- =========================
+           IDENTITAS
+           ========================= -->
+
+      <a
+        class="feature-card feature-teal tilt-card"
+        data-tilt
+        href="{{ url_for('citizen.card') }}"
+      >
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <rect
+              x="3"
+              y="5"
+              width="18"
+              height="14"
+              rx="3"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <circle
+              cx="8"
+              cy="10.5"
+              r="2"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M5.5 16c.6-1.9 1.7-2.8 3-2.8s2.4.9 3 2.8"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M14 10h4M14 14h3"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+          </svg>
+        </span>
+
+        <h3>Identitas dalam genggaman</h3>
+
+        <p>
+          Lihat status kepesertaan, kartu digital,
+          dan data keluarga Anda.
+        </p>
+
+        <span class="text-link">
+          Buka layanan
+          <span aria-hidden="true">→</span>
+        </span>
+      </a>
+
+
+      <!-- =========================
+           FASILITAS
+           ========================= -->
+
+      <a
+        class="feature-card feature-blue tilt-card"
+        data-tilt
+        href="{{ url_for('facilities.list_facilities') }}"
+      >
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <path
+              d="M6.5 20V7.5h11V20"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M9.5 7.5V4.5h5v3"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M9.5 12h5M12 9.5v5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M4 20h16"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+          </svg>
+        </span>
+
+        <h3>Fasilitas sesuai kebutuhan</h3>
+
+        <p>
+          Temukan puskesmas, klinik, atau rumah sakit
+          dari direktori terdaftar.
+        </p>
+
+        <span class="text-link">
+          Buka layanan
+          <span aria-hidden="true">→</span>
+        </span>
+      </a>
+
+
+      <!-- =========================
+           ASISTEN
+           ========================= -->
+
+      <a
+        class="feature-card feature-violet tilt-card"
+        data-tilt
+        href="{{ url_for('assistant.chat_page') }}"
+      >
+        <span class="feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <path
+              d="M5 5h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-8l-5 3v-3H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linejoin="round"
+            />
+
+            <path
+              d="M11.5 8l.7 2.1 2.1.7-2.1.7-.7 2.1-.7-2.1-2.1-.7 2.1-.7.7-2.1Z"
+              fill="currentColor"
+            />
+
+            <path
+              d="M17 7l.4 1.1 1.1.4-1.1.4L17 10l-.4-1.1-1.1-.4 1.1-.4L17 7Z"
+              fill="currentColor"
+              opacity=".7"
+            />
+
+          </svg>
+        </span>
+
+        <h3>Informasi tanpa menebak</h3>
+
+        <p>
+          Asisten membantu menjelaskan alur layanan
+          dan administrasi.
+        </p>
+
+        <span class="text-link">
+          Buka layanan
+          <span aria-hidden="true">→</span>
+        </span>
+      </a>
+
     </div>
   </div>
 </section>
-<section class="service-strip" aria-label="Akses cepat layanan"><div class="container service-strip-grid">
-  {% for number,title,desc,endpoint,color in [('01','Kepesertaan & keluarga','Kelola identitas dan anggota keluarga.','citizen.profile','teal'),('02','Pengajuan layanan','Ajukan dan ikuti perkembangan layanan.','citizen.service_requests_list','blue'),('03','Iuran & pembayaran','Periksa tagihan dan bukti bayar simulasi.','citizen.contributions_list','amber'),('04','Sampaikan pengaduan','Pantau tanggapan atas kendala Anda.','citizen.complaints_list','coral')] %}
-  <a class="service-tile service-{{ color }}" href="{{ url_for(endpoint) }}"><span class="service-number">{{ number }}</span><span><strong>{{ title }}</strong><small>{{ desc }}</small></span><span class="service-arrow" aria-hidden="true">↗</span></a>
-  {% endfor %}
-</div></section>
-<section id="layanan" class="features-section"><div class="container"><div class="section-title-wrap"><p class="eyebrow">LAYANAN DALAM SATU EKOSISTEM</p><h2 class="section-title">Lebih mudah di setiap kebutuhan.</h2><p class="section-subtitle">Dirancang agar informasi penting cepat ditemukan, proses mudah dipahami, dan setiap status dapat dipantau.</p></div>
-  <div class="features-grid">{% for icon,title,desc,endpoint,color in [('01','Identitas dalam genggaman','Lihat status kepesertaan, kartu digital, dan data keluarga Anda.','citizen.card','teal'),('02','Fasilitas sesuai kebutuhan','Temukan puskesmas, klinik, atau rumah sakit dari direktori terdaftar.','facilities.list_facilities','blue'),('03','Informasi tanpa menebak','Asisten membantu menjelaskan alur layanan dan administrasi.','assistant.chat_page','violet')] %}<a class="feature-card feature-{{ color }} tilt-card" data-tilt href="{{ url_for(endpoint) }}"><span class="feature-icon" aria-hidden="true">{{ icon }}</span><h3>{{ title }}</h3><p>{{ desc }}</p><span class="text-link">Buka layanan <span aria-hidden="true">→</span></span></a>{% endfor %}</div>
-</div></section>
-<section id="informasi" class="steps-section"><div class="container steps-layout"><div class="steps-intro"><p class="eyebrow">ALUR PENGGUNAAN</p><h2>Tiga langkah.<br><span>Semua lebih jelas.</span></h2><p>Mulai dari pendaftaran hingga pemantauan, setiap tahap dirancang ringkas dan mudah diikuti.</p></div><ol class="steps-grid"><li><span class="step-number">01</span><div><h3>Daftar sebagai peserta</h3><p>Buat akun dan lengkapi data kepesertaan.</p></div></li><li><span class="step-number">02</span><div><h3>Pilih kebutuhan layanan</h3><p>Temukan fasilitas dan ajukan permohonan.</p></div></li><li><span class="step-number">03</span><div><h3>Pantau perkembangannya</h3><p>Lihat status, jadwal, dan tanggapan petugas.</p></div></li></ol></div></section>
+<section id="informasi" class="journey-section">
+  <div class="container journey-layout">
+
+    <div class="journey-intro">
+      <p class="eyebrow">ALUR PENGGUNAAN</p>
+
+      <h2>
+        Dari daftar sampai layanan,
+        <span>semuanya mudah dipantau.</span>
+      </h2>
+
+      <p class="journey-description">
+        SehatWarga membantu Anda melewati setiap proses layanan
+        secara runtut, mulai dari membuat akun hingga memantau
+        perkembangan pengajuan.
+      </p>
+
+      <div class="journey-note">
+        <span class="journey-note-dot" aria-hidden="true"></span>
+
+        <span>
+          Setiap tahap memiliki status yang jelas dan dapat dilihat kembali.
+        </span>
+      </div>
+    </div>
+
+
+    <div class="journey-steps">
+
+      <!-- STEP 1 -->
+      <article class="journey-step journey-step-teal">
+
+        <div class="journey-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="9"
+              cy="8"
+              r="3"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M4 18c.6-3.1 2.3-4.7 5-4.7s4.4 1.6 5 4.7"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M18 8v6M15 11h6"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </div>
+
+        <div class="journey-step-content">
+          <span class="journey-label">MULAI</span>
+
+          <h3>Daftar sebagai peserta</h3>
+
+          <p>
+            Buat akun dan lengkapi informasi kepesertaan
+            agar layanan SehatWarga dapat digunakan.
+          </p>
+        </div>
+
+        <span class="journey-status" aria-hidden="true">
+          Siap
+        </span>
+
+      </article>
+
+
+      <!-- STEP 2 -->
+      <article class="journey-step journey-step-blue">
+
+        <div class="journey-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <rect
+              x="5"
+              y="4"
+              width="14"
+              height="16"
+              rx="3"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M9 9h6M9 13h4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+
+            <path
+              d="M15.5 15.5l1 1 2-2"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+          </svg>
+        </div>
+
+        <div class="journey-step-content">
+          <span class="journey-label">AJUKAN</span>
+
+          <h3>Pilih kebutuhan layanan</h3>
+
+          <p>
+            Temukan fasilitas kesehatan yang sesuai
+            dan buat pengajuan layanan dari satu portal.
+          </p>
+        </div>
+
+        <span class="journey-status" aria-hidden="true">
+          Proses
+        </span>
+
+      </article>
+
+
+      <!-- STEP 3 -->
+      <article class="journey-step journey-step-violet">
+
+        <div class="journey-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+
+            <circle
+              cx="12"
+              cy="12"
+              r="8"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M8.5 12.3l2.3 2.3 4.8-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+          </svg>
+        </div>
+
+        <div class="journey-step-content">
+          <span class="journey-label">PANTAU</span>
+
+          <h3>Ikuti perkembangannya</h3>
+
+          <p>
+            Pantau status, jadwal, catatan petugas,
+            dan hasil layanan tanpa kehilangan informasi.
+          </p>
+        </div>
+
+        <span class="journey-status" aria-hidden="true">
+          Selesai
+        </span>
+
+      </article>
+
+    </div>
+
+  </div>
+</section>
 <section class="features-section facility-spotlight"><div class="container split-panel"><div><p class="eyebrow">DIREKTORI FASILITAS</p><h2>Temukan layanan kesehatan di sekitar Anda.</h2><p>Cari berdasarkan kota dan jenis fasilitas. Lokasi perangkat hanya digunakan jika Anda memilih untuk membagikannya.</p><a class="btn btn-primary" href="{{ url_for('facilities.list_facilities') }}">Jelajahi fasilitas <span aria-hidden="true">→</span></a></div><div class="mini-map tilt-card" data-tilt aria-hidden="true"><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="map-pin pin-one">+</span><span class="map-pin pin-two">+</span><span class="map-pin pin-three">+</span><div class="map-radar"></div><p>Fasilitas terhubung</p></div></div></section>
 <section class="container final-cta"><div><p class="eyebrow">MULAI SEKARANG</p><h2>Siap mengelola layanan Anda?</h2><p>Buat akun untuk memulai simulasi layanan SehatWarga.</p></div><a class="btn btn-primary btn-prominent" href="{{ url_for('auth.register') }}">Daftar sekarang <span aria-hidden="true">→</span></a></section>
 {% endblock %}

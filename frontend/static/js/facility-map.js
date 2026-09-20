@@ -6,11 +6,11 @@ function calculateDistanceKm(lat1,lon1,lat2,lon2) {
 }
 function facilityNode(tag,text,cls) {const node=document.createElement(tag);node.textContent=text || '';if(cls)node.className=cls;return node;}
 function validFacilityCoordinates(f) {return Number.isFinite(f.lat)&&Number.isFinite(f.lng)&&Math.abs(f.lat)<=90&&Math.abs(f.lng)<=180;}
-function facilityPopup(f) {
+function facilityPopup(f, showDetailLink=true) {
   const node=facilityNode('div','','facility-popup');
   node.append(facilityNode('strong',f.name),facilityNode('p',f.type_label,'small'),facilityNode('p',`${f.address || ''}, ${f.city || ''}`,'small muted'),facilityNode('p',`Telp: ${f.phone || '—'}`,'small muted'));
   const distance=facilityNode('p','','facility-result-distance');distance.id=`distance-marker-${f.id}`;node.append(distance);
-  if(Number.isInteger(f.id)&&f.id>0){const link=facilityNode('a','Lihat Detail →','facility-result-link');link.href=`/facilities/${f.id}`;node.append(link);}
+  if(showDetailLink&&Number.isInteger(f.id)&&f.id>0){const link=facilityNode('a','Lihat Detail →','facility-result-link');link.href=`/facilities/${f.id}`;node.append(link);}
   return node;
 }
 function createFacilityMap(element,center,zoom) {
@@ -48,5 +48,5 @@ function initFacilityDetailMap(mapId,facility) {
   const element=document.getElementById(mapId);if(!element)return;
   if(!validFacilityCoordinates(facility)){element.textContent='Lokasi peta belum tersedia untuk fasilitas ini.';return;}
   const map=createFacilityMap(element,[facility.lat,facility.lng],15);
-  if(map)L.marker([facility.lat,facility.lng]).addTo(map).bindPopup(facilityPopup(facility)).openPopup();
+  if(map)L.marker([facility.lat,facility.lng]).addTo(map).bindPopup(facilityPopup(facility,false)).openPopup();
 }

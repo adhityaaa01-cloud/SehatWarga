@@ -116,10 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
   const tiltTargets = document.querySelectorAll([
-    '[data-tilt]', '.stat-card', '.action-card', '.facility-card', '.profile-card',
-    '.auth-card', '.service-tile', '.secondary-details'
+    '[data-tilt]',
+    '.stat-card',
+    '.action-card',
+    '.profile-card',
+    '.auth-card',
+    '.service-tile',
+    '.secondary-details'
   ].join(','));
-  tiltTargets.forEach(card => {
+    tiltTargets.forEach(card => {
     if (reducedMotion.matches || !finePointer) return;
     card.classList.add('fx-tilt');
     card.addEventListener('pointermove', event => {
@@ -140,21 +145,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Magnetic primary actions. The displacement is intentionally small enough
   // that the target never escapes the pointer or changes the document layout.
+/* Magnetic primary actions.
+   Tombol di dalam facility card dikecualikan agar klik detail stabil. */
   if (!reducedMotion.matches && finePointer) {
-    document.querySelectorAll('.btn-primary,.assistant-floating-btn').forEach(button => {
-      button.classList.add('fx-magnetic');
-      button.addEventListener('pointermove', event => {
-        const bounds = button.getBoundingClientRect();
-        const x = event.clientX - bounds.left - bounds.width / 2;
-        const y = event.clientY - bounds.top - bounds.height / 2;
-        button.style.setProperty('--magnetic-x', `${(x * .11).toFixed(1)}px`);
-        button.style.setProperty('--magnetic-y', `${(y * .14).toFixed(1)}px`);
+    document
+      .querySelectorAll('.btn-primary, .assistant-floating-btn')
+      .forEach(button => {
+
+        /* Jangan gunakan magnetic effect pada tombol fasilitas */
+        if (button.closest('.facility-card')) {
+          return;
+        }
+
+        button.classList.add('fx-magnetic');
+
+        button.addEventListener('pointermove', event => {
+          const bounds = button.getBoundingClientRect();
+
+          const x =
+            event.clientX -
+            bounds.left -
+            bounds.width / 2;
+
+          const y =
+            event.clientY -
+            bounds.top -
+            bounds.height / 2;
+
+          button.style.setProperty(
+            '--magnetic-x',
+            `${(x * .11).toFixed(1)}px`
+          );
+
+          button.style.setProperty(
+            '--magnetic-y',
+            `${(y * .14).toFixed(1)}px`
+          );
+        });
+
+        button.addEventListener('pointerleave', () => {
+          button.style.setProperty('--magnetic-x', '0px');
+          button.style.setProperty('--magnetic-y', '0px');
+        });
+
       });
-      button.addEventListener('pointerleave', () => {
-        button.style.setProperty('--magnetic-x', '0px');
-        button.style.setProperty('--magnetic-y', '0px');
-      });
-    });
   }
 
   const addEnergyShards = (surface, amount) => {

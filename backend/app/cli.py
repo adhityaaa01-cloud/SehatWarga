@@ -608,3 +608,10 @@ def register_cli_commands(app):
         click.echo("Status: SUKSES (Idempoten).")
         click.echo("============================================================")
 
+    @app.cli.command("seed-demo-full")
+    @click.option("--admin-password", default=None, help="Password akun admin demo (default: Demo123!).")
+    @click.option("--citizen-password", default=None, help="Password akun warga demo (default: Demo123!).")
+    def seed_demo_full_cmd(admin_password, citizen_password):
+        """Membuat dataset demo SehatWarga yang lengkap, realistis, dan idempoten (TCC 2026)."""
+        from app.services.demo_seeder import run_seed_demo_full
+        run_seed_demo_full(admin_password=admin_password, citizen_password=citizen_password)

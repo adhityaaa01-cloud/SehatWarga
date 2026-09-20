@@ -1650,6 +1650,103 @@ body::before {
 
 .navbar-brand > span:last-child { display: flex; flex-direction: column; line-height: 1.05; }
 .navbar-brand small { margin-top: 4px; color: var(--color-text-muted); font-size: 8px; font-weight: 600; letter-spacing: .8px; text-transform: uppercase; }
+/* Competition branding */
+.competition-branding {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  margin-right: auto;
+  padding-left: 16px;
+}
+
+.competition-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(16, 47, 70, 0.15);
+  margin-right: 2px;
+}
+
+.competition-logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.competition-logo-tcc {
+  height: 32px;
+}
+
+.competition-logo-triple {
+  height: 34px;
+}
+
+.competition-logo:hover {
+  transform: translateY(-2px);
+}
+
+/* Tablet */
+@media (max-width: 1100px) {
+  .competition-branding {
+    gap: 6px;
+    margin-left: 10px;
+    padding-left: 10px;
+  }
+
+  .competition-logo-tcc {
+    height: 27px;
+  }
+
+  .competition-logo-triple {
+    height: 29px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .competition-branding {
+    margin-left: 8px;
+    padding-left: 8px;
+    gap: 5px;
+  }
+
+  .competition-divider {
+    height: 24px;
+  }
+
+  .competition-logo-tcc {
+    height: 23px;
+  }
+
+  .competition-logo-triple {
+    height: 25px;
+  }
+}
+.navbar-brand-logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.sehatwarga-logo {
+  display: block;
+  width: auto;
+  height: 48px;
+  object-fit: contain;
+}
+
+@media (max-width: 1100px) {
+  .sehatwarga-logo {
+    height: 42px;
+  }
+}
+
+@media (max-width: 700px) {
+  .sehatwarga-logo {
+    height: 36px;
+  }
+}
 .brand-mark { position: relative; overflow: hidden; box-shadow: 0 8px 18px rgba(16,47,70,.2); transform: rotate(-4deg); transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease; }
 .brand-mark i { position: absolute; width: 24px; height: 24px; left: -18px; top: -18px; border-radius: 50%; background: var(--color-blue); opacity: .7; transition: transform .45s ease; }
 .navbar-brand:hover .brand-mark { transform: rotate(0) translateY(-2px); box-shadow: 0 12px 24px rgba(16,47,70,.25); }
@@ -2026,3 +2123,2215 @@ body::before { z-index:1;opacity:.16; }
   .ambient-mesh,.ambient-aurora,.ambient-orbit,.ambient-perspective-grid { animation:none!important; }.ambient-world { background:linear-gradient(125deg,#e8f7f3,#eef2fb 42%,#f8eef7 72%,#fff5e7); }
 }
 @media print { .ambient-world { display:none!important; } body { background:white!important; } }
+/* =========================================================
+   SEHATWARGA HERO ECOSYSTEM - VISUAL POLISH
+   ========================================================= */
+
+.health-orbit {
+  min-height: 470px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(30, 87, 105, 0.10);
+  border-radius: 34px;
+  background:
+    radial-gradient(
+      circle at 50% 48%,
+      rgba(16, 185, 165, 0.10),
+      transparent 34%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,0.98),
+      rgba(238,248,248,0.94)
+    );
+  box-shadow:
+    0 28px 65px rgba(16,47,70,0.12),
+    inset 0 1px rgba(255,255,255,0.95);
+}
+
+/* soft ambient glow */
+.health-orbit::before {
+  width: 360px;
+  height: 360px;
+  opacity: .85;
+  background:
+    radial-gradient(
+      circle,
+      rgba(13, 170, 150, .15) 0%,
+      rgba(50, 117, 216, .06) 46%,
+      transparent 70%
+    );
+}
+
+/* central branding */
+.orbit-core {
+  width: 210px;
+  height: 126px;
+
+  border-radius: 26px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.98),
+      rgba(243,250,250,.96)
+    );
+
+  border: 1px solid rgba(14, 116, 144, .10);
+
+  box-shadow:
+    0 22px 48px rgba(16,47,70,.17),
+    0 0 0 8px rgba(255,255,255,.40);
+
+  color: var(--color-primary);
+}
+
+.orbit-core::before,
+.orbit-core::after {
+  border-radius: 32px;
+}
+
+.orbit-brand-logo {
+  display: block;
+  width: 170px;
+  max-height: 64px;
+  object-fit: contain;
+}
+
+.orbit-core-caption {
+  margin-top: 9px;
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .25px;
+}
+
+
+/* orbit cards */
+.orbit-node {
+  min-width: 145px;
+
+  grid-template-columns: 38px 1fr;
+  column-gap: 11px;
+
+  padding: 12px 14px;
+
+  border-radius: 17px;
+  border: 1px solid rgba(255,255,255,.92);
+
+  background: rgba(255,255,255,.96);
+
+  box-shadow:
+    0 12px 28px rgba(16,47,70,.11),
+    inset 0 1px rgba(255,255,255,.95);
+
+  backdrop-filter: blur(10px);
+}
+
+.orbit-node > span {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 11px;
+
+  font-size: 15px;
+}
+
+.orbit-node strong {
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.orbit-node small {
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 1.3;
+}
+
+
+/* better node positioning */
+.orbit-node-family {
+  left: 22px;
+  top: 56px;
+}
+
+.orbit-node-service {
+  right: 22px;
+  top: 72px;
+}
+
+.orbit-node-facility {
+  left: 28px;
+  bottom: 64px;
+}
+
+.orbit-node-help {
+  right: 24px;
+  bottom: 76px;
+}
+
+
+/* active status */
+.orbit-status {
+  bottom: 18px;
+
+  padding: 8px 14px;
+
+  border: 1px solid rgba(16, 47, 70, .06);
+
+  background: rgba(255,255,255,.94);
+
+  color: #42606d;
+
+  font-size: 10px;
+
+  box-shadow:
+    0 8px 20px rgba(16,47,70,.08);
+}
+
+
+/* MOBILE */
+@media (max-width: 700px) {
+
+  .health-orbit {
+    min-height: 370px;
+    border-radius: 26px;
+  }
+
+  .orbit-core {
+    width: 158px;
+    height: 105px;
+    border-radius: 22px;
+  }
+
+  .orbit-brand-logo {
+    width: 132px;
+    max-height: 50px;
+  }
+
+  .orbit-core-caption {
+    font-size: 8px;
+    margin-top: 6px;
+  }
+
+  .orbit-node {
+    min-width: 112px;
+
+    grid-template-columns: 30px 1fr;
+
+    padding: 9px 10px;
+    column-gap: 7px;
+
+    border-radius: 14px;
+  }
+
+  .orbit-node > span {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+  }
+
+  .orbit-node strong {
+    font-size: 10px;
+  }
+
+  .orbit-node small {
+    font-size: 8px;
+  }
+
+  .orbit-node-family {
+    left: 8px;
+    top: 43px;
+  }
+
+  .orbit-node-service {
+    right: 8px;
+    top: 58px;
+  }
+
+  .orbit-node-facility {
+    left: 9px;
+    bottom: 58px;
+  }
+
+  .orbit-node-help {
+    right: 9px;
+    bottom: 68px;
+  }
+}
+.orbit-node-icon {
+  display: grid;
+  place-items: center;
+}
+
+.orbit-node-icon svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .orbit-node-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+/* =========================================================
+   HOME SERVICE TILES + JACK
+   ========================================================= */
+
+.service-strip-grid {
+  gap: 14px;
+}
+
+.service-tile {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 112px;
+  padding: 12px 16px 12px 8px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(16, 47, 70, .10);
+  border-radius: 18px;
+
+  background: rgba(255,255,255,.97);
+
+  box-shadow:
+    0 8px 22px rgba(16,47,70,.08);
+
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+/* hilangkan efek warna/glow berlebihan lama */
+.service-tile::before,
+.service-tile::after {
+  opacity: 0;
+}
+
+/* =========================================================
+   HOME SERVICE TILES + JACK
+   ========================================================= */
+
+.service-strip-grid {
+  gap: 12px;
+}
+
+
+/* =========================================================
+   SERVICE CARD
+   ========================================================= */
+
+.service-tile {
+  --service-color: var(--color-accent);
+
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 18px;
+  align-items: center;
+  gap: 10px;
+
+  min-height: 100px;
+
+  padding: 8px 14px 8px 8px;
+
+  color: var(--color-primary);
+
+  background: rgba(255, 255, 255, 0.97);
+
+  border: 1px solid rgba(16, 47, 70, 0.09);
+  border-top: 2px solid var(--service-color);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 6px 18px rgba(16, 47, 70, 0.06);
+
+  overflow: hidden;
+
+  transition:
+    transform 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+
+/* Matikan dekorasi lama */
+.service-tile::before,
+.service-tile::after {
+  display: none;
+}
+
+
+/* =========================================================
+   WARNA
+   ========================================================= */
+
+.service-tile-teal {
+  --service-color: var(--color-accent);
+}
+
+.service-tile-blue {
+  --service-color: var(--color-blue);
+}
+
+.service-tile-amber {
+  --service-color: #d99a24;
+}
+
+.service-tile-coral {
+  --service-color: var(--color-coral);
+}
+
+
+/* =========================================================
+   JACK
+   ========================================================= */
+
+.service-jack-wrap {
+  width: 62px;
+  height: 82px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+
+  flex-shrink: 0;
+}
+
+.service-jack {
+  display: block;
+
+  width: 60px;
+  height: 78px;
+
+  max-width: none;
+
+  object-fit: contain;
+  object-position: center;
+
+  transform: none;
+
+  transition:
+    transform 220ms ease;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.service-tile-content {
+  min-width: 0;
+}
+
+.service-tile-content h3 {
+  margin: 0 0 4px;
+
+  color: var(--color-primary);
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.service-tile-content p {
+  margin: 0;
+
+  color: var(--color-text-muted);
+
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   ARROW
+   ========================================================= */
+
+.service-tile-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--service-color);
+
+  font-size: 16px;
+  font-weight: 700;
+
+  opacity: 0.65;
+
+  transition:
+    transform 220ms ease,
+    opacity 220ms ease;
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.service-tile:hover {
+  color: var(--color-primary);
+
+  transform: translateY(-3px);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--service-color) 25%,
+      rgba(16, 47, 70, 0.09)
+    );
+
+  box-shadow:
+    0 12px 28px rgba(16, 47, 70, 0.09);
+}
+
+.service-tile:hover .service-jack {
+  transform: scale(1.05);
+}
+
+.service-tile:hover .service-tile-arrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .service-strip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-tile {
+    grid-template-columns: 62px minmax(0, 1fr) 18px;
+
+    min-height: 98px;
+  }
+
+  .service-jack-wrap {
+    width: 60px;
+    height: 80px;
+  }
+
+  .service-jack {
+    width: 58px;
+    height: 76px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .service-strip-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .service-tile {
+    grid-template-columns: 56px minmax(0, 1fr) 16px;
+
+    min-height: 90px;
+
+    padding: 7px 12px 7px 7px;
+
+    gap: 9px;
+
+    border-radius: 14px;
+  }
+
+  .service-jack-wrap {
+    width: 54px;
+    height: 72px;
+  }
+
+  .service-jack {
+    width: 52px;
+    height: 70px;
+  }
+
+  .service-tile-content h3 {
+    font-size: 12px;
+  }
+
+  .service-tile-content p {
+    font-size: 9px;
+  }
+
+  .service-tile-arrow {
+    font-size: 15px;
+  }
+
+  .service-tile:hover .service-jack {
+    transform: none;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .service-tile {
+    grid-template-columns: 50px minmax(0, 1fr) 14px;
+
+    min-height: 84px;
+
+    padding: 6px 10px 6px 6px;
+  }
+
+  .service-jack-wrap {
+    width: 48px;
+    height: 66px;
+  }
+
+  .service-jack {
+    width: 46px;
+    height: 64px;
+  }
+
+  .service-tile-content h3 {
+    font-size: 11px;
+  }
+
+  .service-tile-content p {
+    font-size: 8px;
+  }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .service-tile,
+  .service-jack,
+  .service-tile-arrow {
+    transition: none;
+  }
+
+  .service-tile:hover,
+  .service-tile:hover .service-jack,
+  .service-tile:hover .service-tile-arrow {
+    transform: none;
+  }
+}
+/* Feature badge icons */
+
+.feature-icon {
+  display: grid;
+  place-items: center;
+
+  width: 46px;
+  height: 46px;
+
+  padding: 10px;
+
+  border-radius: 14px;
+
+  color: var(--feature-color, var(--color-accent));
+
+  background:
+    color-mix(
+      in srgb,
+      var(--feature-color, var(--color-accent)) 9%,
+      white
+    );
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--feature-color, var(--color-accent)) 15%,
+      transparent
+    );
+
+  box-shadow:
+    0 8px 20px
+    color-mix(
+      in srgb,
+      var(--feature-color, var(--color-accent)) 10%,
+      transparent
+    );
+
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease;
+}
+
+.feature-icon svg {
+  display: block;
+
+  width: 23px;
+  height: 23px;
+
+  overflow: visible;
+}
+
+.feature-card:hover .feature-icon {
+  transform: translateY(-2px) scale(1.04);
+}
+/* =========================================================
+   STEPS - FUNCTIONAL ICONS
+   ========================================================= */
+
+.steps-grid {
+  list-style: none;
+}
+
+.steps-grid li {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+
+  min-height: 86px;
+
+  padding: 15px 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.07);
+
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    transform 220ms ease;
+}
+
+
+/* ICON */
+
+.step-icon {
+  --step-color: #72ddd1;
+
+  width: 46px;
+  height: 46px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 13px;
+
+  color: var(--step-color);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--step-color) 12%,
+      transparent
+    );
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--step-color) 28%,
+      transparent
+    );
+
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.08);
+
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease;
+}
+
+.step-icon svg {
+  width: 23px;
+  height: 23px;
+}
+
+
+/* PER STEP */
+
+.step-icon-register {
+  --step-color: #6ed8ca;
+}
+
+.step-icon-service {
+  --step-color: #6ea8ff;
+}
+
+.step-icon-track {
+  --step-color: #a990f2;
+}
+
+
+/* TEXT */
+
+.steps-grid h3 {
+  margin: 0 0 5px;
+
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.steps-grid p {
+  margin: 0;
+
+  color: rgba(225, 239, 241, 0.76);
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* HOVER */
+
+.steps-grid li:hover {
+  transform: translateX(4px);
+
+  background: rgba(255, 255, 255, 0.095);
+
+  border-color: rgba(255, 255, 255, 0.23);
+}
+
+.steps-grid li:hover .step-icon {
+  transform: scale(1.06);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--step-color) 18%,
+      transparent
+    );
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .steps-grid li {
+    grid-template-columns: 46px minmax(0, 1fr);
+
+    min-height: 80px;
+
+    padding: 13px 15px;
+
+    gap: 13px;
+  }
+
+  .step-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .step-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .steps-grid h3 {
+    font-size: 14px;
+  }
+
+  .steps-grid p {
+    font-size: 12px;
+  }
+}
+
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .steps-grid li,
+  .step-icon {
+    transition: none;
+  }
+
+  .steps-grid li:hover,
+  .steps-grid li:hover .step-icon {
+    transform: none;
+  }
+}
+/* =========================================================
+   COMPACT FOOTER
+   ========================================================= */
+
+.footer {
+  padding: 10px 0;
+}
+
+.footer-content {
+  min-height: 42px;
+  padding: 0 18px;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+
+  font-size: 11px;
+}
+
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  white-space: nowrap;
+}
+
+.footer-brand strong {
+  font-size: 12px;
+  color: var(--color-primary);
+}
+
+.footer-brand span {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.footer-note {
+  text-align: center;
+
+  font-size: 10px;
+  line-height: 1.35;
+
+  color: var(--color-text-muted);
+}
+
+.footer-note small {
+  display: inline;
+  font-size: 9px;
+  opacity: .78;
+}
+
+.assistant-footer-link {
+  white-space: nowrap;
+
+  font-size: 10px;
+  font-weight: 600;
+
+  color: var(--color-accent);
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .footer-content {
+    grid-template-columns: 1fr auto;
+    gap: 10px 16px;
+  }
+
+  .footer-note {
+    grid-column: 1 / -1;
+    grid-row: 2;
+
+    text-align: left;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .footer {
+    padding: 9px 0;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    min-height: 0;
+
+    padding: 0 14px;
+    gap: 6px 12px;
+  }
+
+  .footer-brand span {
+    display: none;
+  }
+
+  .footer-note {
+    width: 100%;
+    order: 3;
+
+    font-size: 9px;
+  }
+
+  .assistant-footer-link {
+    margin-left: auto;
+  }
+}
+/* =========================================================
+   LARGE DESKTOP / FULL SCREEN POLISH
+   1440px - 2560px
+   ========================================================= */
+
+@media (min-width: 1440px) {
+
+  /* Semua section memakai garis alignment yang sama */
+  .container,
+  .navbar-container {
+    width: min(1440px, calc(100% - 96px));
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+
+
+  /* =========================
+     NAVBAR
+     ========================= */
+
+  .navbar-container {
+    padding-inline: 0;
+  }
+
+  .sehatwarga-logo {
+    height: 46px;
+  }
+
+  .competition-branding {
+    margin-left: 18px;
+    padding-left: 18px;
+  }
+
+
+  /* =========================
+     HERO
+     ========================= */
+
+  .hero-section {
+    padding: 76px 0 78px;
+  }
+
+  .hero-grid {
+    grid-template-columns:
+      minmax(0, 1.02fr)
+      minmax(460px, .98fr);
+
+    gap: clamp(60px, 6vw, 100px);
+
+    align-items: center;
+  }
+
+  .hero-content {
+    max-width: 650px;
+  }
+
+  .hero-content h1 {
+    max-width: 650px;
+
+    font-size: clamp(54px, 4vw, 68px);
+    line-height: 1.08;
+  }
+
+  .hero-description {
+    max-width: 570px;
+
+    font-size: 16px;
+  }
+
+
+  /* Hero visual kanan jangan ikut membesar terus */
+  .health-orbit {
+    width: 100%;
+    max-width: 560px;
+
+    min-height: 470px;
+
+    margin-left: auto;
+  }
+
+
+  /* =========================
+     JACK SERVICE STRIP
+     ========================= */
+
+  .service-strip {
+    margin-top: -28px;
+
+    padding-inline: 48px;
+    padding-bottom: 36px;
+  }
+
+  .service-strip-grid {
+    width: 100%;
+    max-width: 1440px;
+
+    margin-inline: auto;
+
+    grid-template-columns:
+      repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+  }
+
+  .service-tile {
+    min-height: 96px;
+  }
+
+
+  /* =========================
+     FEATURE SECTION
+     ========================= */
+
+  .features-section {
+    padding: 92px 0;
+  }
+
+  .features-grid {
+    gap: 22px;
+  }
+
+  .section-title-wrap {
+    max-width: 760px;
+  }
+
+
+  /* =========================
+     STEPS
+     ========================= */
+
+  .steps-section {
+    padding: 88px 0;
+  }
+
+  .steps-layout {
+    grid-template-columns:
+      minmax(360px, .75fr)
+      minmax(0, 1.25fr);
+
+    gap: 96px;
+  }
+
+
+  /* =========================
+     CTA
+     ========================= */
+
+  .final-cta {
+    width: 100%;
+    max-width: 1440px;
+
+    margin-inline: auto;
+  }
+}
+
+
+/* =========================================================
+   EXTRA LARGE SCREEN
+   1920px+
+   ========================================================= */
+
+@media (min-width: 1920px) {
+
+  .container,
+  .navbar-container,
+  .service-strip-grid,
+  .final-cta {
+    max-width: 1480px;
+  }
+
+  .hero-grid {
+    gap: 110px;
+  }
+
+  .hero-content h1 {
+    font-size: 70px;
+  }
+
+  .health-orbit {
+    max-width: 590px;
+  }
+}
+
+
+/* =========================================================
+   ULTRAWIDE
+   Jangan biarkan UI melebar tanpa batas
+   ========================================================= */
+
+@media (min-width: 2200px) {
+
+  .container,
+  .navbar-container,
+  .service-strip-grid,
+  .final-cta {
+    max-width: 1520px;
+  }
+
+  .hero-content h1 {
+    font-size: 72px;
+  }
+}
+/* =========================================================
+   FULL SCREEN HERO + RESPONSIVE CONTENT SCALE
+   ========================================================= */
+
+@media (min-width: 1024px) {
+
+  /* Navbar + hero = tepat satu layar */
+  .hero-section {
+    height: calc(100svh - var(--navbar-height));
+    min-height: calc(100svh - var(--navbar-height));
+
+    display: flex;
+    align-items: center;
+
+    padding: clamp(22px, 3vh, 42px) 0;
+
+    overflow: hidden;
+  }
+
+  .hero-section > .container {
+    width: 100%;
+  }
+
+
+  /* =====================================================
+     HERO GRID
+     ===================================================== */
+
+  .hero-grid {
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 1.02fr)
+      minmax(430px, .98fr);
+
+    align-items: center;
+
+    gap: clamp(50px, 6vw, 110px);
+  }
+
+
+  /* =====================================================
+     LEFT SIDE
+     ===================================================== */
+
+  .hero-content {
+    width: 100%;
+    max-width: clamp(580px, 39vw, 720px);
+  }
+
+  .hero-content .eyebrow {
+    margin-bottom: clamp(14px, 2vh, 22px);
+
+    font-size: clamp(10px, 1.15vh, 13px);
+
+    letter-spacing: 1.7px;
+  }
+
+
+  /* Judul ikut tinggi layar */
+  .hero-content h1 {
+    max-width: 720px;
+
+    margin-bottom: clamp(18px, 2.3vh, 28px);
+
+    font-size: clamp(
+      50px,
+      7vh,
+      76px
+    );
+
+    line-height: 1.06;
+
+    letter-spacing: clamp(
+      -3px,
+      -0.18vw,
+      -1.8px
+    );
+  }
+
+
+  /* Deskripsi juga ikut sedikit membesar */
+  .hero-description {
+    max-width: 610px;
+
+    margin-bottom: clamp(18px, 2.5vh, 28px);
+
+    font-size: clamp(
+      14px,
+      1.65vh,
+      18px
+    );
+
+    line-height: 1.7;
+  }
+
+
+  /* =====================================================
+     BUTTON
+     ===================================================== */
+
+  .hero-actions {
+    display: flex;
+
+    gap: 12px;
+
+    margin-bottom: clamp(16px, 2.2vh, 24px);
+  }
+
+  .hero-actions .btn {
+    min-height: clamp(44px, 5.2vh, 54px);
+
+    padding-inline: clamp(18px, 1.8vw, 26px);
+
+    font-size: clamp(
+      13px,
+      1.45vh,
+      15px
+    );
+  }
+
+
+  /* =====================================================
+     TRUST ROW
+     ===================================================== */
+
+  .trust-row {
+    margin-top: clamp(14px, 2vh, 24px);
+
+    gap: clamp(12px, 1.4vw, 20px);
+
+    font-size: clamp(
+      10px,
+      1.25vh,
+      13px
+    );
+  }
+
+  .trust-row i {
+    width: clamp(6px, .75vh, 8px);
+    height: clamp(6px, .75vh, 8px);
+  }
+
+
+  /* =====================================================
+     HERO NOTE
+     ===================================================== */
+
+  .hero-note {
+    margin-top: clamp(10px, 1.5vh, 16px);
+
+    font-size: clamp(
+      10px,
+      1.2vh,
+      12px
+    );
+  }
+
+
+  /* =====================================================
+     RIGHT VISUAL
+     ===================================================== */
+
+  .health-orbit {
+    width: clamp(
+      460px,
+      36vw,
+      620px
+    );
+
+    height: clamp(
+      410px,
+      59vh,
+      590px
+    );
+
+    min-height: 0;
+
+    margin-left: auto;
+  }
+
+
+  /* Logo tengah ikut skala */
+  .orbit-core {
+    width: clamp(
+      180px,
+      13vw,
+      225px
+    );
+
+    height: clamp(
+      112px,
+      14vh,
+      145px
+    );
+  }
+
+  .orbit-brand-logo {
+    width: clamp(
+      145px,
+      10vw,
+      185px
+    );
+
+    max-height: clamp(
+      52px,
+      7vh,
+      70px
+    );
+  }
+
+  .orbit-core-caption {
+    margin-top: clamp(6px, .8vh, 10px);
+
+    font-size: clamp(
+      8px,
+      1vh,
+      11px
+    );
+  }
+
+
+  /* =====================================================
+     ORBIT CARDS
+     ===================================================== */
+
+  .orbit-node {
+    min-width: clamp(
+      132px,
+      10vw,
+      160px
+    );
+
+    padding:
+      clamp(9px, 1.1vh, 13px)
+      clamp(11px, .9vw, 15px);
+
+    grid-template-columns:
+      clamp(32px, 2.4vw, 40px)
+      1fr;
+
+    column-gap: 10px;
+  }
+
+  .orbit-node > span {
+    width: clamp(32px, 2.4vw, 40px);
+    height: clamp(32px, 2.4vw, 40px);
+  }
+
+  .orbit-node strong {
+    font-size: clamp(
+      10px,
+      1.2vh,
+      13px
+    );
+  }
+
+  .orbit-node small {
+    font-size: clamp(
+      8px,
+      .95vh,
+      10px
+    );
+  }
+
+
+  /* =====================================================
+     STATUS
+     ===================================================== */
+
+  .orbit-status {
+    padding:
+      clamp(6px, .8vh, 8px)
+      clamp(10px, .9vw, 14px);
+
+    font-size: clamp(
+      8px,
+      1vh,
+      10px
+    );
+  }
+
+
+  /* =====================================================
+     BAGIAN SETELAH HERO
+     ===================================================== */
+
+  .service-strip {
+    margin-top: 0;
+
+    padding-top: 24px;
+    padding-bottom: 30px;
+  }
+}
+
+
+/* =========================================================
+   LAPTOP PENDEK
+   1366 × 768 dan sejenisnya
+   ========================================================= */
+
+@media (min-width: 1024px) and (max-height: 800px) {
+
+  .hero-content h1 {
+    font-size: clamp(46px, 6.5vh, 56px);
+  }
+
+  .hero-description {
+    font-size: 14px;
+
+    line-height: 1.6;
+  }
+
+  .health-orbit {
+    width: clamp(430px, 35vw, 510px);
+    height: clamp(380px, 55vh, 430px);
+  }
+
+  .orbit-core {
+    width: 185px;
+    height: 112px;
+  }
+
+  .orbit-brand-logo {
+    width: 150px;
+  }
+
+}
+
+
+/* =========================================================
+   FULL HD / LAYAR BESAR
+   ========================================================= */
+
+@media (min-width: 1600px) and (min-height: 900px) {
+
+  .hero-content {
+    max-width: 700px;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(68px, 7vh, 78px);
+  }
+
+  .hero-description {
+    max-width: 620px;
+
+    font-size: 17px;
+  }
+
+  .health-orbit {
+    width: clamp(560px, 35vw, 640px);
+    height: clamp(500px, 59vh, 620px);
+  }
+
+}
+
+
+/* =========================================================
+   ULTRAWIDE
+   Jangan terus membesar tanpa batas
+   ========================================================= */
+
+@media (min-width: 2200px) {
+
+  .hero-content h1 {
+    font-size: 80px;
+  }
+
+  .health-orbit {
+    width: 650px;
+    height: 610px;
+  }
+
+}
+/* =========================================================
+   HERO LARGE DESKTOP - BIGGER CONTENT
+   ========================================================= */
+
+@media (min-width: 1280px) {
+
+  .hero-section > .container {
+    width: min(1540px, calc(100% - 80px));
+    max-width: 1540px;
+    margin-inline: auto;
+  }
+
+  .hero-grid {
+    grid-template-columns:
+      minmax(600px, 1.08fr)
+      minmax(540px, .92fr);
+
+    gap: clamp(60px, 5vw, 100px);
+  }
+
+  /* LEFT */
+  .hero-content {
+    max-width: 760px;
+  }
+
+  .hero-content .eyebrow {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .hero-content h1 {
+    max-width: 760px;
+
+    font-size: clamp(68px, 5vw, 88px);
+    line-height: 1.03;
+    letter-spacing: -3.5px;
+
+    margin-bottom: 26px;
+  }
+
+  .hero-description {
+    max-width: 650px;
+
+    font-size: clamp(16px, 1.1vw, 19px);
+    line-height: 1.7;
+
+    margin-bottom: 26px;
+  }
+
+  .hero-actions .btn {
+    min-height: 52px;
+
+    padding-inline: 25px;
+
+    font-size: 15px;
+  }
+
+  .trust-row {
+    font-size: 13px;
+    margin-top: 22px;
+  }
+
+  .hero-note {
+    font-size: 12px;
+    margin-top: 14px;
+  }
+
+
+  /* RIGHT */
+  .health-orbit {
+    width: clamp(560px, 38vw, 680px);
+    height: clamp(500px, 58vh, 640px);
+
+    max-width: none;
+
+    margin-left: auto;
+  }
+
+  .orbit-core {
+    width: 230px;
+    height: 145px;
+  }
+
+  .orbit-brand-logo {
+    width: 190px;
+    max-height: 72px;
+  }
+
+  .orbit-node {
+    min-width: 158px;
+    padding: 13px 15px;
+
+    grid-template-columns: 40px 1fr;
+  }
+
+  .orbit-node > span {
+    width: 40px;
+    height: 40px;
+  }
+
+  .orbit-node strong {
+    font-size: 13px;
+  }
+
+  .orbit-node small {
+    font-size: 10px;
+  }
+}
+
+
+/* =========================================================
+   FULL HD
+   ========================================================= */
+
+@media (min-width: 1700px) {
+
+  .hero-content h1 {
+    font-size: 92px;
+  }
+
+  .hero-content {
+    max-width: 800px;
+  }
+
+  .health-orbit {
+    width: 700px;
+    height: 650px;
+  }
+}
+/* =========================================================
+   SEHATWARGA JOURNEY SECTION
+   ========================================================= */
+
+.journey-section {
+  position: relative;
+
+  padding: 100px 0;
+
+  overflow: hidden;
+
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #102f43 0%,
+      #123b4d 58%,
+      #164858 100%
+    );
+}
+
+
+/* dekorasi lembut */
+.journey-section::before {
+  content: "";
+
+  position: absolute;
+
+  width: 520px;
+  height: 520px;
+
+  right: -230px;
+  top: -250px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 0 0 80px rgba(255,255,255,.018),
+    0 0 0 160px rgba(255,255,255,.012);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   LAYOUT
+   ========================================================= */
+
+.journey-layout {
+  position: relative;
+  z-index: 2;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(320px, .78fr)
+    minmax(0, 1.22fr);
+
+  align-items: center;
+
+  gap: clamp(60px, 7vw, 110px);
+}
+
+
+/* =========================================================
+   INTRO
+   ========================================================= */
+
+.journey-intro {
+  max-width: 500px;
+}
+
+.journey-intro .eyebrow {
+  margin-bottom: 20px;
+
+  color: #74ddd1;
+}
+
+.journey-intro h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(38px, 3.4vw, 54px);
+  font-weight: 700;
+
+  line-height: 1.08;
+
+  letter-spacing: -1.8px;
+}
+
+.journey-intro h2 span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #74ddd1;
+}
+
+.journey-description {
+  max-width: 460px;
+
+  margin-top: 24px;
+
+  color: rgba(224, 238, 241, .78);
+
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   NOTE
+   ========================================================= */
+
+.journey-note {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-top: 30px;
+
+  color: rgba(224, 238, 241, .66);
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.journey-note-dot {
+  width: 7px;
+  height: 7px;
+
+  margin-top: 5px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #61d7c6;
+
+  box-shadow:
+    0 0 0 4px rgba(97,215,198,.12);
+}
+
+
+/* =========================================================
+   STEP LIST
+   ========================================================= */
+
+.journey-steps {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+/* connector line */
+.journey-steps::before {
+  content: "";
+
+  position: absolute;
+
+  left: 31px;
+  top: 58px;
+  bottom: 58px;
+
+  width: 1px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(110,216,202,.45),
+      rgba(110,168,255,.35),
+      rgba(169,144,242,.40)
+    );
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   STEP CARD
+   ========================================================= */
+
+.journey-step {
+  --journey-color: #6ed8ca;
+
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns:
+    62px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: center;
+
+  gap: 18px;
+
+  min-height: 118px;
+
+  padding: 18px 22px;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(255,255,255,.13);
+
+  background: rgba(255,255,255,.07);
+
+  backdrop-filter: blur(10px);
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.04);
+
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease;
+}
+
+
+/* =========================================================
+   COLORS
+   ========================================================= */
+
+.journey-step-teal {
+  --journey-color: #6ed8ca;
+}
+
+.journey-step-blue {
+  --journey-color: #6ea8ff;
+}
+
+.journey-step-violet {
+  --journey-color: #a990f2;
+}
+
+
+/* =========================================================
+   ICON
+   ========================================================= */
+
+.journey-icon {
+  position: relative;
+  z-index: 2;
+
+  width: 52px;
+  height: 52px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 15px;
+
+  color: var(--journey-color);
+
+  background:
+    color-mix(
+      in srgb,
+      var(--journey-color) 12%,
+      rgba(255,255,255,.04)
+    );
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--journey-color) 28%,
+      transparent
+    );
+}
+
+.journey-icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.journey-step-content {
+  min-width: 0;
+}
+
+.journey-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--journey-color);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+.journey-step h3 {
+  margin: 0 0 6px;
+
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.journey-step p {
+  margin: 0;
+
+  max-width: 520px;
+
+  color: rgba(224,238,241,.72);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   STATUS CHIP
+   ========================================================= */
+
+.journey-status {
+  padding: 5px 9px;
+
+  white-space: nowrap;
+
+  color: var(--journey-color);
+
+  font-size: 9px;
+  font-weight: 700;
+
+  border-radius: 999px;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--journey-color) 10%,
+      transparent
+    );
+
+  border:
+    1px solid
+    color-mix(
+      in srgb,
+      var(--journey-color) 20%,
+      transparent
+    );
+}
+
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.journey-step:hover {
+  transform: translateX(5px);
+
+  background: rgba(255,255,255,.095);
+
+  border-color:
+    color-mix(
+      in srgb,
+      var(--journey-color) 25%,
+      rgba(255,255,255,.13)
+    );
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .journey-section {
+    padding: 72px 0;
+  }
+
+  .journey-layout {
+    grid-template-columns: 1fr;
+
+    gap: 48px;
+  }
+
+  .journey-intro {
+    max-width: 620px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .journey-section {
+    padding: 58px 0;
+  }
+
+  .journey-intro h2 {
+    font-size: 34px;
+  }
+
+  .journey-step {
+    grid-template-columns:
+      48px
+      minmax(0, 1fr);
+
+    min-height: 100px;
+
+    padding: 15px;
+
+    gap: 13px;
+
+    border-radius: 15px;
+  }
+
+  .journey-icon {
+    width: 44px;
+    height: 44px;
+
+    border-radius: 13px;
+  }
+
+  .journey-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .journey-status {
+    display: none;
+  }
+
+  .journey-steps::before {
+    left: 22px;
+  }
+
+  .journey-step h3 {
+    font-size: 14px;
+  }
+
+  .journey-step p {
+    font-size: 11px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .journey-step {
+    transition: none;
+  }
+
+  .journey-step:hover {
+    transform: none;
+  }
+}
+/* =========================================================
+   FACILITY CARD ACTION FIX
+   ========================================================= */
+
+.facility-card {
+  position: relative;
+}
+
+.facility-actions {
+  position: relative;
+  z-index: 10;
+}
+
+.facility-actions .btn {
+  position: relative;
+  z-index: 11;
+
+  pointer-events: auto;
+
+  transform: none !important;
+}
+
+.facility-actions .btn:hover {
+  transform: translateY(-1px) !important;
+}
+
+.facility-actions .btn:active {
+  transform: scale(.98) !important;
+}
+/* =========================================================
+   FACILITY CARD - STABLE CLICK FIX
+   ========================================================= */
+
+.facility-card,
+.facility-card.fx-tilt {
+  position: relative;
+
+  transform: none !important;
+  transform-style: flat !important;
+}
+
+.facility-card:hover {
+  transform: translateY(-2px) !important;
+}
+
+.facility-actions {
+  position: relative;
+  z-index: 20;
+}
+
+.facility-actions a,
+.facility-actions .btn {
+  position: relative;
+  z-index: 21;
+
+  pointer-events: auto !important;
+
+  transform: none !important;
+
+  cursor: pointer;
+}
+
+.facility-actions a::before,
+.facility-actions a::after {
+  pointer-events: none;
+}

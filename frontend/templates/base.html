@@ -30,7 +30,28 @@
   <div class="scroll-progress" aria-hidden="true"><span id="scroll-progress-bar"></span></div>
   <header class="navbar">
     <div class="container navbar-container">
-      <a href="{{ url_for('main.index') }}" class="navbar-brand"><span class="brand-mark" aria-hidden="true"><i></i>s<span>+</span></span><span>SehatWarga<small>Portal layanan warga</small></span></a>
+    <a href="{{ url_for('main.index') }}" class="navbar-brand navbar-brand-logo">
+  <img
+    src="{{ url_for('static', filename='images/branding/sehatwargalogo.png') }}"
+    alt="SehatWarga - Portal Layanan Warga"
+    class="sehatwarga-logo"
+  >
+</a>
+        <div class="competition-branding" aria-label="Identitas kompetisi">
+    <span class="competition-divider" aria-hidden="true"></span>
+
+    <img
+      src="{{ url_for('static', filename='images/competition/tcc.png') }}"
+      alt="Logo TCC"
+      class="competition-logo competition-logo-tcc"
+    >
+
+    <img
+      src="{{ url_for('static', filename='images/competition/triple-c.png') }}"
+      alt="Logo Triple-C"
+      class="competition-logo competition-logo-triple"
+    >
+  </div>
       <button type="button" id="nav-toggle" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" aria-label="Buka menu navigasi">Menu <span aria-hidden="true">☰</span></button>
       <nav id="site-navigation" class="site-navigation" aria-label="Navigasi utama" tabindex="-1">
         <div class="drawer-heading"><strong>Menu SehatWarga</strong><button type="button" id="nav-close" class="btn" aria-label="Tutup menu navigasi">Tutup</button></div>
@@ -96,11 +117,32 @@
     </div>
     {% block content %}{% endblock %}
   </main>
-  <footer class="footer"><div class="container footer-content">
-    <strong class="footer-brand"><span class="footer-brand-mark" aria-hidden="true">S+</span>SehatWarga</strong><span>Prototype akademik independen.</span>
-    <p class="footer-disclaimer">Bukan situs resmi BPJS atau lembaga pemerintah. Pembayaran dan layanan merupakan simulasi.</p>
-    {% if request.endpoint != 'assistant.chat_page' %}<a href="{{ url_for('assistant.chat_page') }}" class="assistant-floating-btn" aria-label="Buka Asisten SehatWarga">Bantuan Asisten <span aria-hidden="true">↗</span></a>{% endif %}
-  </div></footer>
+  <footer class="footer"><div class="footer-content">
+
+  <div class="footer-brand">
+    <strong>SehatWarga</strong>
+    <span>Portal layanan kesehatan warga terintegrasi.</span>
+  </div>
+
+  <div class="footer-note">
+    <span>
+      Prototipe kompetisi TCC 2026 • Data, pembayaran, dan layanan pada demo ini bersifat simulasi.
+    </span>
+
+    <small>
+      Tidak terafiliasi dengan BPJS Kesehatan atau instansi pemerintah.
+    </small>
+  </div>
+
+  <a
+    href="{{ url_for('assistant.chat_page') }}"
+    class="assistant-footer-link"
+  >
+    Buka Asisten
+    <span aria-hidden="true">↗</span>
+  </a>
+
+</div></footer>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block extra_js %}{% endblock %}
 </body></html>
