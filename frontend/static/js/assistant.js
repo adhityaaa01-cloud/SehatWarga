@@ -47,9 +47,46 @@ document.addEventListener('DOMContentLoaded', () => {
       return container;
     }
 
-    source.split('\n').forEach((line,index) => {
-      if(index) container.append(document.createElement('br'));
-      appendInlineMarkdown(container,line);
+    let list=null;
+    let listType=null;
+    let lastItem=null;
+
+    source.split('\n').forEach(rawLine => {
+      const line=rawLine.trim();
+      const ordered=line.match(/^\d+[.)]\s+(.+)$/);
+      const unordered=line.match(/^[-•]\s+(.+)$/);
+      const match=ordered || unordered;
+
+      if(match) {
+        const type=ordered ? 'ol' : 'ul';
+
+        if(!list || listType!==type) {
+          list=el(type,'message-list');
+          container.append(list);
+          listType=type;
+        }
+
+        lastItem=el('li');
+        appendInlineMarkdown(lastItem,match[1]);
+        list.append(lastItem);
+        return;
+      }
+
+      if(/^\s+/.test(rawLine) && lastItem && line) {
+        lastItem.append(document.createElement('br'));
+        appendInlineMarkdown(lastItem,line);
+        return;
+      }
+
+      list=null;
+      listType=null;
+      lastItem=null;
+
+      if(!line) return;
+
+      const paragraph=el('p');
+      appendInlineMarkdown(paragraph,line);
+      container.append(paragraph);
     });
 
     return container;
@@ -71,6 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return bubble;
   }
   function setBusy(value) {busy=value;submit.disabled=value;form.setAttribute('aria-busy',String(value));document.querySelectorAll('.suggested-pill,.btn-location-action').forEach(b=>b.disabled=value);}
+
+  function resizeInput() {
+    input.style.height='auto';
+    input.style.height=`${Math.min(input.scrollHeight,96)}px`;
+    input.style.overflowY=input.scrollHeight>96 ? 'auto' : 'hidden';
+  }
   async function request(url,payload,retry) {
     if(busy) return;
     setBusy(true);
@@ -90,7 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function send(message) {
     if(busy || !message.trim()) return;
-    message=message.trim().slice(0,2000); row(message,true);input.value='';
+    message=message.trim().slice(0,2000);
+    row(message,true);
+    input.value='';
+    resizeInput();
     request(form.dataset.chatUrl,{message},()=>request(form.dataset.chatUrl,{message},()=>send(message)));
   }
   function hasCoords(f) {return typeof f.latitude==='number' && Number.isFinite(f.latitude) && Math.abs(f.latitude)<=90 && typeof f.longitude==='number' && Number.isFinite(f.longitude) && Math.abs(f.longitude)<=180;}
@@ -169,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
     messages.scrollTop=messages.scrollHeight;
   }
   form.addEventListener('submit',e=>{e.preventDefault();send(input.value);});
+  input.addEventListener('input',resizeInput);
   input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send(input.value);}});
+  resizeInput();
   document.querySelectorAll('.suggested-pill').forEach(b=>b.addEventListener('click',()=>send(b.dataset.query)));
 });
