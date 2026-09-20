@@ -81,15 +81,28 @@ def process_assistant_chat(
     local_provider = FallbackAIProvider()
     local_intent = local_provider.classify_intent(validated_msg)
 
+    local_required_intents = {
+        "MEMBERSHIP_SUMMARY",
+        "FACILITY_NEARBY",
+        "FACILITY_SEARCH",
+    }
+
     if safety:
         intent = safety
         ai_provider = local_provider
-    elif local_intent == "MEMBERSHIP_SUMMARY":
+    elif local_intent in local_required_intents:
         intent = local_intent
         ai_provider = local_provider
-    else:
+    elif local_intent == "SERVICE_RECOMMENDATION":
+        # Satu panggilan Gemini untuk klasifikasi layanan.
+        # Jawaban dan fasilitas tetap disusun dari database lokal.
         ai_provider = get_ai_provider()
         intent = ai_provider.classify_intent(validated_msg)
+    else:
+        # Pertanyaan umum langsung dibuatkan jawaban.
+        # Tidak ada panggilan Gemini tambahan untuk klasifikasi.
+        intent = local_intent
+        ai_provider = get_ai_provider()
 
     facility_type = extract_facility_filter(validated_msg)
     city = extract_city_filter(validated_msg)

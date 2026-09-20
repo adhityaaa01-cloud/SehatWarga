@@ -9,10 +9,59 @@ document.addEventListener('DOMContentLoaded', () => {
   let busy=false;
   const maps=[];
   function el(tag, cls, text) { const n=document.createElement(tag); if(cls) n.className=cls; if(text) n.textContent=text; return n; }
+
+  function appendItalic(parent,text) {
+    const pattern=/\*([^*\n]+)\*/g;
+    let cursor=0;
+
+    for(const match of text.matchAll(pattern)) {
+      parent.append(document.createTextNode(text.slice(cursor,match.index)));
+      parent.append(el('em','',match[1]));
+      cursor=match.index+match[0].length;
+    }
+
+    parent.append(document.createTextNode(text.slice(cursor)));
+  }
+
+  function appendInlineMarkdown(parent,text) {
+    const pattern=/\*\*([^\n]+?)\*\*/g;
+    let cursor=0;
+
+    for(const match of text.matchAll(pattern)) {
+      appendItalic(parent,text.slice(cursor,match.index));
+      const strong=el('strong');
+      appendItalic(strong,match[1]);
+      parent.append(strong);
+      cursor=match.index+match[0].length;
+    }
+
+    appendItalic(parent,text.slice(cursor));
+  }
+
+  function renderMessageText(text,markdown=false) {
+    const container=el('div','message-text');
+    const source=String(text ?? '');
+
+    if(!markdown) {
+      container.textContent=source;
+      return container;
+    }
+
+    source.split('\n').forEach((line,index) => {
+      if(index) container.append(document.createElement('br'));
+      appendInlineMarkdown(container,line);
+    });
+
+    return container;
+  }
+
   function row(text, user=false) {
     const r=el('div',`message-row ${user?'user-row':'assistant-row'}`);
     r.append(el('div','message-avatar',user?'Anda':'SW'));
-    const bubble=el('div','message-bubble'); bubble.append(el('div','message-text',text)); r.append(bubble); messages.append(r);
+    const bubble=el('div','message-bubble');
+    bubble.append(renderMessageText(text,!user));
+    r.append(bubble);
+    messages.append(r);
     // Bound DOM and map resources; no durable chat storage.
     while(messages.children.length>40) {
       const first=messages.firstElementChild;
