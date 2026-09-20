@@ -1,4 +1,5 @@
 import re
+import os
 import json
 import logging
 from abc import ABC, abstractmethod
@@ -336,6 +337,9 @@ def get_ai_provider() -> BaseAIProvider:
     Defaults to FallbackAIProvider if unconfigured, missing key, or provider=='fallback'.
     """
     provider_name = str(current_app.config.get("AI_PROVIDER") or "fallback").lower()
+    if provider_name == "groq":
+        return get_groq_provider() or FallbackAIProvider()
+
     api_key = current_app.config.get("AI_API_KEY", "")
 
     # If provider is fallback or key is missing, return deterministic FallbackAIProvider
@@ -538,3 +542,127 @@ class GeminiAIProvider(BaseAIProvider):
         """Return only a small, validated conversation window."""
         # Riwayat chat dan data akun tidak dikirim ke provider eksternal.
         return []
+
+
+def get_groq_provider():
+    """Resolve Groq credentials independently of the Gemini configuration."""
+    api_key = current_app.config.get("GROQ_API_KEY", os.getenv("GROQ_API_KEY", ""))
+    model = current_app.config.get("GROQ_MODEL", os.getenv("GROQ_MODEL", "openai/gpt-oss-20b"))
+    if not api_key or not model:
+        return None
+    return GroqAIProvider(api_key, model, current_app.config.get("AI_TIMEOUT_MS", 8000))
+
+
+class GroqAIProvider(BaseAIProvider):
+    """Groq responses with local intent routing and deterministic fallback."""
+
+    def __init__(self, api_key, model, timeout_ms=8000):
+        self.api_key = api_key
+        self.model = model
+        self.timeout_ms = max(1000, min(int(timeout_ms), 30000))
+        self.fallback = FallbackAIProvider()
+
+    def classify_intent(self, message, context=None):
+        return self.fallback.classify_intent(message, context)
+
+    def build_context(self, conversation_history=None, app_context=None):
+        return self.fallback.build_context(conversation_history, app_context)
+
+    def generate_response(self, message, intent, context=None):
+        try:
+            return self._request(message, intent, context)
+        except Exception:
+            logger.warning("Groq unavailable; using local fallback")
+            return self.fallback.generate_response(message, intent, context)
+
+    def _request(self, message, intent, context=None):
+        from groq import Groq
+        from app.services.assistant_safety import redact_sensitive
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "Kamu adalah asisten virtual SehatWarga. "
+                    "Jawab menggunakan Bahasa Indonesia yang jelas, "
+                    "ramah, natural, dan mudah dipahami. "
+                    ""
+                    "Kamu membantu pengguna memahami informasi kesehatan "
+                    "umum dan layanan SehatWarga. "
+                    ""
+                    "Untuk pertanyaan kesehatan, berikan informasi umum "
+                    "dan edukatif, tetapi jangan mengaku memberikan "
+                    "diagnosis medis pasti. "
+                    ""
+                    "Jika pengguna menyebut kondisi yang tampak darurat "
+                    "atau berbahaya, sarankan pengguna segera mencari "
+                    "pertolongan medis atau fasilitas kesehatan terdekat. "
+                    ""
+                    "Jangan mengarang nama fasilitas kesehatan, alamat, "
+                    "lokasi, data kepesertaan, status layanan, ataupun "
+                    "data pribadi pengguna. Data tersebut ditangani "
+                    "langsung oleh backend dan database SehatWarga. "
+                    ""
+                    "Jangan mengatakan bahwa kamu menggunakan Groq, "
+                    "Gemini, model tertentu, atau provider AI tertentu "
+                    "kecuali pengguna secara khusus menanyakannya."
+                ),
+            }
+        ]
+
+        # Ambil riwayat percakapan jika tersedia.
+        history = []
+
+        if context:
+            history = context.get(
+                "conversation_history",
+                [],
+            )[-10:]
+
+        for item in history:
+            if not isinstance(item, dict):
+                continue
+
+            role = item.get("role")
+            content = item.get("content")
+
+            if (
+                role in {"user", "assistant"}
+                and isinstance(content, str)
+                and content.strip()
+            ):
+                messages.append(
+                    {
+                        "role": role,
+                        "content": redact_sensitive(content),
+                    }
+                )
+
+        # Tambahkan pertanyaan terbaru.
+        messages.append(
+            {
+                "role": "user",
+                "content": redact_sensitive(message),
+            }
+        )
+
+        with Groq(api_key=self.api_key, timeout=self.timeout_ms / 1000,
+                  max_retries=0) as client:
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+            )
+
+        if not response.choices:
+            raise RuntimeError(
+                "Groq tidak menghasilkan pilihan respons."
+            )
+
+        result = response.choices[0].message.content
+
+        if not isinstance(result, str) or not result.strip():
+            raise RuntimeError(
+                "Groq menghasilkan respons kosong."
+            )
+
+        return result.strip()

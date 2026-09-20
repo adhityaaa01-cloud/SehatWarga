@@ -1,8 +1,6 @@
 import logging
-import os
 
 from typing import Dict, Any, Optional, List, Tuple
-from groq import Groq
 
 from app.services.facility_service import (
     find_nearest_facilities,
@@ -12,6 +10,8 @@ from app.services.facility_service import (
 
 from app.services.ai_service import (
     get_ai_provider,
+    get_groq_provider,
+    GroqAIProvider,
     FallbackAIProvider,
     extract_facility_filter,
     extract_city_filter,
@@ -31,118 +31,12 @@ logger = logging.getLogger(__name__)
 # GROQ FALLBACK
 # ============================================================
 
-def generate_groq_response(
-    message: str,
-    intent: str,
-    context: Optional[Dict[str, Any]] = None,
-) -> str:
-    """
-    Provider AI cadangan.
-
-    Digunakan ketika Gemini / provider utama gagal, timeout,
-    terkena rate limit, atau quota habis.
-    """
-
-    api_key = os.getenv("GROQ_API_KEY")
-    model = os.getenv(
-        "GROQ_MODEL",
-        "openai/gpt-oss-20b",
-    )
-
-    if not api_key:
-        raise RuntimeError(
-            "GROQ_API_KEY belum tersedia di environment."
-        )
-
-    client = Groq(
-        api_key=api_key,
-    )
-
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "Kamu adalah asisten virtual SehatWarga. "
-                "Jawab menggunakan Bahasa Indonesia yang jelas, "
-                "ramah, natural, dan mudah dipahami. "
-                ""
-                "Kamu membantu pengguna memahami informasi kesehatan "
-                "umum dan layanan SehatWarga. "
-                ""
-                "Untuk pertanyaan kesehatan, berikan informasi umum "
-                "dan edukatif, tetapi jangan mengaku memberikan "
-                "diagnosis medis pasti. "
-                ""
-                "Jika pengguna menyebut kondisi yang tampak darurat "
-                "atau berbahaya, sarankan pengguna segera mencari "
-                "pertolongan medis atau fasilitas kesehatan terdekat. "
-                ""
-                "Jangan mengarang nama fasilitas kesehatan, alamat, "
-                "lokasi, data kepesertaan, status layanan, ataupun "
-                "data pribadi pengguna. Data tersebut ditangani "
-                "langsung oleh backend dan database SehatWarga. "
-                ""
-                "Jangan mengatakan bahwa kamu menggunakan Groq, "
-                "Gemini, model tertentu, atau provider AI tertentu "
-                "kecuali pengguna secara khusus menanyakannya."
-            ),
-        }
-    ]
-
-    # Ambil riwayat percakapan jika tersedia.
-    history = []
-
-    if context:
-        history = context.get(
-            "conversation_history",
-            [],
-        )[-10:]
-
-    for item in history:
-        if not isinstance(item, dict):
-            continue
-
-        role = item.get("role")
-        content = item.get("content")
-
-        if (
-            role in {"user", "assistant"}
-            and isinstance(content, str)
-            and content.strip()
-        ):
-            messages.append(
-                {
-                    "role": role,
-                    "content": content,
-                }
-            )
-
-    # Tambahkan pertanyaan terbaru.
-    messages.append(
-        {
-            "role": "user",
-            "content": message,
-        }
-    )
-
-    response = client.chat.completions.create(
-        model=model,
-        messages=messages,
-    )
-
-    if not response.choices:
-        raise RuntimeError(
-            "Groq tidak menghasilkan pilihan respons."
-        )
-
-    result = response.choices[0].message.content
-
-    if not result or not result.strip():
-        raise RuntimeError(
-            "Groq menghasilkan respons kosong."
-        )
-
-    return result.strip()
+def generate_groq_response(message, intent, context=None):
+    """Use the same Groq adapter when the primary provider fails."""
+    provider = get_groq_provider()
+    if provider is None:
+        raise RuntimeError("Groq is not configured")
+    return provider.generate_response(message, intent, context)
 
 
 def generate_ai_response_with_fallback(
@@ -154,8 +48,8 @@ def generate_ai_response_with_fallback(
     """
     Urutan provider:
 
-    1. Gemini / provider utama.
-    2. Groq.
+    1. Provider utama sesuai AI_PROVIDER (Gemini atau Groq).
+    2. Groq jika provider utama bukan Groq.
     3. Fallback lokal SehatWarga.
 
     Untuk intent yang memang menggunakan FallbackAIProvider,
@@ -210,6 +104,9 @@ def generate_ai_response_with_fallback(
             "Primary AI provider tidak tersedia. "
             "Mencoba Groq fallback."
         )
+
+    if isinstance(ai_provider, GroqAIProvider):
+        return FallbackAIProvider().generate_response(message, intent, context)
 
     # ========================================================
     # 2. GROQ
