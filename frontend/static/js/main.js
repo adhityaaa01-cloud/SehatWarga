@@ -75,6 +75,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
   updateProgress();
 
+  // Keep the journey reveal independent of other sections' animation order.
+  if (!reducedMotion.matches && 'IntersectionObserver' in window) {
+    const journeyObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.journey-step').forEach(card => {
+      card.classList.add('journey-reveal');
+      journeyObserver.observe(card);
+    });
+  }
+
   const revealTargets = document.querySelectorAll([
     '.service-tile', '.feature-card', '.steps-grid li', '.facility-spotlight .split-panel',
     '.final-cta', '.dashboard-header', '.summary-panel', '.stat-card', '.action-card',
