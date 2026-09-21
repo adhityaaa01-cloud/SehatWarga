@@ -10,6 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}SehatWarga — Layanan dalam satu ruang{% endblock %}</title>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/instrument-sans-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant.css') }}">
   {% block extra_css %}{% endblock %}

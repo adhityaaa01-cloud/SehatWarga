@@ -10,7 +10,7 @@
   --color-text-muted: #586C75;
   --color-accent: #0F9F95;
   --color-accent-hover: #0B8179;
-  --font-family-base: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-base: "Instrument Sans", sans-serif;
   --font-size-display: 44px;
   --font-size-heading: 32px;
   --font-size-subheading: 20px;
@@ -39,40 +39,25 @@
   --navbar-height: 78px;
   --admin-sidebar-width: 256px;
 }
+/* latin-ext */
 @font-face {
-  font-family: 'Plus Jakarta Sans';
+  font-family: 'Instrument Sans';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 700;
+  font-stretch: 100%;
   font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-0.woff2) format('woff2');
+  src: url(../fonts/instrument-sans-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+/* latin */
 @font-face {
-  font-family: 'Plus Jakarta Sans';
+  font-family: 'Instrument Sans';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400 700;
+  font-stretch: 100%;
   font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-1.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-2.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-3.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url(../fonts/plus-jakarta-sans-4.woff2) format('woff2');
+  src: url(../fonts/instrument-sans-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -1805,7 +1790,7 @@ body::before {
 .service-tile { --service-color:var(--color-accent);position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:13px;min-height:106px;padding:18px;border:1px solid var(--color-border);border-radius:17px;background:white;color:var(--color-primary);box-shadow:var(--shadow-card);overflow:hidden;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease; }
 .service-tile::before { content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--service-color);transition:width .25s ease; }
 .service-tile:hover { color:var(--color-primary);transform:translateY(-5px);box-shadow:var(--shadow-elevated);border-color:color-mix(in srgb,var(--service-color) 35%,white); }.service-tile:hover::before { width:7px; }
-.service-tile > span:nth-child(2) { min-width:0; }.service-tile strong,.service-tile small { display:block; }.service-tile strong { font-size:13px; }.service-tile small { margin-top:5px;color:var(--color-text-muted);font-size:10px;line-height:1.5; }.service-number { font-family:var(--font-family-mono);font-size:11px;font-weight:700;color:var(--service-color); }.service-arrow { transition:transform .2s ease;color:var(--service-color); }.service-tile:hover .service-arrow { transform:translate(3px,-3px); }
+.service-tile > span:nth-child(2) { min-width:0; }.service-tile strong,.service-tile small { display:block; }.service-tile strong { font-size:13px; }.service-tile small { margin-top:5px;color:var(--color-text-muted);font-size:10px;line-height:1.5; }.service-number { font-family:var(--font-family-base);font-size:11px;font-weight:700;color:var(--service-color); }.service-arrow { transition:transform .2s ease;color:var(--service-color); }.service-tile:hover .service-arrow { transform:translate(3px,-3px); }
 .service-blue { --service-color:var(--color-blue); }.service-amber { --service-color:var(--color-amber); }.service-coral { --service-color:var(--color-coral); }
 
 .features-section { padding:86px 0; }
@@ -1815,7 +1800,7 @@ body::before {
 .feature-card::before { content:"";position:absolute;width:150px;height:150px;right:-80px;top:-80px;border-radius:50%;background:var(--feature-color);opacity:.1;transition:transform .45s ease,opacity .45s ease; }
 .feature-card::after { content:"";position:absolute;inset:auto 28px 0;height:4px;border-radius:5px 5px 0 0;background:var(--feature-color);transform:scaleX(.25);transform-origin:left;transition:transform .35s ease; }
 .feature-card:hover { transform:perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-7px);box-shadow:var(--shadow-elevated);border-color:color-mix(in srgb,var(--feature-color) 30%,white); }.feature-card:hover::before { transform:scale(1.45);opacity:.16; }.feature-card:hover::after { transform:scaleX(1); }
-.feature-card h3 { margin-top:28px;font-size:20px;color:var(--color-primary); }.feature-card p { max-width:330px; }.feature-icon { display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--feature-color) 13%,white);color:var(--feature-color);font-family:var(--font-family-mono);font-weight:700;font-size:12px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--feature-color) 20%,white); }
+.feature-card h3 { margin-top:28px;font-size:20px;color:var(--color-primary); }.feature-card p { max-width:330px; }.feature-icon { display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:color-mix(in srgb,var(--feature-color) 13%,white);color:var(--feature-color);font-family:var(--font-family-base);font-weight:700;font-size:12px;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--feature-color) 20%,white); }
 .feature-card .text-link { color:var(--feature-color); }.feature-blue { --feature-color:var(--color-blue); }.feature-violet { --feature-color:var(--color-violet); }
 
 .steps-section { padding:80px 0;background:linear-gradient(135deg,var(--color-primary),#123f52 58%,#174c59);color:white;border:0;position:relative;overflow:hidden; }
@@ -1825,7 +1810,7 @@ body::before {
 .steps-section .eyebrow { color:#8ee8dc; }
 .steps-grid { grid-template-columns:1fr;padding:0;gap:13px;counter-reset:none; }
 .steps-grid li { list-style:none;display:grid;grid-template-columns:52px 1fr;align-items:center;gap:17px;padding:18px 20px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.065);transition:transform .25s ease,background .25s ease,border-color .25s ease; }.steps-grid li:hover { transform:translateX(7px);background:rgba(255,255,255,.1);border-color:rgba(114,220,205,.42); }
-.step-number { display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:rgba(114,220,205,.12);color:#8ee8dc;font-family:var(--font-family-mono);font-size:11px;font-weight:700;border:1px solid rgba(114,220,205,.25); }.steps-grid h3 { color:white;margin:0 0 5px; }.steps-grid p { color:#c6d9dc;margin:0; }
+.step-number { display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:rgba(114,220,205,.12);color:#8ee8dc;font-family:var(--font-family-base);font-size:11px;font-weight:700;border:1px solid rgba(114,220,205,.25); }.steps-grid h3 { color:white;margin:0 0 5px; }.steps-grid p { color:#c6d9dc;margin:0; }
 
 .facility-spotlight .split-panel { min-height:390px;padding:46px;border-radius:26px;background:linear-gradient(120deg,#fff 0%,#f4faf9 58%,#eef3fb 100%);border:1px solid var(--color-border);box-shadow:var(--shadow-card); }
 .facility-spotlight .split-panel > div:first-child { max-width:540px; }.facility-spotlight h2 { font-size:clamp(28px,3vw,42px);line-height:1.18; }.facility-spotlight .btn { margin-top:24px; }
@@ -4334,4 +4319,9 @@ body::before { z-index:1;opacity:.16; }
 .facility-actions a::before,
 .facility-actions a::after {
   pointer-events: none;
+}
+/* Keep map UI on the shared font, overriding Leaflet defaults. */
+body .leaflet-container,
+.leaflet-container .leaflet-bar a {
+  font-family: var(--font-family-base);
 }
