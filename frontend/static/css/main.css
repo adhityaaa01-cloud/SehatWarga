@@ -2178,6 +2178,7 @@ body::before { z-index:1;opacity:.16; }
 .orbit-brand-logo {
   display: block;
   width: 170px;
+  height: auto;
   max-height: 64px;
   object-fit: contain;
 }

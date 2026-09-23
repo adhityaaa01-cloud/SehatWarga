@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const form=document.getElementById('chat-form');
   const input=document.getElementById('chat-input');
   const submit=document.getElementById('chat-submit');
-  if(!form) return;
+  if(!form || window.__sehatWargaChatInitialized) return;
+  window.__sehatWargaChatInitialized = true;
   const csrf=document.getElementById('csrf_token').value;
   let busy=false;
   const maps=[];

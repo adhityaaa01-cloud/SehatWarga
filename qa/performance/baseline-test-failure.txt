@@ -1,0 +1,21 @@
+test_16_academic_disclaimer_present_across_pages (tests.test_stage8.Stage8TestCase.test_16_academic_disclaimer_present_across_pages) ... FAIL
+
+======================================================================
+FAIL: test_16_academic_disclaimer_present_across_pages (tests.test_stage8.Stage8TestCase.test_16_academic_disclaimer_present_across_pages)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/tests/test_stage8.py", line 396, in test_16_academic_disclaimer_present_across_pages
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        "kebutuhan akademik" in home_html.lower() or "prototype" in home_html.lower(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "Academic prototype disclaimer missing on homepage",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: False is not true : Academic prototype disclaimer missing on homepage
+
+----------------------------------------------------------------------
+Ran 1 test in 0.275s
+
+FAILED (failures=1)

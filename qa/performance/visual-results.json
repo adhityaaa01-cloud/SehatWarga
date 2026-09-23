@@ -1,0 +1,34 @@
+[
+  {
+    "width": 375,
+    "same_animation_metadata": true,
+    "same_geometry_and_visual_styles": true,
+    "nodes_compared": 236,
+    "same_shard_count": true,
+    "shards": 18,
+    "same_screenshot_dimensions": true,
+    "pixel_diff_bbox": [
+      87,
+      696,
+      290,
+      855
+    ],
+    "max_channel_difference": 3
+  },
+  {
+    "width": 1440,
+    "same_animation_metadata": true,
+    "same_geometry_and_visual_styles": true,
+    "nodes_compared": 236,
+    "same_shard_count": true,
+    "shards": 18,
+    "same_screenshot_dimensions": true,
+    "pixel_diff_bbox": [
+      0,
+      14,
+      694,
+      78
+    ],
+    "max_channel_difference": 1
+  }
+]

@@ -36,6 +36,7 @@
     src="{{ url_for('static', filename='images/branding/sehatwargalogo.png') }}"
     alt="SehatWarga - Portal Layanan Warga"
     class="sehatwarga-logo"
+    width="2172" height="724"
   >
 </a>
         <div class="competition-branding" aria-label="Identitas kompetisi">
@@ -45,12 +46,14 @@
       src="{{ url_for('static', filename='images/competition/tcc.png') }}"
       alt="Logo TCC"
       class="competition-logo competition-logo-tcc"
+      width="473" height="853"
     >
 
     <img
       src="{{ url_for('static', filename='images/competition/triple-c.png') }}"
       alt="Logo Triple-C"
       class="competition-logo competition-logo-triple"
+      width="2708" height="2576"
     >
   </div>
       <button type="button" id="nav-toggle" class="nav-toggle" aria-controls="site-navigation" aria-expanded="false" aria-label="Buka menu navigasi">Menu <span aria-hidden="true">☰</span></button>
@@ -144,6 +147,6 @@
   </a>
 
 </div></footer>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% block extra_js %}{% endblock %}
 </body></html>

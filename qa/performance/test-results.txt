@@ -1,0 +1,291 @@
+test_seed_demo_full_execution_and_idempotency (test_demo_seeder.DemoSeederTestCase.test_seed_demo_full_execution_and_idempotency) ... ok
+test_seeded_data_integrity_and_relationships (test_demo_seeder.DemoSeederTestCase.test_seeded_data_integrity_and_relationships) ... ok
+test_errors_timeout_and_empty_response_fall_back_once (test_groq_ai.GroqProviderTest.test_errors_timeout_and_empty_response_fall_back_once) ... Groq unavailable; using local fallback
+Groq unavailable; using local fallback
+Groq unavailable; using local fallback
+Groq unavailable; using local fallback
+ok
+test_explicit_fallback_does_not_call_groq (test_groq_ai.GroqProviderTest.test_explicit_fallback_does_not_call_groq) ... ok
+test_facility_response_uses_database_results (test_groq_ai.GroqProviderTest.test_facility_response_uses_database_results) ... ok
+test_factory_uses_groq_environment_without_generic_key (test_groq_ai.GroqProviderTest.test_factory_uses_groq_environment_without_generic_key) ... ok
+test_missing_key_uses_local_fallback (test_groq_ai.GroqProviderTest.test_missing_key_uses_local_fallback) ... ok
+test_primary_groq_called_through_assistant (test_groq_ai.GroqProviderTest.test_primary_groq_called_through_assistant) ... ok
+test_safety_and_facility_requests_stay_local (test_groq_ai.GroqProviderTest.test_safety_and_facility_requests_stay_local) ... ok
+test_sdk_unavailable_uses_local_fallback (test_groq_ai.GroqProviderTest.test_sdk_unavailable_uses_local_fallback) ... Groq unavailable; using local fallback
+ok
+test_account_summary_requires_login (test_redesign_ai.AdapterSafetyTest.test_account_summary_requires_login) ... ok
+test_account_summary_scoped_and_never_sent_to_provider (test_redesign_ai.AdapterSafetyTest.test_account_summary_scoped_and_never_sent_to_provider) ... /home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/schema.py:3627: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  return util.wrap_callable(lambda ctx: fn(), fn)  # type: ignore
+ok
+test_adapter_also_guards_direct_calls (test_redesign_ai.AdapterSafetyTest.test_adapter_also_guards_direct_calls) ... ok
+test_admin_cannot_read_citizen_summary (test_redesign_ai.AdapterSafetyTest.test_admin_cannot_read_citizen_summary) ... ok
+test_api_failure_and_timeout_fallback (test_redesign_ai.AdapterSafetyTest.test_api_failure_and_timeout_fallback) ... Primary AI provider gagal. Mencoba Groq fallback. Error: primary failed
+ok
+test_classification_all_intents (test_redesign_ai.AdapterSafetyTest.test_classification_all_intents) ... ok
+test_configuration_precedes_database_extension (test_redesign_ai.AdapterSafetyTest.test_configuration_precedes_database_extension) ... ok
+test_coordinates_zero_are_valid (test_redesign_ai.AdapterSafetyTest.test_coordinates_zero_are_valid) ... ok
+test_csrf_stays_enabled (test_redesign_ai.AdapterSafetyTest.test_csrf_stays_enabled) ... ok
+test_demo_domain_does_not_bypass_password (test_redesign_ai.AdapterSafetyTest.test_demo_domain_does_not_bypass_password) ... ok
+test_empty_long_and_wrong_message_types (test_redesign_ai.AdapterSafetyTest.test_empty_long_and_wrong_message_types) ... ok
+test_existing_demo_account_can_login (test_redesign_ai.AdapterSafetyTest.test_existing_demo_account_can_login) ... ok
+test_facility_results_only_database (test_redesign_ai.AdapterSafetyTest.test_facility_results_only_database) ... ok
+test_factory_returns_gemini (test_redesign_ai.AdapterSafetyTest.test_factory_returns_gemini) ... ok
+test_fallback_missing_key_provider_or_model (test_redesign_ai.AdapterSafetyTest.test_fallback_missing_key_provider_or_model) ... ok
+test_gemini_health_navigator_uses_database_facilities (test_redesign_ai.AdapterSafetyTest.test_gemini_health_navigator_uses_database_facilities) ... /home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b36649d50>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b3664a980>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b3664ad40>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b3664b2e0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b3664a7a0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b3664b1f0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b36649a80>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b363149a0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b363157b0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b36316980>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b363165c0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b36315d50>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/sqlalchemy/sql/compiler.py:6915: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x7f6b363175b0>
+  return ", \n\t".join(
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_history_and_app_context_never_sent (test_redesign_ai.AdapterSafetyTest.test_history_and_app_context_never_sent) ... ok
+test_invalid_coordinates (test_redesign_ai.AdapterSafetyTest.test_invalid_coordinates) ... ok
+test_invalid_history_rejected (test_redesign_ai.AdapterSafetyTest.test_invalid_history_rejected) ... ok
+test_invalid_provider_schema_falls_back (test_redesign_ai.AdapterSafetyTest.test_invalid_provider_schema_falls_back) ... AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+AI classification unavailable; using local fallback
+ok
+test_json_objects_only (test_redesign_ai.AdapterSafetyTest.test_json_objects_only) ... ok
+test_knowledge_uses_active_constants (test_redesign_ai.AdapterSafetyTest.test_knowledge_uses_active_constants) ... ok
+test_location_endpoint_rejects_malformed_facility_type (test_redesign_ai.AdapterSafetyTest.test_location_endpoint_rejects_malformed_facility_type) ... ok
+test_low_confidence_falls_back (test_redesign_ai.AdapterSafetyTest.test_low_confidence_falls_back) ... ok
+test_navigator_never_invents_facility (test_redesign_ai.AdapterSafetyTest.test_navigator_never_invents_facility) ... ok
+test_navigator_query_prefills_service_form (test_redesign_ai.AdapterSafetyTest.test_navigator_query_prefills_service_form) ... ok
+test_primary_and_groq_failure_use_local_fallback (test_redesign_ai.AdapterSafetyTest.test_primary_and_groq_failure_use_local_fallback) ... Primary AI provider gagal. Mencoba Groq fallback. Error: primary failed
+Groq fallback gagal. Menggunakan fallback lokal. Error: groq failed
+ok
+test_redaction_numeric_ids_and_opaque_tokens (test_redesign_ai.AdapterSafetyTest.test_redaction_numeric_ids_and_opaque_tokens) ... ok
+test_register_transaction_failure_leaves_no_orphan (test_redesign_ai.AdapterSafetyTest.test_register_transaction_failure_leaves_no_orphan) ... ok
+test_safety_before_provider_factory (test_redesign_ai.AdapterSafetyTest.test_safety_before_provider_factory) ... ok
+test_sdk_error_is_not_logged (test_redesign_ai.AdapterSafetyTest.test_sdk_error_is_not_logged) ... ok
+test_sdk_structured_request_timeout_and_redaction (test_redesign_ai.AdapterSafetyTest.test_sdk_structured_request_timeout_and_redaction) ... /home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/google/genai/types.py:42: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+  VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+ok
+test_service_form_with_active_family_member_renders (test_redesign_ai.AdapterSafetyTest.test_service_form_with_active_family_member_renders) ... ok
+test_unsafe_classification_does_not_answer (test_redesign_ai.AdapterSafetyTest.test_unsafe_classification_does_not_answer) ... ok
+test_all_public_citizen_admin_pages (test_render_routes.RenderRoutesTest.test_all_public_citizen_admin_pages) ... ok
+test_cli_create_admin (test_stage3.Stage3TestCase.test_cli_create_admin) ... ok
+test_data_privacy (test_stage3.Stage3TestCase.test_data_privacy) ... ok
+test_database_relationships (test_stage3.Stage3TestCase.test_database_relationships) ... ok
+test_date_gender_service_class_validation (test_stage3.Stage3TestCase.test_date_gender_service_class_validation) ... ok
+test_duplicate_email_handling (test_stage3.Stage3TestCase.test_duplicate_email_handling) ... ok
+test_login_logout_flow (test_stage3.Stage3TestCase.test_login_logout_flow) ... ok
+test_participant_number_generator (test_stage3.Stage3TestCase.test_participant_number_generator) ... ok
+test_password_validation (test_stage3.Stage3TestCase.test_password_validation) ... ok
+test_privilege_escalation_attempt (test_stage3.Stage3TestCase.test_privilege_escalation_attempt) ... ok
+test_register_flow (test_stage3.Stage3TestCase.test_register_flow) ... ok
+test_registration_transaction_rollback (test_stage3.Stage3TestCase.test_registration_transaction_rollback) ... ok
+test_role_matrix (test_stage3.Stage3TestCase.test_role_matrix) ... ok
+test_admin_facility_create_and_deactivation (test_stage4.Stage4TestCase.test_admin_facility_create_and_deactivation) ... ok
+test_admin_facility_protection (test_stage4.Stage4TestCase.test_admin_facility_protection) ... ok
+test_facility_detail (test_stage4.Stage4TestCase.test_facility_detail) ... ok
+test_facility_public_list_and_filters (test_stage4.Stage4TestCase.test_facility_public_list_and_filters) ... ok
+test_family_create_and_member_number (test_stage4.Stage4TestCase.test_family_create_and_member_number) ... ok
+test_family_mass_assignment (test_stage4.Stage4TestCase.test_family_mass_assignment) ... ok
+test_family_ownership_isolation (test_stage4.Stage4TestCase.test_family_ownership_isolation) ... ok
+test_family_validation (test_stage4.Stage4TestCase.test_family_validation) ... ok
+test_seed_facilities_cli (test_stage4.Stage4TestCase.test_seed_facilities_cli) ... ok
+test_admin_dashboard_service_stats (test_stage5.Stage5TestCase.test_admin_dashboard_service_stats) ... ok
+test_admin_reject_action_web_flow (test_stage5.Stage5TestCase.test_admin_reject_action_web_flow) ... ok
+test_admin_service_actions_web_flow (test_stage5.Stage5TestCase.test_admin_service_actions_web_flow) ... ok
+test_citizen_cancel_submitted_request (test_stage5.Stage5TestCase.test_citizen_cancel_submitted_request) ... ok
+test_citizen_cannot_cancel_scheduled_request (test_stage5.Stage5TestCase.test_citizen_cannot_cancel_scheduled_request) ... ok
+test_citizen_dashboard_service_stats (test_stage5.Stage5TestCase.test_citizen_dashboard_service_stats) ... ok
+test_citizen_privacy_isolation (test_stage5.Stage5TestCase.test_citizen_privacy_isolation) ... ok
+test_citizen_web_submit_request (test_stage5.Stage5TestCase.test_citizen_web_submit_request) ... ok
+test_create_service_request_family (test_stage5.Stage5TestCase.test_create_service_request_family) ... ok
+test_create_service_request_self (test_stage5.Stage5TestCase.test_create_service_request_self) ... ok
+test_reject_request_for_foreign_family_member (test_stage5.Stage5TestCase.test_reject_request_for_foreign_family_member) ... ok
+test_reject_request_for_inactive_facility (test_stage5.Stage5TestCase.test_reject_request_for_inactive_facility) ... ok
+test_reject_request_for_inactive_family_member (test_stage5.Stage5TestCase.test_reject_request_for_inactive_family_member) ... ok
+test_reject_request_for_inactive_participant (test_stage5.Stage5TestCase.test_reject_request_for_inactive_participant) ... ok
+test_reject_request_for_past_date (test_stage5.Stage5TestCase.test_reject_request_for_past_date) ... ok
+test_request_number_format (test_stage5.Stage5TestCase.test_request_number_format) ... ok
+test_status_workflow_complete_lifecycle (test_stage5.Stage5TestCase.test_status_workflow_complete_lifecycle) ... ok
+test_status_workflow_rejection_requires_reason (test_stage5.Stage5TestCase.test_status_workflow_rejection_requires_reason) ... ok
+test_workflow_disallowed_transitions (test_stage5.Stage5TestCase.test_workflow_disallowed_transitions) ... ok
+test_admin_contributions_list_and_filters (test_stage6.Stage6TestCase.test_admin_contributions_list_and_filters)
+Admin can access contribution list and filter by status, class, and month. ... ok
+test_admin_generate_contributions_post (test_stage6.Stage6TestCase.test_admin_generate_contributions_post)
+Admin can trigger monthly contribution generation for all active participants. ... ok
+test_admin_payments_list (test_stage6.Stage6TestCase.test_admin_payments_list)
+Admin can view the payments history list. ... ok
+test_billing_generation_idempotency (test_stage6.Stage6TestCase.test_billing_generation_idempotency)
+Generating contribution twice for the same participant and period returns existing without duplicate. ... ok
+test_citizen_cannot_view_or_pay_other_participant_contribution (test_stage6.Stage6TestCase.test_citizen_cannot_view_or_pay_other_participant_contribution)
+Citizen A cannot view or pay Citizen B's contribution (404/403). ... ok
+test_cli_generate_contributions_and_overdue (test_stage6.Stage6TestCase.test_cli_generate_contributions_and_overdue)
+Test Flask CLI commands 'generate-contributions' and 'update-overdue'. ... ok
+test_duplicate_payment_rejection (test_stage6.Stage6TestCase.test_duplicate_payment_rejection)
+Paying an already PAID contribution is rejected and redirected. ... ok
+test_generate_monthly_contribution_active_participant (test_stage6.Stage6TestCase.test_generate_monthly_contribution_active_participant)
+Active participant generates UNPAID contribution for the specified period. ... ok
+test_generate_monthly_contribution_inactive_participant_rejected (test_stage6.Stage6TestCase.test_generate_monthly_contribution_inactive_participant_rejected)
+Inactive participant is rejected from contribution generation. ... ok
+test_overdue_transition_logic (test_stage6.Stage6TestCase.test_overdue_transition_logic)
+UNPAID contributions past due_date become OVERDUE; PAID contributions remain untouched. ... ok
+test_pay_overdue_contribution (test_stage6.Stage6TestCase.test_pay_overdue_contribution)
+Citizen can successfully pay an OVERDUE contribution, which becomes PAID. ... ok
+test_payment_agreement_checkbox_required (test_stage6.Stage6TestCase.test_payment_agreement_checkbox_required)
+Omitting agreement checkbox fails form validation. ... ok
+test_payment_amount_tamper_proofing (test_stage6.Stage6TestCase.test_payment_amount_tamper_proofing)
+Client cannot alter payment amount; amount is derived strictly from contribution. ... ok
+test_payment_method_whitelist_validation (test_stage6.Stage6TestCase.test_payment_method_whitelist_validation)
+Invalid payment method is rejected by service and form. ... ok
+test_payment_privacy_isolation (test_stage6.Stage6TestCase.test_payment_privacy_isolation)
+Citizen A cannot view Citizen B's payment detail/receipt. ... ok
+test_service_class_snapshot_behavior (test_stage6.Stage6TestCase.test_service_class_snapshot_behavior)
+Changing participant service_class does not alter previously generated contribution amount. ... ok
+test_simulated_rates_mapping (test_stage6.Stage6TestCase.test_simulated_rates_mapping)
+Test simulated rates are exact and mapped to CLASS_1, CLASS_2, CLASS_3. ... ok
+test_unique_constraint_enforcement (test_stage6.Stage6TestCase.test_unique_constraint_enforcement)
+Unique constraint on (participant_id, billing_period) raises IntegrityError on duplicate insert. ... ok
+test_valid_simulated_payment_success (test_stage6.Stage6TestCase.test_valid_simulated_payment_success)
+Citizen pays their UNPAID contribution: Payment created, Contribution PAID. ... ok
+test_01_ticket_generator_format_and_uniqueness (test_stage7.Stage7TestCase.test_01_ticket_generator_format_and_uniqueness) ... ok
+test_02_create_complaint_service_and_mass_assignment (test_stage7.Stage7TestCase.test_02_create_complaint_service_and_mass_assignment) ... ok
+test_03_create_complaint_route_success_and_mass_assignment (test_stage7.Stage7TestCase.test_03_create_complaint_route_success_and_mass_assignment) ... ok
+test_04_create_validation_subject_and_message (test_stage7.Stage7TestCase.test_04_create_validation_subject_and_message) ... ok
+test_05_ownership_and_list_isolation (test_stage7.Stage7TestCase.test_05_ownership_and_list_isolation) ... ok
+test_06_admin_list_and_role_protection (test_stage7.Stage7TestCase.test_06_admin_list_and_role_protection) ... ok
+test_07_workflow_open_to_in_progress (test_stage7.Stage7TestCase.test_07_workflow_open_to_in_progress) ... ok
+test_08_direct_open_to_resolved_prohibited (test_stage7.Stage7TestCase.test_08_direct_open_to_resolved_prohibited) ... ok
+test_09_workflow_in_progress_to_resolved_and_validation (test_stage7.Stage7TestCase.test_09_workflow_in_progress_to_resolved_and_validation) ... ok
+test_10_workflow_reject_from_open_and_in_progress (test_stage7.Stage7TestCase.test_10_workflow_reject_from_open_and_in_progress) ... ok
+test_11_terminal_states_cannot_be_reprocessed (test_stage7.Stage7TestCase.test_11_terminal_states_cannot_be_reprocessed) ... ok
+test_12_xss_protection_in_citizen_and_admin_views (test_stage7.Stage7TestCase.test_12_xss_protection_in_citizen_and_admin_views) ... ok
+test_13_csrf_protection_on_all_action_routes (test_stage7.Stage7TestCase.test_13_csrf_protection_on_all_action_routes) ... ok
+test_14_privacy_output_and_credential_protection (test_stage7.Stage7TestCase.test_14_privacy_output_and_credential_protection) ... ok
+test_15_search_filter_and_pagination (test_stage7.Stage7TestCase.test_15_search_filter_and_pagination) ... ok
+test_16_dashboards_updated_with_complaint_stats (test_stage7.Stage7TestCase.test_16_dashboards_updated_with_complaint_stats) ... ok
+test_01_custom_404_error_page (test_stage8.Stage8TestCase.test_01_custom_404_error_page) ... ok
+test_02_custom_403_error_page (test_stage8.Stage8TestCase.test_02_custom_403_error_page) ... ok
+test_03_custom_400_error_page (test_stage8.Stage8TestCase.test_03_custom_400_error_page) ... ok
+test_04_custom_500_error_page_does_not_leak_traceback (test_stage8.Stage8TestCase.test_04_custom_500_error_page_does_not_leak_traceback) ... [2026-09-23 08:46:40,843] ERROR in app: Exception on /test-trigger-500 [GET]
+Traceback (most recent call last):
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/.venv/lib/python3.14/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/tests/test_stage8.py", line 33, in trigger_500
+    raise RuntimeError("Database connection secret-password-123 failed!")
+RuntimeError: Database connection secret-password-123 failed!
+ok
+test_05_open_redirect_rejected_external_url (test_stage8.Stage8TestCase.test_05_open_redirect_rejected_external_url) ... ok
+test_06_open_redirect_rejected_protocol_relative_url (test_stage8.Stage8TestCase.test_06_open_redirect_rejected_protocol_relative_url) ... ok
+test_07_open_redirect_rejected_backslash_url (test_stage8.Stage8TestCase.test_07_open_redirect_rejected_backslash_url) ... ok
+test_08_open_redirect_citizen_blocked_from_admin_next (test_stage8.Stage8TestCase.test_08_open_redirect_citizen_blocked_from_admin_next) ... ok
+test_09_open_redirect_admin_blocked_from_citizen_next (test_stage8.Stage8TestCase.test_09_open_redirect_admin_blocked_from_citizen_next) ... ok
+test_10_open_redirect_safe_relative_url_allowed (test_stage8.Stage8TestCase.test_10_open_redirect_safe_relative_url_allowed) ... ok
+test_11_csrf_protection_rejects_missing_token_on_post (test_stage8.Stage8TestCase.test_11_csrf_protection_rejects_missing_token_on_post) ... ok
+test_12_demo_seed_cli_execution_and_idempotency (test_stage8.Stage8TestCase.test_12_demo_seed_cli_execution_and_idempotency) ... ok
+test_13_demo_seeded_data_integrity (test_stage8.Stage8TestCase.test_13_demo_seeded_data_integrity) ... ok
+test_14_unauthenticated_protected_routes_redirect_to_login (test_stage8.Stage8TestCase.test_14_unauthenticated_protected_routes_redirect_to_login) ... ok
+test_15_public_routes_accessible_without_auth (test_stage8.Stage8TestCase.test_15_public_routes_accessible_without_auth) ... ok
+test_16_academic_disclaimer_present_across_pages (test_stage8.Stage8TestCase.test_16_academic_disclaimer_present_across_pages) ... FAIL
+test_01_assistant_page_renders_successfully (test_stage9.Stage9TestCase.test_01_assistant_page_renders_successfully)
+Test GET /assistant renders with proper title, disclaimer, and suggested questions. ... ok
+test_02_chat_message_validation (test_stage9.Stage9TestCase.test_02_chat_message_validation)
+Test message validation rejects empty, whitespace, and overly long inputs. ... ok
+test_03_intent_greeting (test_stage9.Stage9TestCase.test_03_intent_greeting)
+Test 'Halo' -> GREETING intent. ... ok
+test_04_intent_service_guide (test_stage9.Stage9TestCase.test_04_intent_service_guide)
+Test 'Cara mengajukan layanan?' -> SERVICE_GUIDE intent. ... ok
+test_05_intent_contribution_guide (test_stage9.Stage9TestCase.test_05_intent_contribution_guide)
+Test contribution guide intent and factual pricing. ... ok
+test_06_intent_payment_guide (test_stage9.Stage9TestCase.test_06_intent_payment_guide)
+Test payment simulation guide intent. ... ok
+test_07_intent_complaint_guide (test_stage9.Stage9TestCase.test_07_intent_complaint_guide)
+Test complaint guide intent. ... ok
+test_08_intent_facility_search (test_stage9.Stage9TestCase.test_08_intent_facility_search)
+Test 'Cari rumah sakit di Surabaya' -> FACILITY_SEARCH. ... ok
+test_09_facility_nearby_requires_location (test_stage9.Stage9TestCase.test_09_facility_nearby_requires_location)
+Test 'Puskesmas terdekat dari saya' without coordinates -> requires_location=True. ... ok
+test_10_facility_nearby_with_location (test_stage9.Stage9TestCase.test_10_facility_nearby_with_location)
+Test 'Puskesmas terdekat dari saya' with user_location provided. ... ok
+test_11_nearest_facility_ordering_and_haversine (test_stage9.Stage9TestCase.test_11_nearest_facility_ordering_and_haversine)
+Test facilities are sorted ascending by distance and Haversine is accurate. ... ok
+test_12_facility_type_filtering (test_stage9.Stage9TestCase.test_12_facility_type_filtering)
+Test type filtering for HOSPITAL vs PUSKESMAS. ... ok
+test_13_inactive_facility_not_recommended (test_stage9.Stage9TestCase.test_13_inactive_facility_not_recommended)
+Test that HealthFacility with is_active=False is NEVER returned. ... ok
+test_14_coordinate_integrity (test_stage9.Stage9TestCase.test_14_coordinate_integrity)
+Test facility latitude/longitude in response exactly matches database record. ... ok
+test_15_location_privacy_no_db_persistence (test_stage9.Stage9TestCase.test_15_location_privacy_no_db_persistence)
+Test that user latitude and longitude are NOT stored in the database. ... ok
+test_16_xss_protection (test_stage9.Stage9TestCase.test_16_xss_protection)
+Test that malicious script tags in input are safely handled. ... ok
+test_17_secret_request_protection (test_stage9.Stage9TestCase.test_17_secret_request_protection)
+Test that user asking for SECRET_KEY / DATABASE_URL is rejected without revealing secrets. ... ok
+test_18_medical_safety_no_diagnosis (test_stage9.Stage9TestCase.test_18_medical_safety_no_diagnosis)
+Test that user asking for medical diagnosis is refused diagnosis safely. ... ok
+test_19_emergency_safety_response (test_stage9.Stage9TestCase.test_19_emergency_safety_response)
+Test that emergency situations prompt immediate emergency room (UGD) visit. ... ok
+test_20_dedicated_location_endpoint (test_stage9.Stage9TestCase.test_20_dedicated_location_endpoint)
+Test POST /assistant/location with coordinates. ... ok
+test_21_csrf_protection_enforced (test_stage9.Stage9TestCase.test_21_csrf_protection_enforced)
+Test that POST endpoints enforce CSRF when CSRF is enabled. ... ok
+
+======================================================================
+FAIL: test_16_academic_disclaimer_present_across_pages (test_stage8.Stage8TestCase.test_16_academic_disclaimer_present_across_pages)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/adhitya/Documents/Trunojoyo/SehatWarga/tests/test_stage8.py", line 396, in test_16_academic_disclaimer_present_across_pages
+    self.assertTrue(
+    ~~~~~~~~~~~~~~~^
+        "kebutuhan akademik" in home_html.lower() or "prototype" in home_html.lower(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "Academic prototype disclaimer missing on homepage",
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+AssertionError: False is not true : Academic prototype disclaimer missing on homepage
+
+----------------------------------------------------------------------
+Ran 157 tests in 87.258s
+
+FAILED (failures=1)

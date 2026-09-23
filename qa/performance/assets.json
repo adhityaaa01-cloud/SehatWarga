@@ -1,0 +1,123 @@
+[
+  {
+    "file": "frontend/static/images/competition/tcc.png",
+    "before": 112882,
+    "after": 105958,
+    "size": [
+      473,
+      853
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/competition/triple-c.png",
+    "before": 1069280,
+    "after": 1017015,
+    "size": [
+      2708,
+      2576
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/competition/jack.png",
+    "before": 304278,
+    "after": 300072,
+    "size": [
+      1353,
+      2232
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/branding/sehatwargalogo.png",
+    "before": 443315,
+    "after": 442057,
+    "size": [
+      2172,
+      724
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/jack/jack-family.png",
+    "before": 1132591,
+    "after": 1084177,
+    "size": [
+      1254,
+      1254
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/jack/jack-service.png",
+    "before": 1139394,
+    "after": 1088806,
+    "size": [
+      1254,
+      1254
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/jack/jack-payment.png",
+    "before": 1154853,
+    "after": 1103848,
+    "size": [
+      1254,
+      1254
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/jack/jack-complaint.png",
+    "before": 1105900,
+    "after": 1052433,
+    "size": [
+      1254,
+      1254
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/icon/citizenship.png",
+    "before": 23635,
+    "after": 22935,
+    "size": [
+      512,
+      512
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/icon/landmark.png",
+    "before": 9232,
+    "after": 7987,
+    "size": [
+      512,
+      512
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  },
+  {
+    "file": "frontend/static/images/icon/cover-letter.png",
+    "before": 7510,
+    "after": 6548,
+    "size": [
+      512,
+      512
+    ],
+    "identical_rgba": true,
+    "metadata_equal": true
+  }
+]

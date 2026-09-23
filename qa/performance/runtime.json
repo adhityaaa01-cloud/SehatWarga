@@ -1,0 +1,98 @@
+{
+  "checks": [
+    {
+      "check": "one hero canvas",
+      "pass": true
+    },
+    {
+      "check": "duplicate main init does not attach listeners or decorations",
+      "pass": true
+    },
+    {
+      "check": "100 pointer events use one frame and one read per affected element",
+      "pass": true
+    },
+    {
+      "check": "pointerleave cancels pending tilt write",
+      "pass": true
+    },
+    {
+      "check": "visible hero canvas runs",
+      "pass": true
+    },
+    {
+      "check": "offscreen canvas stops",
+      "pass": true
+    },
+    {
+      "check": "offscreen repeating hero animations pause",
+      "pass": true
+    },
+    {
+      "check": "visible canvas resumes",
+      "pass": true
+    },
+    {
+      "check": "hidden document stops canvas",
+      "pass": true
+    },
+    {
+      "check": "hidden document pauses repeating CSS",
+      "pass": true
+    },
+    {
+      "check": "active document resumes canvas",
+      "pass": true
+    },
+    {
+      "check": "Leaflet loaded",
+      "pass": true
+    },
+    {
+      "check": "duplicate facility init adds no listeners",
+      "pass": true
+    },
+    {
+      "check": "one Leaflet container",
+      "pass": true
+    },
+    {
+      "check": "facility marker opens popup",
+      "pass": true
+    },
+    {
+      "check": "facility geolocation updates feedback",
+      "pass": true
+    },
+    {
+      "check": "facility detail map and popup render",
+      "pass": true
+    },
+    {
+      "check": "duplicate detail map init adds no listeners",
+      "pass": true
+    },
+    {
+      "check": "duplicate chat init adds no listeners",
+      "pass": true
+    },
+    {
+      "check": "one chat submission sends one request",
+      "pass": true
+    },
+    {
+      "check": "chat fallback response rendered",
+      "pass": true
+    },
+    {
+      "check": "no JavaScript exceptions",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "console_errors": [],
+  "pointer_burst": {
+    "reads": 2,
+    "flush": 1
+  }
+}

@@ -45,6 +45,7 @@
     src="{{ url_for('static', filename='images/branding/sehatwargalogo.png') }}"
     alt="SehatWarga"
     class="orbit-brand-logo"
+    width="2172" height="724"
   >
   <span class="orbit-core-caption">Ekosistem layanan warga</span>
 </div>
@@ -148,6 +149,7 @@
         src="{{ url_for('static', filename='images/jack/' ~ image) }}"
         alt=""
         class="service-jack"
+        width="1254" height="1254"
         aria-hidden="true"
       >
     </div>
@@ -191,7 +193,7 @@
         href="{{ url_for('citizen.card') }}"
       >
         <span class="feature-icon" aria-hidden="true">
-          <img src="{{ url_for('static', filename='images/icon/citizenship.png') }}" alt="" width="24" height="24">
+          <img src="{{ url_for('static', filename='images/icon/citizenship.png') }}" alt="" width="24" height="24" loading="lazy" decoding="async">
         </span>
 
         <h3>Identitas dalam genggaman</h3>
@@ -218,7 +220,7 @@
         href="{{ url_for('facilities.list_facilities') }}"
       >
         <span class="feature-icon" aria-hidden="true">
-          <img src="{{ url_for('static', filename='images/icon/landmark.png') }}" alt="" width="24" height="24">
+          <img src="{{ url_for('static', filename='images/icon/landmark.png') }}" alt="" width="24" height="24" loading="lazy" decoding="async">
         </span>
 
         <h3>Fasilitas sesuai kebutuhan</h3>
@@ -245,7 +247,7 @@
         href="{{ url_for('assistant.chat_page') }}"
       >
         <span class="feature-icon" aria-hidden="true">
-          <img src="{{ url_for('static', filename='images/icon/cover-letter.png') }}" alt="" width="24" height="24">
+          <img src="{{ url_for('static', filename='images/icon/cover-letter.png') }}" alt="" width="24" height="24" loading="lazy" decoding="async">
         </span>
 
         <h3>Informasi tanpa menebak</h3>

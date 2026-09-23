@@ -14,6 +14,7 @@ function facilityPopup(f, showDetailLink=true) {
   return node;
 }
 function createFacilityMap(element,center,zoom) {
+  if(!element || !element.isConnected) return null;
   if(typeof L==='undefined') {element.textContent='Peta tidak dapat dimuat. Gunakan daftar fasilitas untuk melihat informasi.';element.setAttribute('role','status');return null;}
   element.classList.add('skeleton');
   const map=L.map(element).setView(center,zoom);
@@ -26,6 +27,8 @@ function createFacilityMap(element,center,zoom) {
 }
 function initFacilityListMap(mapId,facilitiesData) {
   const element=document.getElementById(mapId);
+  if(!element || element.dataset.facilityMapInitialized) return;
+  element.dataset.facilityMapInitialized='true';
   const facilities=(facilitiesData || []).filter(validFacilityCoordinates);
   const map=element&&facilities.length?createFacilityMap(element,[facilities[0].lat,facilities[0].lng],11):null;
   if(element&&!facilities.length)element.textContent='Belum ada koordinat fasilitas untuk hasil pencarian ini.';
@@ -46,6 +49,8 @@ function initFacilityListMap(mapId,facilitiesData) {
 }
 function initFacilityDetailMap(mapId,facility) {
   const element=document.getElementById(mapId);if(!element)return;
+  if(element.dataset.facilityMapInitialized) return;
+  element.dataset.facilityMapInitialized='true';
   if(!validFacilityCoordinates(facility)){element.textContent='Lokasi peta belum tersedia untuk fasilitas ini.';return;}
   const map=createFacilityMap(element,[facility.lat,facility.lng],15);
   if(map)L.marker([facility.lat,facility.lng]).addTo(map).bindPopup(facilityPopup(facility,false)).openPopup();
