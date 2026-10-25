@@ -60,15 +60,18 @@ def generate_ai_response_with_fallback(
     # INTENT LOKAL
     # ========================================================
 
-    if isinstance(
-        ai_provider,
-        FallbackAIProvider,
-    ):
-        return ai_provider.generate_response(
-            message,
-            intent,
-        )
-
+if isinstance(
+    ai_provider,
+    FallbackAIProvider,
+):
+    logger.info(
+        "AI_SOURCE=local_fallback STATUS=used "
+        "reason=provider_selected"
+    )
+    return ai_provider.generate_response(
+        message,
+        intent,
+    )
     # ========================================================
     # 1. PROVIDER UTAMA / GEMINI
     # ========================================================
@@ -83,7 +86,7 @@ def generate_ai_response_with_fallback(
 
             if response and response.strip():
                 logger.info(
-                    "AI response generated using primary provider."
+                    "AI provider adapter returned a non-empty response"
                 )
 
                 return response.strip()
