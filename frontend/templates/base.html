@@ -9,6 +9,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>{% block title %}SehatWarga — Layanan dalam satu ruang{% endblock %}</title>
   <link rel="preload" href="{{ url_for('static', filename='fonts/instrument-sans-latin.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
@@ -130,11 +131,11 @@
 
   <div class="footer-note">
     <span>
-      Prototipe kompetisi TCC 2026 • Data, pembayaran, dan layanan pada demo ini bersifat simulasi.
+      Prototipe kompetisi TCC 2026 (prototype kebutuhan akademik) • Data, pembayaran, dan layanan pada demo ini bersifat simulasi.
     </span>
 
     <small>
-      Tidak terafiliasi dengan BPJS Kesehatan atau instansi pemerintah.
+      Bukan situs resmi BPJS Kesehatan • Tidak terafiliasi dengan BPJS Kesehatan atau instansi pemerintah.
     </small>
   </div>
 
@@ -147,6 +148,12 @@
   </a>
 
 </div></footer>
+  {% if request.endpoint != 'assistant.chat_page' and not (request.path and request.path.startswith('/assistant')) %}
+    {% include "assistant/_widget.html" %}
+  {% endif %}
   <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% if request.endpoint != 'assistant.chat_page' and not (request.path and request.path.startswith('/assistant')) %}
+    <script defer src="{{ url_for('static', filename='js/assistant-widget.js') }}"></script>
+  {% endif %}
   {% block extra_js %}{% endblock %}
 </body></html>
