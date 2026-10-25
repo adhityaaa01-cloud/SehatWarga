@@ -149,7 +149,7 @@
 
 </div></footer>
   {% if request.endpoint != 'assistant.chat_page' and not (request.path and request.path.startswith('/assistant')) %}
-    {% include "assistant/_widget.html" %}
+    {% include "assistant/widget.html" %}
   {% endif %}
   <script defer src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% if request.endpoint != 'assistant.chat_page' and not (request.path and request.path.startswith('/assistant')) %}

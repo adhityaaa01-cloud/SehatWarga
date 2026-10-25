@@ -1,0 +1,136 @@
+<aside class="sw-chat-widget" id="sw-chat-widget" aria-label="Widget Asisten SehatWarga">
+  <!-- Launcher Button -->
+  <button
+    type="button"
+    id="sw-widget-launcher"
+    class="sw-widget-launcher"
+    aria-expanded="false"
+    aria-controls="sw-widget-panel"
+    aria-label="Tanya SehatWarga - Buka asisten percakapan"
+  >
+    <span class="sw-widget-launcher-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </span>
+    <span class="sw-widget-launcher-label">Tanya SehatWarga</span>
+  </button>
+
+  <!-- Conversation Panel -->
+  <div
+    id="sw-widget-panel"
+    class="sw-widget-panel"
+    role="dialog"
+    aria-labelledby="sw-widget-title"
+    aria-describedby="sw-widget-desc"
+    aria-modal="false"
+    aria-hidden="true"
+    hidden
+  >
+    <!-- Header -->
+    <header class="sw-widget-header">
+      <div class="sw-widget-header-brand">
+        <div class="sw-widget-header-avatar" aria-hidden="true">SW</div>
+        <div class="sw-widget-header-text">
+          <h2 id="sw-widget-title" class="sw-widget-title">Asisten SehatWarga</h2>
+          <p id="sw-widget-desc" class="sw-widget-desc">Bantuan informasi layanan kesehatan</p>
+        </div>
+      </div>
+      <div class="sw-widget-header-actions">
+        <a
+          href="{{ url_for('assistant.chat_page') }}"
+          class="sw-widget-ctrl-btn"
+          title="Buka asisten penuh"
+          aria-label="Buka asisten penuh"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          </svg>
+        </a>
+        <button
+          type="button"
+          id="sw-widget-minimize"
+          class="sw-widget-ctrl-btn"
+          title="Minimalkan percakapan"
+          aria-label="Minimalkan percakapan"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button
+          type="button"
+          id="sw-widget-close"
+          class="sw-widget-ctrl-btn"
+          title="Tutup percakapan"
+          aria-label="Tutup percakapan"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Message Area -->
+    <div
+      id="sw-widget-messages"
+      class="sw-widget-messages"
+      role="log"
+      aria-live="polite"
+      aria-label="Percakapan asisten"
+    >
+      <div class="message-row assistant-row">
+        <div class="message-avatar" aria-hidden="true">SW</div>
+        <div class="message-bubble">
+          <div class="message-text">
+            <p>Halo! Saya Asisten SehatWarga. Ada yang bisa saya bantu terkait layanan atau fasilitas kesehatan?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggested Quick Chips -->
+    <div class="sw-widget-suggestions" aria-label="Saran pertanyaan cepat">
+      <button type="button" class="sw-widget-chip" data-query="Cari fasilitas terdekat">Fasilitas terdekat</button>
+      <button type="button" class="sw-widget-chip" data-query="Cara mengajukan layanan">Ajukan layanan</button>
+      <button type="button" class="sw-widget-chip" data-query="Cara melihat iuran">Cek iuran</button>
+      <button type="button" class="sw-widget-chip" data-query="Saya ingin memeriksakan anak, tetapi bingung memilih layanan">Layanan anak</button>
+    </div>
+
+    <!-- Input Form Area -->
+    <div class="sw-widget-input-area">
+      <form
+        id="sw-widget-form"
+        class="sw-widget-form"
+        data-chat-url="{{ url_for('assistant.chat_api') }}"
+        data-location-url="{{ url_for('assistant.location_api') }}"
+      >
+        <input type="hidden" name="csrf_token" id="sw-widget-csrf" value="{{ csrf_token() }}">
+        <label for="sw-widget-input" class="sr-only">Pertanyaan untuk Asisten SehatWarga</label>
+        <textarea
+          id="sw-widget-input"
+          class="sw-widget-input"
+          placeholder="Tulis pertanyaan Anda…"
+          maxlength="2000"
+          rows="1"
+          autocomplete="off"
+          required
+        ></textarea>
+        <button type="submit" id="sw-widget-submit" class="sw-widget-send-btn" aria-label="Kirim pesan">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
+      <div class="sw-widget-footer-bar">
+        <span class="sw-widget-disclaimer">Bukan diagnosis medis • Simulasi</span>
+        <a href="{{ url_for('assistant.chat_page') }}" class="sw-widget-full-link">Buka asisten penuh →</a>
+      </div>
+    </div>
+  </div>
+</aside>
